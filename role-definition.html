@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="How Siraj Builders defines leadership roles on a project — responsibilities, decisions and how each role connects from first conversation to handover."
+    />
+    <meta name="theme-color" content="#151C21" />
+    <meta property="og:title" content="Role Definition | Siraj Builders" />
+    <meta
+      property="og:description"
+      content="Responsibilities, decision ownership and how each role connects from first conversation to handover."
+    />
+    <title>Role Definition | Siraj Builders</title>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%23212a31%27/%3E%3Ctext x=%2732%27 y=%2742%27 font-family=%27Manrope,sans-serif%27 font-size=%2726%27 font-weight=%27800%27 fill=%27%239dc1c8%27 text-anchor=%27middle%27%3ESB%3C/text%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Shared site-wide layer (tokens, header, footer, components) -->
+    <link rel="stylesheet" href="assets/style.css" />
+    <!-- Page-specific layer -->
+    <link rel="stylesheet" href="assets/css/role-definition.css" />
+  </head>
+
+  <body data-page="role-definition.html">
+    <a class="skip" href="#main">Skip to content</a>
+
+    <!-- ===== SHARED HEADER — layout/header.html ===== -->
+    <div data-include="header"></div>
+
+<main id="main">
+      <!-- ================= PAGE HERO ================= -->
+      <section class="page-hero">
+        <div class="page-hero-bg" aria-hidden="true"></div>
+        <div class="hero-glow" aria-hidden="true"></div>
+
+        <svg
+          class="role-motif"
+          viewBox="0 0 500 500"
+          fill="none"
+          aria-hidden="true"
+        >
+          <!-- halos -->
+          <circle class="halo halo-a" cx="150" cy="200" r="80" />
+          <circle class="halo halo-b" cx="350" cy="300" r="80" />
+
+          <!-- dashed rings -->
+          <circle class="ring ring-a" cx="150" cy="200" r="60" />
+          <circle class="ring ring-b" cx="350" cy="300" r="60" />
+
+          <!-- two big connectors -->
+          <path class="connector" d="M150 200 Q 250 120 350 300" />
+          <path
+            class="connector connector-2"
+            d="M150 200 Q 250 380 350 300"
+          />
+
+          <!-- cores -->
+          <circle class="core core-a" cx="150" cy="200" r="34" />
+          <circle class="core core-b" cx="350" cy="300" r="34" />
+
+          <!-- small pulses connecting -->
+          <circle class="pulse pulse-a" cx="250" cy="160" r="5" />
+          <circle class="pulse pulse-b" cx="250" cy="250" r="5" />
+          <circle class="pulse pulse-c" cx="250" cy="340" r="5" />
+        </svg>
+
+        <div class="container">
+          <div class="crumbs">Siraj Builders / Role Definition</div>
+          <span class="eyebrow">Role definition</span>
+          <h1>
+            Every project role,
+            <span class="accent">clearly defined.</span>
+          </h1>
+          <p class="lead">
+            Leadership works when everyone knows what they own. This page
+            defines what each role is responsible for, what it isn't, and how
+            the roles connect across a project.
+          </p>
+
+          <div class="hero-trust">
+            <span>Clear ownership</span>
+            <span>Defined boundaries</span>
+            <span>Connected workflow</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= INTRO ================= -->
+      <section class="section">
+        <div class="container intro-grid">
+          <div class="intro-copy reveal">
+            <span class="intro-index">01 · Why define roles</span>
+            <h2>
+              Overlap creates confusion.
+              <em>Clarity creates momentum.</em>
+            </h2>
+            <p>
+              Most problems on a construction project aren't technical — they're
+              coordination problems. Two people assumed someone else was
+              handling a decision. A question sat unanswered because it wasn't
+              clear whose answer it was.
+            </p>
+            <p>
+              Defining roles up front removes that ambiguity. Each role below
+              lists what it owns, what it doesn't, and where it connects to the
+              others.
+            </p>
+
+            <div class="feature-pills">
+              <div class="pill">
+                <span class="pill-num">01</span>
+                <div class="pill-body">
+                  <b>What each role owns</b>
+                  <span>Clear decision-making authority per stage.</span>
+                </div>
+              </div>
+              <div class="pill">
+                <span class="pill-num">02</span>
+                <div class="pill-body">
+                  <b>What it doesn't own</b>
+                  <span>Equally important — reduces overlap.</span>
+                </div>
+              </div>
+              <div class="pill">
+                <span class="pill-num">03</span>
+                <div class="pill-body">
+                  <b>Where roles connect</b>
+                  <span>Handoffs that keep a project moving.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="intro-visual reveal" style="--d: 0.15s">
+            <img
+              class="intro-img"
+              src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&q=85"
+              alt="Construction site coordination between roles"
+              loading="lazy"
+            />
+            <div class="intro-badge">
+              <span class="intro-badge-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2M16 3.1a4 4 0 0 1 0 7.8M23 21v-2a4 4 0 0 0-3-3.87" />
+                </svg>
+              </span>
+              <div>
+                <b>Defined per project</b>
+                <span>Roles adapt as the project changes.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ROLE DEFINITIONS ================= -->
+      <section class="section light">
+        <div class="container">
+          <div class="rd-head reveal">
+            <span class="eyebrow">The four roles</span>
+            <h2 class="h2">Responsibilities, boundaries and decisions.</h2>
+            <p>
+              Click any role to see its responsibilities, what it doesn't own,
+              and how it connects to the other roles across a project.
+            </p>
+          </div>
+
+          <div class="rd-list" data-rd-list>
+            <!-- ROLE 1 — FOUNDER / DIRECTOR -->
+            <article class="rd-item reveal" data-rd-item>
+              <button
+                class="rd-header"
+                type="button"
+                aria-expanded="false"
+                aria-controls="rd-body-1"
+              >
+                <div class="rd-photo" data-num="01">
+                  <img
+                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&h=400&q=80"
+                    alt="Founder and Director at Siraj Builders"
+                    loading="lazy"
+                  />
+                </div>
+
+                <div class="rd-title-block">
+                  <span class="rd-role-level">01 · Leadership</span>
+                  <h3 class="rd-role-title">Founder / Director</h3>
+                  <p class="rd-role-summary">
+                    Sets the standards, guides the company's direction and is
+                    accountable for how every project is run.
+                  </p>
+                </div>
+
+                <span class="rd-toggle" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </span>
+              </button>
+
+              <div class="rd-body" id="rd-body-1">
+                <div class="rd-body-inner">
+                  <div class="rd-cols">
+                    <div class="rd-col owns">
+                      <h4>What this role owns</h4>
+                      <ul class="rd-list-items">
+                        <li>
+                          Company-wide standards for quality, conduct and
+                          client experience.
+                        </li>
+                        <li>
+                          Final sign-off on the company's strategic and ethical
+                          commitments.
+                        </li>
+                        <li>
+                          Overall accountability for how a project is run —
+                          even when day-to-day work is delegated.
+                        </li>
+                        <li>
+                          Relationships with key clients and long-standing
+                          partners.
+                        </li>
+                        <li>
+                          Escalation point when decisions span multiple
+                          projects.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div class="rd-col not-owns">
+                      <h4>What this role doesn't own</h4>
+                      <ul class="rd-list-items">
+                        <li>
+                          Day-to-day site supervision — that belongs to the
+                          Site Lead.
+                        </li>
+                        <li>
+                          Individual project schedules and material decisions.
+                        </li>
+                        <li>
+                          Line-by-line drawings and technical specifications.
+                        </li>
+                        <li>
+                          Direct coordination of trades and site labour.
+                        </li>
+                        <li>
+                          Routine client updates — those are handled by the
+                          Project Lead.
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="rd-meta">
+                    <div class="rd-meta-item">
+                      <b>Primary contact with</b>
+                      <span>Client, Project Lead, external partners</span>
+                    </div>
+                    <div class="rd-meta-item">
+                      <b>Active from</b>
+                      <span>First conversation to final handover</span>
+                    </div>
+                    <div class="rd-meta-item">
+                      <b>Reports to</b>
+                      <span>Client and company ownership</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- ROLE 2 — PROJECT LEAD -->
+            <article class="rd-item reveal" data-rd-item>
+              <button
+                class="rd-header"
+                type="button"
+                aria-expanded="false"
+                aria-controls="rd-body-2"
+              >
+                <div class="rd-photo" data-num="02">
+                  <img
+                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80"
+                    alt="Project Lead at Siraj Builders"
+                    loading="lazy"
+                  />
+                </div>
+
+                <div class="rd-title-block">
+                  <span class="rd-role-level">02 · Delivery</span>
+                  <h3 class="rd-role-title">Project Lead</h3>
+                  <p class="rd-role-summary">
+                    Owns the day-to-day progress of a project — scope,
+                    schedule, coordination and client communication.
+                  </p>
+                </div>
+
+                <span class="rd-toggle" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </span>
+              </button>
+
+              <div class="rd-body" id="rd-body-2">
+                <div class="rd-body-inner">
+                  <div class="rd-cols">
+                    <div class="rd-col owns">
+                      <h4>What this role owns</h4>
+                      <ul class="rd-list-items">
+                        <li>
+                          Project schedule — sequence, milestones and delivery
+                          dates.
+                        </li>
+                        <li>
+                          Scope definition, change control and clarifications.
+                        </li>
+                        <li>
+                          Client communication — progress, decisions and
+                          concerns.
+                        </li>
+                        <li>
+                          Coordination between design, site and materials.
+                        </li>
+                        <li>
+                          Commercial tracking — budget position and cost
+                          implications of decisions.
+                        </li>
+                        <li>
+                          Reporting and updates to the client and Director.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div class="rd-col not-owns">
+                      <h4>What this role doesn't own</h4>
+                      <ul class="rd-list-items">
+                        <li>
+                          Hands-on site supervision — the Site Lead runs the
+                          physical work.
+                        </li>
+                        <li>
+                          Technical design decisions — the Design Lead handles
+                          drawings.
+                        </li>
+                        <li>
+                          Company-wide standards and ethics.
+                        </li>
+                        <li>
+                          Selection of individual trade teams on site.
+                        </li>
+                        <li>
+                          Physical quality inspection of each activity.
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="rd-meta">
+                    <div class="rd-meta-item">
+                      <b>Primary contact with</b>
+                      <span>Client, Site Lead, Design Lead</span>
+                    </div>
+                    <div class="rd-meta-item">
+                      <b>Active from</b>
+                      <span>Scope agreement to handover</span>
+                    </div>
+                    <div class="rd-meta-item">
+                      <b>Reports to</b>
+                      <span>Director</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- ROLE 3 — SITE LEAD -->
+            <article class="rd-item reveal" data-rd-item>
+              <button
+                class="rd-header"
+                type="button"
+                aria-expanded="false"
+                aria-controls="rd-body-3"
+              >
+                <div class="rd-photo" data-num="03">
+                  <img
+                    src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80"
+                    alt="Site Lead at Siraj Builders"
+                    loading="lazy"
+                  />
+                </div>
+
+                <div class="rd-title-block">
+                  <span class="rd-role-level">03 · Execution</span>
+                  <h3 class="rd-role-title">Site Lead</h3>
+                  <p class="rd-role-summary">
+                    Runs the physical site — sequencing, supervision, quality
+                    checks and coordination of trades and materials.
+                  </p>
+                </div>
+
+                <span class="rd-toggle" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </span>
+              </button>
+
+              <div class="rd-body" id="rd-body-3">
+                <div class="rd-body-inner">
+                  <div class="rd-cols">
+                    <div class="rd-col owns">
+                      <h4>What this role owns</h4>
+                      <ul class="rd-list-items">
+                        <li>
+                          Daily site organisation, sequencing and access.
+                        </li>
+                        <li>
+                          Supervision of trades, labour and site activities.
+                        </li>
+                        <li>
+                          Quality checks against drawings and specifications.
+                        </li>
+                        <li>
+                          Material deliveries, storage and on-site handling.
+                        </li>
+                        <li>
+                          Site safety and physical working conditions.
+                        </li>
+                        <li>
+                          Flagging issues early — before they become rework.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div class="rd-col not-owns">
+                      <h4>What this role doesn't own</h4>
+                      <ul class="rd-list-items">
+                        <li>
+                          Client-facing communication — that's the Project
+                          Lead's role.
+                        </li>
+                        <li>
+                          Project schedule changes and commercial decisions.
+                        </li>
+                        <li>
+                          Design changes or drawing amendments.
+                        </li>
+                        <li>
+                          Contracts and payments with trade partners.
+                        </li>
+                        <li>
+                          Final handover sign-off with the client.
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="rd-meta">
+                    <div class="rd-meta-item">
+                      <b>Primary contact with</b>
+                      <span>Project Lead, Design Lead, trade teams</span>
+                    </div>
+                    <div class="rd-meta-item">
+                      <b>Active from</b>
+                      <span>Site mobilisation to handover</span>
+                    </div>
+                    <div class="rd-meta-item">
+                      <b>Reports to</b>
+                      <span>Project Lead</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- ROLE 4 — DESIGN LEAD -->
+            <article class="rd-item reveal" data-rd-item>
+              <button
+                class="rd-header"
+                type="button"
+                aria-expanded="false"
+                aria-controls="rd-body-4"
+              >
+                <div class="rd-photo" data-num="04">
+                  <img
+                    src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=400&h=400&q=80"
+                    alt="Design Lead at Siraj Builders"
+                    loading="lazy"
+                  />
+                </div>
+
+                <div class="rd-title-block">
+                  <span class="rd-role-level">04 · Coordination</span>
+                  <h3 class="rd-role-title">Design Lead</h3>
+                  <p class="rd-role-summary">
+                    Bridges design and construction — drawings, specifications
+                    and site questions handled before they reach the site.
+                  </p>
+                </div>
+
+                <span class="rd-toggle" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </span>
+              </button>
+
+              <div class="rd-body" id="rd-body-4">
+                <div class="rd-body-inner">
+                  <div class="rd-cols">
+                    <div class="rd-col owns">
+                      <h4>What this role owns</h4>
+                      <ul class="rd-list-items">
+                        <li>
+                          Architectural and technical drawings issued to site.
+                        </li>
+                        <li>
+                          Specifications for materials, finishes and systems.
+                        </li>
+                        <li>
+                          Answering site questions about design intent.
+                        </li>
+                        <li>
+                          Coordinating design changes with the Project Lead.
+                        </li>
+                        <li>
+                          Aligning design decisions with construction reality.
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div class="rd-col not-owns">
+                      <h4>What this role doesn't own</h4>
+                      <ul class="rd-list-items">
+                        <li>
+                          Site supervision — that's the Site Lead's domain.
+                        </li>
+                        <li>
+                          Project schedule and delivery commitments.
+                        </li>
+                        <li>
+                          Commercial decisions on cost and budget.
+                        </li>
+                        <li>
+                          Client relationship management.
+                        </li>
+                        <li>
+                          Physical quality control on site.
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="rd-meta">
+                    <div class="rd-meta-item">
+                      <b>Primary contact with</b>
+                      <span>Project Lead, Site Lead, client design input</span>
+                    </div>
+                    <div class="rd-meta-item">
+                      <b>Active from</b>
+                      <span>Design phase through construction support</span>
+                    </div>
+                    <div class="rd-meta-item">
+                      <b>Reports to</b>
+                      <span>Project Lead</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= HOW ROLES WORK TOGETHER ================= -->
+      <section class="section dark">
+        <div class="container">
+          <div class="flow-head">
+            <div class="reveal">
+              <span class="eyebrow">Roles across a project</span>
+              <h2 class="h2">Who leads at each stage.</h2>
+            </div>
+            <div class="reveal" style="--d: 0.12s">
+              <p class="muted">
+                Roles aren't equal at every stage. Leadership shifts as the
+                project moves from conversation to construction to handover.
+              </p>
+            </div>
+          </div>
+
+          <div class="flow-grid" data-stagger>
+            <div class="flow-card reveal">
+              <span class="flow-step">Phase 01</span>
+              <h4>First conversation</h4>
+              <p>
+                Understanding the client, the property and the requirements
+                before any scope is discussed.
+              </p>
+              <div class="flow-roles">
+                <span>Director</span>
+                <span>Project Lead</span>
+              </div>
+            </div>
+
+            <div class="flow-card reveal">
+              <span class="flow-step">Phase 02</span>
+              <h4>Scope &amp; planning</h4>
+              <p>
+                Drawings, specifications, schedule and delivery approach defined
+                and agreed.
+              </p>
+              <div class="flow-roles">
+                <span>Project Lead</span>
+                <span>Design Lead</span>
+              </div>
+            </div>
+
+            <div class="flow-card reveal">
+              <span class="flow-step">Phase 03</span>
+              <h4>On site</h4>
+              <p>
+                Execution, supervision and quality control — where coordination
+                problems show up first.
+              </p>
+              <div class="flow-roles">
+                <span>Site Lead</span>
+                <span>Project Lead</span>
+              </div>
+            </div>
+
+            <div class="flow-card reveal">
+              <span class="flow-step">Phase 04</span>
+              <h4>Handover</h4>
+              <p>
+                Final reviews, resolution of outstanding items and transition
+                to the client.
+              </p>
+              <div class="flow-roles">
+                <span>Project Lead</span>
+                <span>Site Lead</span>
+                <span>Director</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PRINCIPLES OF ASSIGNMENT ================= -->
+      <section class="section">
+        <div class="container">
+          <div
+            class="reveal"
+            style="
+              text-align: center;
+              max-width: 640px;
+              margin: 0 auto clamp(2.5rem, 5vw, 3.5rem);
+            "
+          >
+            <span class="eyebrow">How roles are assigned</span>
+            <h2 class="h2">Three principles behind every role.</h2>
+          </div>
+
+          <div class="assign-grid" data-stagger>
+            <article class="assign-tile reveal">
+              <div class="assign-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M9 11l3 3L22 4" />
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                </svg>
+              </div>
+              <h3>Single owner per decision</h3>
+              <p class="muted">
+                Every important decision has one owner. Others can advise —
+                but ownership doesn't get split.
+              </p>
+            </article>
+
+            <article class="assign-tile reveal">
+              <div class="assign-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 6v6l4 2" />
+                </svg>
+              </div>
+              <h3>Adjusted for project size</h3>
+              <p class="muted">
+                A larger project may split roles across more people. A smaller
+                one may combine two. The responsibilities don't change.
+              </p>
+            </article>
+
+            <article class="assign-tile reveal">
+              <div class="assign-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M8 3v18M16 3v18M3 8h18M3 16h18" />
+                </svg>
+              </div>
+              <h3>Confirmed in writing</h3>
+              <p class="muted">
+                Roles, contacts and escalation paths are agreed in writing
+                before work begins.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CTA BANNER ================= -->
+      <section class="banner">
+        <div class="container banner-inner">
+          <div class="reveal">
+            <span class="eyebrow">Start with clarity</span>
+            <h2 class="h2">Want a clearer view of who does what?</h2>
+            <p>
+              Tell us about your project. We'll confirm the roles, contacts and
+              escalation path before any work begins.
+            </p>
+          </div>
+          <div class="banner-cta reveal" style="--d: 0.15s">
+            <a class="btn btn-light" href="consultation.html">
+              Discuss Your Project <span class="arrow">→</span>
+            </a>
+            <a
+              class="btn btn-outline"
+              href="leadership.html"
+              style="border-color: rgba(255, 255, 255, 0.3); color: #fff"
+            >
+              Meet the Leadership <span class="arrow">→</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===== SHARED FOOTER — layout/footer.html ===== -->
+    <div data-include="footer"></div>
+
+    <script src="assets/app.js"></script>
+    <script src="assets/js/role-definition.js"></script>
+    <script src="assets/include.js"></script>
+  </body>
+</html>

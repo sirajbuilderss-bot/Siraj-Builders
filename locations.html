@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Where Siraj Builders works — service areas, regional considerations and how location shapes a construction project."
+    />
+    <meta name="theme-color" content="#151C21" />
+    <meta property="og:title" content="Locations | Siraj Builders" />
+    <meta
+      property="og:description"
+      content="Service areas, regional considerations and how location shapes a construction project."
+    />
+    <title>Locations | Siraj Builders</title>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%23212a31%27/%3E%3Ctext x=%2732%27 y=%2742%27 font-family=%27Manrope,sans-serif%27 font-size=%2726%27 font-weight=%27800%27 fill=%27%239dc1c8%27 text-anchor=%27middle%27%3ESB%3C/text%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Shared site-wide layer (tokens, header, footer, components) -->
+    <link rel="stylesheet" href="assets/style.css" />
+    <!-- Page-specific layer -->
+    <link rel="stylesheet" href="assets/css/locations.css" />
+  </head>
+
+  <body data-page="locations.html">
+    <a class="skip" href="#main">Skip to content</a>
+
+    <!-- ===== SHARED HEADER — layout/header.html ===== -->
+    <div data-include="header"></div>
+
+<main id="main">
+      <!-- ================= PAGE HERO ================= -->
+      <section class="page-hero">
+        <div class="page-hero-bg" aria-hidden="true"></div>
+        <div class="hero-glow" aria-hidden="true"></div>
+
+        <!-- map / pin motif -->
+        <svg
+          class="map-motif"
+          viewBox="0 0 500 500"
+          fill="none"
+          aria-hidden="true"
+        >
+          <!-- faint grid -->
+          <line class="grid-line" x1="0" y1="100" x2="500" y2="100" />
+          <line class="grid-line" x1="0" y1="200" x2="500" y2="200" />
+          <line class="grid-line" x1="0" y1="300" x2="500" y2="300" />
+          <line class="grid-line" x1="0" y1="400" x2="500" y2="400" />
+          <line class="grid-line" x1="120" y1="0" x2="120" y2="500" />
+          <line class="grid-line" x1="380" y1="0" x2="380" y2="500" />
+
+          <!-- region shapes (abstract) -->
+          <path
+            class="region"
+            d="M120 140 Q200 100 290 140 Q360 180 370 240 Q360 320 280 350 Q200 370 140 320 Q100 240 120 140 Z"
+          />
+          <path
+            class="region"
+            d="M150 180 Q240 160 300 200 Q320 260 260 300 Q200 320 170 270 Q140 220 150 180 Z"
+          />
+          <path
+            class="region"
+            d="M200 220 Q250 210 280 240 Q270 280 230 290 Q200 280 200 220 Z"
+          />
+
+          <!-- connecting routes between pins -->
+          <path class="connector" d="M140 180 Q250 130 360 190" />
+          <path class="connector connector-2" d="M140 180 Q200 300 320 340" />
+          <path class="connector connector-3" d="M360 190 Q330 260 320 340" />
+
+          <!-- pulse rings (behind pins) -->
+          <circle class="pulse-ring" cx="140" cy="180" r="20" />
+          <circle class="pulse-ring pr-2" cx="360" cy="190" r="20" />
+          <circle class="pulse-ring pr-3" cx="320" cy="340" r="20" />
+          <circle class="pulse-ring pr-4" cx="250" cy="250" r="20" />
+
+          <!-- pins -->
+          <g class="pin pin-1">
+            <path
+              class="pin-body"
+              d="M140 168 C 133 168 128 173 128 180 C 128 189 140 200 140 200 C 140 200 152 189 152 180 C 152 173 147 168 140 168 Z"
+            />
+            <circle class="pin-dot" cx="140" cy="180" r="3" />
+          </g>
+          <g class="pin pin-2">
+            <path
+              class="pin-body"
+              d="M360 178 C 353 178 348 183 348 190 C 348 199 360 210 360 210 C 360 210 372 199 372 190 C 372 183 367 178 360 178 Z"
+            />
+            <circle class="pin-dot" cx="360" cy="190" r="3" />
+          </g>
+          <g class="pin pin-3">
+            <path
+              class="pin-body"
+              d="M320 328 C 313 328 308 333 308 340 C 308 349 320 360 320 360 C 320 360 332 349 332 340 C 332 333 327 328 320 328 Z"
+            />
+            <circle class="pin-dot" cx="320" cy="340" r="3" />
+          </g>
+          <g class="pin pin-4">
+            <path
+              class="pin-body"
+              d="M250 238 C 243 238 238 243 238 250 C 238 259 250 270 250 270 C 250 270 262 259 262 250 C 262 243 257 238 250 238 Z"
+            />
+            <circle class="pin-dot" cx="250" cy="250" r="3" />
+          </g>
+        </svg>
+
+        <div class="container">
+          <div class="crumbs">Siraj Builders / Locations</div>
+          <span class="eyebrow">Locations</span>
+          <h1>
+            Where a project is built
+            <span class="accent">shapes how it's managed.</span>
+          </h1>
+          <p class="lead">
+            Location affects everything — regulations, materials, labour,
+            climate, logistics. This page shows the areas Siraj Builders works
+            in and the practical thinking behind each one.
+          </p>
+
+          <div class="hero-trust">
+            <span>Primary &amp; secondary service areas</span>
+            <span>Regional considerations</span>
+            <span>Local realities respected</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= INTRO — EDITORIAL ================= -->
+      <section class="section">
+        <div class="container intro-grid">
+          <div class="intro-copy reveal">
+            <span class="intro-index">01 · Why location matters</span>
+            <h2>
+              A construction approach that respects
+              <em>where it's being built.</em>
+            </h2>
+            <p>
+              The principles of good construction are consistent everywhere:
+              clear scope, coordinated execution, responsible management. But
+              the practical realities change from one region to the next.
+            </p>
+            <p>
+              Local regulations, building codes, material availability, labour
+              markets, climate and site access all shape what a project needs.
+              Siraj Builders approaches each area with those realities in view.
+            </p>
+
+            <div class="feature-pills">
+              <div class="pill">
+                <span class="pill-num">01</span>
+                <div class="pill-body">
+                  <b>Local regulations</b>
+                  <span>Codes, approvals and authority requirements per area.</span>
+                </div>
+              </div>
+              <div class="pill">
+                <span class="pill-num">02</span>
+                <div class="pill-body">
+                  <b>Materials &amp; labour</b>
+                  <span>What's locally available and what needs to be sourced.</span>
+                </div>
+              </div>
+              <div class="pill">
+                <span class="pill-num">03</span>
+                <div class="pill-body">
+                  <b>Site realities</b>
+                  <span>Climate, access, terrain and neighbouring conditions.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="intro-visual reveal" style="--d: 0.15s">
+            <img
+              class="intro-img"
+              src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1600&q=85"
+              alt="Aerial view of a city and its construction context"
+              loading="lazy"
+            />
+            <div class="intro-badge">
+              <span class="intro-badge-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+              </span>
+              <div>
+                <b>Regional thinking</b>
+                <span>Same principles, adapted per area.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SERVICE AREAS ================= -->
+      <section class="section light">
+        <div class="container">
+          <div class="areas-head">
+            <div class="reveal">
+              <span class="eyebrow">Service areas</span>
+              <h2 class="h2">Where Siraj Builders works.</h2>
+            </div>
+            <div class="reveal" style="--d: 0.12s">
+              <p class="muted">
+                Projects are organised around a primary service area, with
+                secondary and extended coverage where scope and logistics allow.
+              </p>
+            </div>
+          </div>
+
+          <div class="areas-grid" data-stagger>
+            <!-- Primary area (featured) -->
+            <article class="area-card primary reveal">
+              <span class="area-label">Primary service area</span>
+              <span class="area-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+              </span>
+              <h3>Primary city &amp; surroundings</h3>
+              <p>
+                Our home base. Most projects are delivered here, with the
+                closest site oversight, the fastest response times and the
+                strongest local network.
+              </p>
+              <div class="area-cities">
+                <span class="area-tag">Primary city</span>
+                <span class="area-tag">Nearby areas</span>
+                <span class="area-tag">Surrounding districts</span>
+              </div>
+              <div class="area-foot">
+                <span class="area-count">Highest coverage</span>
+              </div>
+            </article>
+
+            <!-- Secondary areas -->
+            <article class="area-card reveal">
+              <span class="area-label">Secondary areas</span>
+              <span class="area-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z" />
+                </svg>
+              </span>
+              <h3>Secondary cities</h3>
+              <p>
+                Larger regional cities where we take on projects based on
+                scope, logistics and site-access review.
+              </p>
+              <div class="area-cities">
+                <span class="area-tag">Secondary city A</span>
+                <span class="area-tag">Secondary city B</span>
+                <span class="area-tag">Secondary city C</span>
+              </div>
+              <div class="area-foot">
+                <span class="area-count">By project review</span>
+              </div>
+            </article>
+
+            <!-- Extended coverage -->
+            <article class="area-card reveal">
+              <span class="area-label">Extended coverage</span>
+              <span class="area-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z" />
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+              </span>
+              <h3>Extended coverage</h3>
+              <p>
+                Selective projects further afield, subject to scope,
+                logistics and site conditions being properly reviewed.
+              </p>
+              <div class="area-cities">
+                <span class="area-tag">Other regions</span>
+                <span class="area-tag">Selective projects</span>
+                <span class="area-tag">Case-by-case</span>
+              </div>
+              <div class="area-foot">
+                <span class="area-count">Selective</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MAP PANEL ================= -->
+      <section class="section">
+        <div class="container">
+          <div
+            class="reveal"
+            style="
+              max-width: 640px;
+              margin-bottom: clamp(2rem, 4vw, 3rem);
+            "
+          >
+            <span class="eyebrow">On the map</span>
+            <h2 class="h2">A clearer view of where we work.</h2>
+            <p class="muted">
+              The map below shows our primary operating region. For projects
+              outside this view, contact us to discuss scope and coverage.
+            </p>
+          </div>
+
+          <div class="map-panel reveal">
+            <iframe
+              title="Siraj Builders primary service area"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=74.30%2C31.47%2C74.40%2C31.57&amp;layer=mapnik"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+
+            <div class="map-overlay">
+              <div class="map-overlay-text">
+                <span class="map-overlay-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                </span>
+                <div>
+                  <b>Primary operating region</b>
+                  <span>Detailed coverage map — confirm at consultation.</span>
+                </div>
+              </div>
+              <a
+                href="https://www.openstreetmap.org/"
+                target="_blank"
+                rel="noopener"
+              >
+                Open in maps <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= REGIONAL CONSIDERATIONS ================= -->
+      <section class="section light">
+        <div class="container">
+          <div
+            class="reveal"
+            style="
+              text-align: center;
+              max-width: 640px;
+              margin: 0 auto clamp(2.5rem, 5vw, 3.5rem);
+            "
+          >
+            <span class="eyebrow">What changes with location</span>
+            <h2 class="h2">Six things that shift from region to region.</h2>
+            <p class="muted">
+              These are the practical factors we review for any project,
+              wherever it's built.
+            </p>
+          </div>
+
+          <div class="considerations-grid" data-stagger>
+            <article class="consideration reveal">
+              <div class="consideration-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 21h18M5 21V8l7-5 7 5v13" />
+                  <path d="M9 21v-6h6v6M9 12h6" />
+                </svg>
+              </div>
+              <h3>Building codes &amp; approvals</h3>
+              <p class="muted">
+                Different authorities have different requirements. Approvals
+                and design must align with the local framework.
+              </p>
+            </article>
+
+            <article class="consideration reveal">
+              <div class="consideration-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 2v20M4 8l8-4 8 4M4 16l8 4 8-4" />
+                </svg>
+              </div>
+              <h3>Material availability</h3>
+              <p class="muted">
+                Some materials are local, others need sourcing. Availability
+                and lead times affect both cost and schedule.
+              </p>
+            </article>
+
+            <article class="consideration reveal">
+              <div class="consideration-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
+                </svg>
+              </div>
+              <h3>Labour &amp; trades</h3>
+              <p class="muted">
+                Skill availability and site labour markets vary. Local
+                coordination is planned around what's actually there.
+              </p>
+            </article>
+
+            <article class="consideration reveal">
+              <div class="consideration-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 2v4M12 18v4M4.2 4.2l2.8 2.8M17 17l2.8 2.8M2 12h4M18 12h4M4.2 19.8 7 17M17 7l2.8-2.8" />
+                </svg>
+              </div>
+              <h3>Climate &amp; weather</h3>
+              <p class="muted">
+                Heat, rain, humidity and seasonal patterns all influence
+                materials, sequence and site scheduling.
+              </p>
+            </article>
+
+            <article class="consideration reveal">
+              <div class="consideration-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 21h18M5 21V7l7-4 7 4v14" />
+                  <path d="M9 21v-6h6v6" />
+                  <path d="M9 10h.01M15 10h.01" />
+                </svg>
+              </div>
+              <h3>Site access &amp; logistics</h3>
+              <p class="muted">
+                Narrow streets, load limits and delivery windows shape how
+                materials and equipment reach the site.
+              </p>
+            </article>
+
+            <article class="consideration reveal">
+              <div class="consideration-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+              </div>
+              <h3>Neighbourhood context</h3>
+              <p class="muted">
+                Density, noise restrictions and neighbour expectations change
+                the way a site needs to be managed.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= HOW WE WORK ACROSS AREAS ================= -->
+      <section class="section dark">
+        <div class="container across-split">
+          <div class="across-copy reveal">
+            <span class="eyebrow">How we work across areas</span>
+            <h2 class="h2">
+              Consistent standards, adapted to each market.
+            </h2>
+            <p>
+              Wherever a project is built, the same responsibilities apply:
+              clear scope, coordinated execution, honest communication. What
+              changes is how those responsibilities are delivered on the ground.
+            </p>
+
+            <div class="across-list">
+              <div class="across-item">
+                <span class="across-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M9 11l3 3L22 4" />
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                  </svg>
+                </span>
+                <div>
+                  <b>Same standards, every area</b>
+                  <p>
+                    Supervision, quality review and reporting apply equally —
+                    regardless of distance.
+                  </p>
+                </div>
+              </div>
+
+              <div class="across-item">
+                <span class="across-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z" />
+                  </svg>
+                </span>
+                <div>
+                  <b>Local coordination where it matters</b>
+                  <p>
+                    Materials, trades and approvals handled through people who
+                    know the area.
+                  </p>
+                </div>
+              </div>
+
+              <div class="across-item">
+                <span class="across-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z"
+                    />
+                  </svg>
+                </span>
+                <div>
+                  <b>Clear communication, wherever you are</b>
+                  <p>
+                    Progress, decisions and next steps shared consistently,
+                    near or far.
+                  </p>
+                </div>
+              </div>
+
+              <div class="across-item">
+                <span class="across-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <path d="M14 2v6h6M9 15l2 2 4-4" />
+                  </svg>
+                </span>
+                <div>
+                  <b>Reviewed scope per project</b>
+                  <p>
+                    Not every project fits every area. Scope and coverage are
+                    confirmed before work begins.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="across-stats reveal" style="--d: 0.15s">
+            <div class="across-stat">
+              <strong>01</strong>
+              <span>Primary service area with the closest oversight</span>
+            </div>
+            <div class="across-stat">
+              <strong>03</strong>
+              <span>Tiers of coverage — primary, secondary, extended</span>
+            </div>
+            <div class="across-stat">
+              <strong>06</strong>
+              <span>Regional factors reviewed for every project</span>
+            </div>
+            <div class="across-stat">
+              <strong>01</strong>
+              <span>Standard of quality, wherever a project is built</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CTA BANNER ================= -->
+      <section class="banner">
+        <div class="container banner-inner">
+          <div class="reveal">
+            <span class="eyebrow">Start with clarity</span>
+            <h2 class="h2">Is your project in one of our areas?</h2>
+            <p>
+              Share the property location, project type and intended outcome.
+              We'll confirm coverage and the right next step.
+            </p>
+          </div>
+          <div class="banner-cta reveal" style="--d: 0.15s">
+            <a class="btn btn-light" href="consultation.html">
+              Discuss Your Project <span class="arrow">→</span>
+            </a>
+            <a
+              class="btn btn-outline"
+              href="international.html"
+              style="border-color: rgba(255, 255, 255, 0.3); color: #fff"
+            >
+              International Work <span class="arrow">→</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===== SHARED FOOTER — layout/footer.html ===== -->
+    <div data-include="footer"></div>
+
+    <script src="assets/app.js"></script>
+    <script src="assets/include.js"></script>
+  </body>
+</html>

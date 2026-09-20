@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Subcontractor coordination should support quality, safety, schedule visibility and clear responsibilities."
+    />
+    <meta name="theme-color" content="#151C21" />
+    <meta property="og:title" content="Subcontractors | Siraj Builders" />
+    <meta
+      property="og:description"
+      content="Subcontractor coordination should support quality, safety, schedule visibility and clear responsibilities."
+    />
+    <title>Subcontractors | Siraj Builders</title>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%23212a31%27/%3E%3Ctext x=%2732%27 y=%2742%27 font-family=%27Manrope,sans-serif%27 font-size=%2726%27 font-weight=%27800%27 fill=%27%239dc1c8%27 text-anchor=%27middle%27%3ESB%3C/text%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Shared site-wide layer (tokens, header, footer, components) -->
+    <link rel="stylesheet" href="assets/style.css" />
+    <!-- Page-specific layer -->
+    <link rel="stylesheet" href="assets/css/subcontractors.css" />
+  </head>
+
+  <body data-page="subcontractors.html">
+    <a class="skip" href="#main">Skip to content</a>
+
+    <!-- ===== SHARED HEADER — layout/header.html ===== -->
+    <div data-include="header"></div>
+
+<main id="main">
+      <!-- ================= PAGE HERO ================= -->
+      <section class="page-hero">
+        <div class="page-hero-bg" aria-hidden="true"></div>
+        <div class="hero-glow" aria-hidden="true"></div>
+
+        <!-- coordination network motif -->
+        <svg
+          class="network-motif"
+          viewBox="0 0 600 600"
+          fill="none"
+          aria-hidden="true"
+        >
+          <!-- faint outer rings -->
+          <circle class="ring" cx="300" cy="300" r="250" />
+          <circle class="ring ring-2" cx="300" cy="300" r="180" />
+
+          <!-- hub-to-node connections -->
+          <line class="link" x1="300" y1="300" x2="300" y2="90" />
+          <line class="link" x1="300" y1="300" x2="480" y2="180" />
+          <line class="link" x1="300" y1="300" x2="480" y2="420" />
+          <line class="link" x1="300" y1="300" x2="300" y2="510" />
+          <line class="link" x1="300" y1="300" x2="120" y2="420" />
+          <line class="link" x1="300" y1="300" x2="120" y2="180" />
+
+          <!-- outer connections between specialist nodes -->
+          <line class="outer-link" x1="300" y1="90" x2="480" y2="180" />
+          <line class="outer-link" x1="480" y1="180" x2="480" y2="420" />
+          <line class="outer-link" x1="480" y1="420" x2="300" y2="510" />
+          <line class="outer-link" x1="300" y1="510" x2="120" y2="420" />
+          <line class="outer-link" x1="120" y1="420" x2="120" y2="180" />
+          <line class="outer-link" x1="120" y1="180" x2="300" y2="90" />
+
+          <!-- central hub (coordinator) -->
+          <circle class="hub" cx="300" cy="300" r="52" />
+          <path class="hub-mark" d="M280 300 L295 315 L320 285" />
+
+          <!-- specialist nodes -->
+          <g class="node">
+            <circle class="node-circle" cx="300" cy="90" r="24" />
+            <circle class="node-dot" cx="300" cy="90" r="5" />
+          </g>
+          <g class="node">
+            <circle class="node-circle" cx="480" cy="180" r="24" />
+            <circle class="node-dot" cx="480" cy="180" r="5" />
+          </g>
+          <g class="node">
+            <circle class="node-circle" cx="480" cy="420" r="24" />
+            <circle class="node-dot" cx="480" cy="420" r="5" />
+          </g>
+          <g class="node">
+            <circle class="node-circle" cx="300" cy="510" r="24" />
+            <circle class="node-dot" cx="300" cy="510" r="5" />
+          </g>
+          <g class="node">
+            <circle class="node-circle" cx="120" cy="420" r="24" />
+            <circle class="node-dot" cx="120" cy="420" r="5" />
+          </g>
+          <g class="node">
+            <circle class="node-circle" cx="120" cy="180" r="24" />
+            <circle class="node-dot" cx="120" cy="180" r="5" />
+          </g>
+        </svg>
+
+        <div class="container">
+          <div class="crumbs">Siraj Builders / Subcontractors</div>
+          <span class="eyebrow">Subcontractors</span>
+          <h1>
+            A professional relationship from
+            <span class="accent">first scope to final detail.</span>
+          </h1>
+          <p class="lead">
+            Subcontractor coordination should support quality, safety,
+            schedule visibility and clear responsibilities — because on a
+            construction project, most quality problems are coordination
+            problems in disguise.
+          </p>
+
+          <div class="hero-trust">
+            <span>Clear scope per trade</span>
+            <span>Coordinated on site</span>
+            <span>Reviewed before handover</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= NOTICE ================= -->
+      <section class="section" style="padding-bottom: 0">
+        <div class="container">
+          <div class="notice reveal">
+            <svg
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 8h.01M11 12h1v4h1" />
+            </svg>
+            <p>
+              <b>Context.</b> This page describes how Siraj Builders approaches
+              subcontractor coordination and relationships. Specific trade
+              partners, contracting terms and scope definitions are agreed per
+              project — not published here.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= INTRO — EDITORIAL ================= -->
+      <section class="section">
+        <div class="container intro-grid">
+          <div class="intro-copy reveal">
+            <span class="intro-index">01 · The principle</span>
+            <h2>
+              Coordination is what
+              <em>makes trades work together.</em>
+            </h2>
+            <p>
+              A construction project isn't built by one team. It's built by
+              specialists — electricians, plumbers, HVAC engineers, masons,
+              finishers, joiners — each of whom is expert in their own area but
+              has to fit into a wider sequence.
+            </p>
+            <p>
+              Subcontractor coordination is what makes that sequence work. Clear
+              scope per trade, a defined schedule, defined responsibilities,
+              and a single coordinator holding the connections — that's what
+              keeps quality from slipping between trades.
+            </p>
+
+            <div class="feature-pills">
+              <div class="pill">
+                <span class="pill-num">01</span>
+                <div class="pill-body">
+                  <b>Scope per trade</b>
+                  <span>Each specialist knows exactly what they own.</span>
+                </div>
+              </div>
+              <div class="pill">
+                <span class="pill-num">02</span>
+                <div class="pill-body">
+                  <b>Sequence on site</b>
+                  <span>Trades move in the right order, not in collision.</span>
+                </div>
+              </div>
+              <div class="pill">
+                <span class="pill-num">03</span>
+                <div class="pill-body">
+                  <b>Reviewed work</b>
+                  <span>Each stage checked before the next one begins.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="intro-visual reveal" style="--d: 0.15s">
+            <img
+              class="intro-img"
+              src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&q=85"
+              alt="Construction specialists coordinating on site"
+              loading="lazy"
+            />
+            <div class="intro-badge">
+              <span class="intro-badge-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2M16 3.1a4 4 0 0 1 0 7.8M23 21v-2a4 4 0 0 0-3-3.87" />
+                </svg>
+              </span>
+              <div>
+                <b>One coordinator</b>
+                <span>Holding the connections between trades.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= WHAT COORDINATION COVERS — BENTO ================= -->
+      <section class="section light">
+        <div class="container">
+          <div class="bento-head">
+            <div class="reveal">
+              <span class="eyebrow">What coordination covers</span>
+              <h2 class="h2">Six areas that keep trades working together.</h2>
+            </div>
+            <div class="reveal" style="--d: 0.12s">
+              <p class="muted">
+                Subcontractor coordination isn't one task — it's a set of
+                responsibilities that run across every trade and every stage.
+              </p>
+            </div>
+          </div>
+
+          <div class="bento" data-stagger>
+            <!-- 1. Scope definition — FEATURE -->
+            <article class="bento-tile b-feature b-span-2 reveal">
+              <div class="tile-top">
+                <span class="tile-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="22"
+                    height="22"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M9 11l3 3L22 4" />
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                  </svg>
+                </span>
+                <span class="tile-num">01 / 06</span>
+              </div>
+              <h3>Scope definition per trade</h3>
+              <p class="tile-desc">
+                Each subcontractor works to a defined scope — what they own, what
+                they don't, and how their work connects to the trades on either
+                side. Scope clarity is what stops quality gaps at the boundaries
+                between trades.
+              </p>
+            </article>
+
+            <!-- 2. Quality standards -->
+            <article class="bento-tile reveal">
+              <div class="tile-top">
+                <span class="tile-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" />
+                  </svg>
+                </span>
+                <span class="tile-num">02 / 06</span>
+              </div>
+              <h3>Quality standards</h3>
+              <p class="tile-desc">
+                A consistent expectation of workmanship across trades — not
+                different standards on different parts of the same project.
+              </p>
+            </article>
+
+            <!-- 3. Safety alignment -->
+            <article class="bento-tile reveal">
+              <div class="tile-top">
+                <span class="tile-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z" />
+                    <path d="M9 12l2 2 4-4" />
+                  </svg>
+                </span>
+                <span class="tile-num">03 / 06</span>
+              </div>
+              <h3>Safety alignment</h3>
+              <p class="tile-desc">
+                Site safety expectations applied consistently — across
+                trades, not trade-by-trade.
+              </p>
+            </article>
+
+            <!-- 4. Schedule visibility -->
+            <article class="bento-tile reveal">
+              <div class="tile-top">
+                <span class="tile-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 7v5l3 2" />
+                  </svg>
+                </span>
+                <span class="tile-num">04 / 06</span>
+              </div>
+              <h3>Schedule visibility</h3>
+              <p class="tile-desc">
+                Each trade knows when they're on site, what stage precedes
+                them and what follows — not left to guess.
+              </p>
+            </article>
+
+            <!-- 5. Interface coordination -->
+            <article class="bento-tile reveal">
+              <div class="tile-top">
+                <span class="tile-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3" />
+                  </svg>
+                </span>
+                <span class="tile-num">05 / 06</span>
+              </div>
+              <h3>Interface coordination</h3>
+              <p class="tile-desc">
+                The points where trades meet — walls and services, framing and
+                openings, finishes and fittings — actively managed.
+              </p>
+            </article>
+
+            <!-- 6. Documentation & handover — WIDE -->
+            <article class="bento-tile b-span-2 reveal">
+              <div class="tile-top">
+                <span class="tile-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <path d="M14 2v6h6M9 15l2 2 4-4" />
+                  </svg>
+                </span>
+                <span class="tile-num">06 / 06</span>
+              </div>
+              <h3>Documentation &amp; handover</h3>
+              <p class="tile-desc">
+                Every trade's work recorded as it's completed — reviewed against
+                the agreed scope, checked before the next trade moves in, and
+                documented for the final handover. Records that hold up if a
+                question arises later.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= WORKFLOW TIMELINE ================= -->
+      <section class="section">
+        <div class="container">
+          <div
+            class="reveal"
+            style="
+              text-align: center;
+              max-width: 640px;
+              margin: 0 auto clamp(2.5rem, 5vw, 3.5rem);
+            "
+          >
+            <span class="eyebrow">The workflow</span>
+            <h2 class="h2">How a subcontractor engagement moves forward.</h2>
+            <p class="muted">
+              From the first conversation about scope to the final review of
+              completed work, each stage has defined responsibilities on both
+              sides.
+            </p>
+          </div>
+
+          <div class="v-timeline" data-stagger>
+            <div class="v-stage left reveal">
+              <div class="v-card">
+                <span class="v-num">Stage 01</span>
+                <h3>Scope agreement</h3>
+                <p class="muted">
+                  What the trade is responsible for, what they aren't, and how
+                  their work connects to others — agreed in writing.
+                </p>
+              </div>
+              <span class="v-dot"></span>
+            </div>
+
+            <div class="v-stage right reveal">
+              <span class="v-dot"></span>
+              <div class="v-card">
+                <span class="v-num">Stage 02</span>
+                <h3>Schedule &amp; sequence</h3>
+                <p class="muted">
+                  When the trade is on site, what precedes them and what
+                  follows — communicated in advance, not on the day.
+                </p>
+              </div>
+            </div>
+
+            <div class="v-stage left reveal">
+              <div class="v-card">
+                <span class="v-num">Stage 03</span>
+                <h3>On-site coordination</h3>
+                <p class="muted">
+                  Interface points between trades actively managed. Issues
+                  raised early, not after the fact.
+                </p>
+              </div>
+              <span class="v-dot"></span>
+            </div>
+
+            <div class="v-stage right reveal">
+              <span class="v-dot"></span>
+              <div class="v-card">
+                <span class="v-num">Stage 04</span>
+                <h3>Quality review</h3>
+                <p class="muted">
+                  Work checked against the agreed scope and standard before
+                  the next trade moves into the same area.
+                </p>
+              </div>
+            </div>
+
+            <div class="v-stage left reveal">
+              <div class="v-card">
+                <span class="v-num">Stage 05</span>
+                <h3>Documentation &amp; close-out</h3>
+                <p class="muted">
+                  Completed work recorded, any outstanding items resolved, and
+                  the trade's involvement formally closed.
+                </p>
+              </div>
+              <span class="v-dot"></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= WHAT GOOD COORDINATION PREVENTS ================= -->
+      <section class="section dark">
+        <div class="container">
+          <div class="compare-head reveal">
+            <span class="eyebrow">Why it matters</span>
+            <h2 class="h2">
+              What good coordination prevents.
+            </h2>
+            <p>
+              On a project without clear subcontractor coordination, problems
+              rarely come from one trade being bad. They come from the
+              boundaries between trades — where ownership is unclear, sequence
+              is rushed, and issues aren't caught in time.
+            </p>
+          </div>
+
+          <div class="compare-grid reveal">
+            <!-- RISK column -->
+            <div class="compare-col risk">
+              <span class="compare-label">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="12"
+                  height="12"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+                </svg>
+                What unclear coordination causes
+              </span>
+
+              <div class="compare-list">
+                <div class="compare-item">
+                  <span class="marker" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="12"
+                      height="12"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                    >
+                      <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                  </span>
+                  <div>
+                    <b>Ownership gaps</b>
+                    <p>
+                      Things that "aren't my trade" fall between the cracks —
+                      and get discovered at handover.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="compare-item">
+                  <span class="marker" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="12"
+                      height="12"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                    >
+                      <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                  </span>
+                  <div>
+                    <b>Rework at interfaces</b>
+                    <p>
+                      One trade covers another's work, and it has to be opened
+                      up again to fix.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="compare-item">
+                  <span class="marker" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="12"
+                      height="12"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                    >
+                      <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                  </span>
+                  <div>
+                    <b>Site collisions</b>
+                    <p>
+                      Trades arriving at the same time to the same area,
+                      tripping over each other.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="compare-item">
+                  <span class="marker" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="12"
+                      height="12"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                    >
+                      <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                  </span>
+                  <div>
+                    <b>Unclear accountability</b>
+                    <p>
+                      When something goes wrong, no one is clearly responsible
+                      — so it stays wrong.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- APPROACH column -->
+            <div class="compare-col approach">
+              <span class="compare-label">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="12"
+                  height="12"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                What coordinated delivery delivers
+              </span>
+
+              <div class="compare-list">
+                <div class="compare-item">
+                  <span class="marker" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="12"
+                      height="12"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                    >
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                  </span>
+                  <div>
+                    <b>Defined ownership</b>
+                    <p>
+                      Every part of the work is owned by a named party — with
+                      boundaries agreed in advance.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="compare-item">
+                  <span class="marker" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="12"
+                      height="12"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                    >
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                  </span>
+                  <div>
+                    <b>Clean interfaces</b>
+                    <p>
+                      Where trades meet, work is coordinated so nothing has to
+                      be re-opened later.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="compare-item">
+                  <span class="marker" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="12"
+                      height="12"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                    >
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                  </span>
+                  <div>
+                    <b>Sequenced trades</b>
+                    <p>
+                      Trades move through the site in order, with clear slots
+                      so no one is tripping over anyone else.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="compare-item">
+                  <span class="marker" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="12"
+                      height="12"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                    >
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                  </span>
+                  <div>
+                    <b>Clear accountability</b>
+                    <p>
+                      When something needs to move, it's clear whose
+                      responsibility it is to move it.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CTA BANNER ================= -->
+      <section class="banner">
+        <div class="container banner-inner">
+          <div class="reveal">
+            <span class="eyebrow">Start with clarity</span>
+            <h2 class="h2">Working with us as a subcontractor?</h2>
+            <p>
+              If you're a specialist trade and want to discuss working with
+              Siraj Builders, use the contact page and mention your area of
+              expertise.
+            </p>
+          </div>
+          <div class="banner-cta reveal" style="--d: 0.15s">
+            <a class="btn btn-light" href="contact-us.html">
+              Contact Us <span class="arrow">→</span>
+            </a>
+            <a
+              class="btn btn-outline"
+              href="project-management.html"
+              style="border-color: rgba(255, 255, 255, 0.3); color: #fff"
+            >
+              See Project Management <span class="arrow">→</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===== SHARED FOOTER — layout/footer.html ===== -->
+    <div data-include="footer"></div>
+
+    <script src="assets/app.js"></script>
+    <script src="assets/include.js"></script>
+  </body>
+</html>

@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="A practical construction cost index for Siraj Builders clients — indicative rates, cost factors and a simple estimator to help you plan with clarity."
+    />
+    <meta name="theme-color" content="#151C21" />
+    <meta property="og:title" content="Construction Cost Index | Siraj Builders" />
+    <meta
+      property="og:description"
+      content="Indicative construction rates, cost factors and a simple estimator to help you plan with clarity."
+    />
+    <title>Cost Index | Siraj Builders</title>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%23212a31%27/%3E%3Ctext x=%2732%27 y=%2742%27 font-family=%27Manrope,sans-serif%27 font-size=%2726%27 font-weight=%27800%27 fill=%27%239dc1c8%27 text-anchor=%27middle%27%3ESB%3C/text%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Shared site-wide layer (tokens, header, footer, components) -->
+    <link rel="stylesheet" href="assets/style.css" />
+    <!-- Page-specific layer -->
+    <link rel="stylesheet" href="assets/css/cost-index.css" />
+  </head>
+
+  <body data-page="cost-index.html">
+    <a class="skip" href="#main">Skip to content</a>
+
+    <!-- ===== SHARED HEADER — layout/header.html ===== -->
+    <div data-include="header"></div>
+
+<main id="main">
+      <!-- ================= PAGE HERO ================= -->
+      <section class="page-hero">
+        <div class="page-hero-bg" aria-hidden="true"></div>
+
+        <svg
+          class="chart-motif"
+          viewBox="0 0 400 300"
+          aria-hidden="true"
+          fill="none"
+        >
+          <rect class="bar" x="40" y="180" width="34" height="90" rx="5" />
+          <rect class="bar" x="100" y="140" width="34" height="130" rx="5" />
+          <rect class="bar" x="160" y="160" width="34" height="110" rx="5" />
+          <rect class="bar" x="220" y="100" width="34" height="170" rx="5" />
+          <rect class="bar" x="280" y="60" width="34" height="210" rx="5" />
+          <polyline
+            class="line"
+            points="57,175 117,135 177,155 237,95 297,55"
+          />
+          <circle class="dot" cx="57" cy="175" r="4" />
+          <circle class="dot" cx="117" cy="135" r="4" />
+          <circle class="dot" cx="177" cy="155" r="4" />
+          <circle class="dot" cx="237" cy="95" r="4" />
+          <circle class="dot" cx="297" cy="55" r="4" />
+        </svg>
+
+        <div class="container">
+          <div class="crumbs">Siraj Builders / Cost Index</div>
+          <span class="eyebrow">Transparency, not guesswork</span>
+          <h1>Construction cost index.</h1>
+          <p class="lead">
+            A practical reference for what construction work typically costs,
+            what changes the numbers, and a simple estimator to help you plan
+            before the first conversation.
+          </p>
+
+          <div class="hero-trust">
+            <span>Indicative rates only</span>
+            <span>Reviewed regularly</span>
+            <span>Global &amp; local factors</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= QUICK STATS ================= -->
+      <section>
+        <div class="container">
+          <div class="stats-strip" data-stagger>
+            <div class="stat-tile reveal">
+              <span class="stat-label">Coverage</span>
+              <strong>190+</strong>
+              <span>Countries in the location model</span>
+            </div>
+            <div class="stat-tile reveal">
+              <span class="stat-label">Scopes</span>
+              <strong>5</strong>
+              <span>Grey structure to commercial</span>
+            </div>
+            <div class="stat-tile reveal">
+              <span class="stat-label">Cost factors</span>
+              <strong>06</strong>
+              <span>What really changes the number</span>
+            </div>
+            <div class="stat-tile reveal">
+              <span class="stat-label">Accuracy</span>
+              <strong>Planning</strong>
+              <span>Not a fixed price — a starting point</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CALCULATOR ================= -->
+      <section class="section">
+        <div class="container">
+          <div class="notice reveal">
+            <svg
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 8h.01M11 12h1v4h1" />
+            </svg>
+            <p>
+              <b>Indicative only.</b> The estimator below uses typical ranges
+              for planning purposes and applies a regional cost factor. A real
+              quotation depends on drawings, specifications, site conditions
+              and material selections — all of which we review before
+              confirming a scope.
+            </p>
+          </div>
+
+          <div class="calc-layout">
+            <!-- ============ INPUTS ============ -->
+            <div class="reveal">
+              <div class="calc-card">
+                <div class="calc-head">
+                  <span class="eyebrow">Cost estimator</span>
+                  <h2>Estimate the range for your project.</h2>
+                  <p>
+                    Enter your property size, pick the scope and location. The
+                    estimate updates as you change the inputs.
+                  </p>
+                </div>
+
+                <div class="calc-grid">
+                  <!-- area unit toggle -->
+                  <div class="field full">
+                    <label>
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="14"
+                        height="14"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <path d="M3 9h18M9 3v18" />
+                      </svg>
+                      Area unit
+                    </label>
+                    <div class="segment" role="group" aria-label="Area unit">
+                      <button type="button" class="is-active" data-unit="marla">
+                        Marla
+                      </button>
+                      <button type="button" data-unit="sqft">Sq. ft.</button>
+                      <button type="button" data-unit="sqyd">Sq. yd.</button>
+                    </div>
+                  </div>
+
+                  <div class="field full">
+                    <label for="areaInput">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="14"
+                        height="14"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M3 3h18v18H3z" />
+                        <path d="M9 3v18M3 9h18" />
+                      </svg>
+                      Property area
+                      <span class="hint-line" id="areaHint"
+                        >Enter total covered or plot area</span
+                      >
+                    </label>
+                    <input
+                      type="number"
+                      id="areaInput"
+                      name="areaInput"
+                      placeholder="e.g. 10"
+                      min="1"
+                      step="0.5"
+                      value="10"
+                    />
+                  </div>
+
+                  <div class="field full">
+                    <label for="scopeSelect">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="14"
+                        height="14"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M4 21V7l8-4 8 4v14" />
+                        <path d="M9 21v-6h6v6" />
+                      </svg>
+                      Scope of work
+                    </label>
+                    <select id="scopeSelect" name="scopeSelect">
+                      <option value="grey">Grey structure only</option>
+                      <option value="standard" selected>
+                        Standard finish (turnkey)
+                      </option>
+                      <option value="premium">Premium finish</option>
+                      <option value="renovation">
+                        Renovation &amp; remodelling
+                      </option>
+                      <option value="commercial">
+                        Commercial construction
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="qualitySelect">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="14"
+                        height="14"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="m12 2 3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" />
+                      </svg>
+                      Material tier
+                    </label>
+                    <select id="qualitySelect" name="qualitySelect">
+                      <option value="0.9">Economy</option>
+                      <option value="1" selected>Standard</option>
+                      <option value="1.18">Premium</option>
+                    </select>
+                  </div>
+
+                  <div class="field">
+                    <label for="areaTypeSelect">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="14"
+                        height="14"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M3 21h18M5 21V7l7-4 7 4v14" />
+                        <path d="M9 21v-6h6v6" />
+                      </svg>
+                      Area type
+                    </label>
+                    <select id="areaTypeSelect" name="areaTypeSelect">
+                      <option value="0.9">Rural / smaller town</option>
+                      <option value="1" selected>Mid-sized city</option>
+                      <option value="1.12">Major city</option>
+                      <option value="1.25">Prime urban / metro</option>
+                    </select>
+                  </div>
+
+                  <div class="field full">
+                    <label for="countrySelect">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="14"
+                        height="14"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <circle cx="12" cy="12" r="9" />
+                        <path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18z" />
+                      </svg>
+                      Country / region
+                    </label>
+                    <select id="countrySelect" name="countrySelect">
+                      <optgroup label="South Asia">
+                        <option value="1" selected>Pakistan</option>
+                        <option value="1.05">India</option>
+                        <option value="0.95">Bangladesh</option>
+                        <option value="1">Sri Lanka</option>
+                        <option value="0.9">Nepal</option>
+                        <option value="0.85">Afghanistan</option>
+                        <option value="1.1">Maldives</option>
+                        <option value="0.9">Bhutan</option>
+                      </optgroup>
+
+                      <optgroup label="Middle East">
+                        <option value="2.2">United Arab Emirates</option>
+                        <option value="1.8">Saudi Arabia</option>
+                        <option value="2.4">Qatar</option>
+                        <option value="2">Kuwait</option>
+                        <option value="2">Bahrain</option>
+                        <option value="1.7">Oman</option>
+                        <option value="1.3">Jordan</option>
+                        <option value="1.4">Lebanon</option>
+                        <option value="1.2">Iraq</option>
+                        <option value="1">Iran</option>
+                        <option value="3.2">Israel</option>
+                        <option value="1.15">Yemen</option>
+                        <option value="1.9">Turkey</option>
+                      </optgroup>
+
+                      <optgroup label="Central Asia">
+                        <option value="0.95">Uzbekistan</option>
+                        <option value="1.4">Kazakhstan</option>
+                        <option value="0.9">Kyrgyzstan</option>
+                        <option value="0.85">Tajikistan</option>
+                        <option value="0.95">Turkmenistan</option>
+                        <option value="1.05">Azerbaijan</option>
+                        <option value="0.95">Armenia</option>
+                        <option value="0.9">Georgia</option>
+                      </optgroup>
+
+                      <optgroup label="East Asia">
+                        <option value="1.9">China</option>
+                        <option value="3.5">Japan</option>
+                        <option value="3">South Korea</option>
+                        <option value="1.1">North Korea</option>
+                        <option value="2.1">Taiwan</option>
+                        <option value="2">Hong Kong</option>
+                        <option value="2.1">Macau</option>
+                        <option value="1.8">Mongolia</option>
+                      </optgroup>
+
+                      <optgroup label="Southeast Asia">
+                        <option value="4.2">Singapore</option>
+                        <option value="1.6">Malaysia</option>
+                        <option value="1.4">Thailand</option>
+                        <option value="1.2">Indonesia</option>
+                        <option value="1.3">Philippines</option>
+                        <option value="1.1">Vietnam</option>
+                        <option value="1.2">Cambodia</option>
+                        <option value="1.15">Laos</option>
+                        <option value="1.1">Myanmar</option>
+                        <option value="1.15">Brunei</option>
+                        <option value="1.05">East Timor</option>
+                      </optgroup>
+
+                      <optgroup label="Europe — West">
+                        <option value="4">United Kingdom</option>
+                        <option value="3.8">Germany</option>
+                        <option value="3.6">France</option>
+                        <option value="3.7">Belgium</option>
+                        <option value="4">Netherlands</option>
+                        <option value="4.2">Luxembourg</option>
+                        <option value="5.5">Switzerland</option>
+                        <option value="4">Austria</option>
+                        <option value="3.8">Ireland</option>
+                        <option value="4.2">Monaco</option>
+                      </optgroup>
+
+                      <optgroup label="Europe — South">
+                        <option value="2.8">Spain</option>
+                        <option value="3.2">Italy</option>
+                        <option value="2.4">Portugal</option>
+                        <option value="2">Greece</option>
+                        <option value="2.2">Malta</option>
+                        <option value="2.4">Cyprus</option>
+                        <option value="1.6">Bosnia &amp; Herzegovina</option>
+                        <option value="1.8">Croatia</option>
+                        <option value="1.7">Serbia</option>
+                        <option value="1.6">Montenegro</option>
+                        <option value="1.5">North Macedonia</option>
+                        <option value="1.6">Albania</option>
+                        <option value="1.7">Bulgaria</option>
+                        <option value="1.75">Slovenia</option>
+                      </optgroup>
+
+                      <optgroup label="Europe — North">
+                        <option value="4.5">Sweden</option>
+                        <option value="4.8">Norway</option>
+                        <option value="4.6">Denmark</option>
+                        <option value="4.5">Finland</option>
+                        <option value="4.9">Iceland</option>
+                      </optgroup>
+
+                      <optgroup label="Europe — East">
+                        <option value="2.2">Poland</option>
+                        <option value="2">Czechia</option>
+                        <option value="1.9">Slovakia</option>
+                        <option value="1.8">Hungary</option>
+                        <option value="1.8">Romania</option>
+                        <option value="1.5">Ukraine</option>
+                        <option value="1.4">Belarus</option>
+                        <option value="1.5">Moldova</option>
+                        <option value="1.6">Russia</option>
+                        <option value="1.7">Estonia</option>
+                        <option value="1.7">Latvia</option>
+                        <option value="1.65">Lithuania</option>
+                      </optgroup>
+
+                      <optgroup label="North America">
+                        <option value="4.5">United States</option>
+                        <option value="4.2">Canada</option>
+                        <option value="1.5">Mexico</option>
+                        <option value="2.5">Panama</option>
+                        <option value="2.2">Costa Rica</option>
+                        <option value="1.6">Guatemala</option>
+                        <option value="1.5">Honduras</option>
+                        <option value="1.4">El Salvador</option>
+                        <option value="1.4">Nicaragua</option>
+                        <option value="1.3">Belize</option>
+                      </optgroup>
+
+                      <optgroup label="Caribbean">
+                        <option value="2">Bahamas</option>
+                        <option value="2.1">Barbados</option>
+                        <option value="2">Trinidad &amp; Tobago</option>
+                        <option value="1.9">Jamaica</option>
+                        <option value="2.3">Puerto Rico</option>
+                        <option value="1.6">Dominican Republic</option>
+                        <option value="1.5">Cuba</option>
+                        <option value="1.7">Haiti</option>
+                      </optgroup>
+
+                      <optgroup label="South America">
+                        <option value="1.8">Brazil</option>
+                        <option value="1.4">Argentina</option>
+                        <option value="1.7">Chile</option>
+                        <option value="1.3">Colombia</option>
+                        <option value="1.2">Peru</option>
+                        <option value="1.1">Venezuela</option>
+                        <option value="1.2">Ecuador</option>
+                        <option value="1.1">Bolivia</option>
+                        <option value="1.3">Uruguay</option>
+                        <option value="1.1">Paraguay</option>
+                        <option value="1.2">Guyana</option>
+                        <option value="1.15">Suriname</option>
+                      </optgroup>
+
+                      <optgroup label="Africa — North">
+                        <option value="0.9">Egypt</option>
+                        <option value="1.1">Morocco</option>
+                        <option value="1.05">Algeria</option>
+                        <option value="1">Tunisia</option>
+                        <option value="0.85">Libya</option>
+                        <option value="0.9">Sudan</option>
+                      </optgroup>
+
+                      <optgroup label="Africa — West">
+                        <option value="1.1">Nigeria</option>
+                        <option value="1.2">Ghana</option>
+                        <option value="1.15">Ivory Coast</option>
+                        <option value="1.1">Senegal</option>
+                        <option value="1">Mali</option>
+                        <option value="1.05">Cameroon</option>
+                        <option value="1">Guinea</option>
+                        <option value="0.95">Benin</option>
+                        <option value="0.95">Burkina Faso</option>
+                        <option value="0.9">Niger</option>
+                        <option value="0.95">Togo</option>
+                        <option value="1">Sierra Leone</option>
+                        <option value="0.95">Liberia</option>
+                        <option value="1.05">Mauritania</option>
+                        <option value="0.9">Gambia</option>
+                      </optgroup>
+
+                      <optgroup label="Africa — East">
+                        <option value="1.2">Kenya</option>
+                        <option value="1.1">Tanzania</option>
+                        <option value="1.15">Uganda</option>
+                        <option value="1">Rwanda</option>
+                        <option value="0.95">Burundi</option>
+                        <option value="1">Ethiopia</option>
+                        <option value="1.05">Somalia</option>
+                        <option value="1.15">Mozambique</option>
+                        <option value="1.1">Madagascar</option>
+                        <option value="1.05">Zimbabwe</option>
+                        <option value="1">Zambia</option>
+                        <option value="0.95">Malawi</option>
+                      </optgroup>
+
+                      <optgroup label="Africa — Central &amp; South">
+                        <option value="1.5">South Africa</option>
+                        <option value="1.1">Angola</option>
+                        <option value="1">DR Congo</option>
+                        <option value="0.95">Congo</option>
+                        <option value="1.3">Botswana</option>
+                        <option value="1.25">Namibia</option>
+                        <option value="1.2">Eswatini</option>
+                        <option value="1.15">Lesotho</option>
+                        <option value="1.2">Gabon</option>
+                        <option value="1.1">Chad</option>
+                        <option value="1">Central African Republic</option>
+                      </optgroup>
+
+                      <optgroup label="Oceania">
+                        <option value="4">Australia</option>
+                        <option value="3.8">New Zealand</option>
+                        <option value="2.2">Fiji</option>
+                        <option value="2.1">Papua New Guinea</option>
+                        <option value="1.8">Samoa</option>
+                        <option value="1.75">Tonga</option>
+                        <option value="1.7">Vanuatu</option>
+                        <option value="1.65">Solomon Islands</option>
+                      </optgroup>
+
+                      <optgroup label="Other / Not listed">
+                        <option value="1.2">Other — mid-range</option>
+                        <option value="2.2">Other — high-cost region</option>
+                        <option value="0.9">Other — emerging market</option>
+                      </optgroup>
+                    </select>
+                  </div>
+
+                  <div class="field full">
+                    <label for="extrasSelect">
+                      <svg
+                        viewBox="0 0 24 24"
+                        width="14"
+                        height="14"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M12 5v14M5 12h14" />
+                      </svg>
+                      Additional considerations
+                    </label>
+                    <select id="extrasSelect" name="extrasSelect">
+                      <option value="0">None</option>
+                      <option value="0.05">
+                        Basement / additional structure
+                      </option>
+                      <option value="0.08">Complex site access</option>
+                      <option value="0.1">
+                        Extensive external works (boundary, landscaping)
+                      </option>
+                    </select>
+                    <span class="field-note">
+                      Adds a percentage on top of the base range.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ============ RESULT ============ -->
+            <aside class="reveal" style="--d: 0.15s">
+              <div class="result-card">
+                <div class="result-label">Estimated range</div>
+                <div class="result-value" id="resultValue">PKR —</div>
+                <div class="result-sub" id="resultSub">
+                  Based on 10 marla · standard finish · Pakistan
+                </div>
+
+                <div class="composition">
+                  <div class="composition-label">
+                    <span>Cost composition</span>
+                    <span>Typical split</span>
+                  </div>
+                  <div class="composition-bar" aria-hidden="true">
+                    <span style="width: 55%"></span>
+                    <span style="width: 25%"></span>
+                    <span style="width: 12%"></span>
+                    <span style="width: 8%"></span>
+                  </div>
+                  <div class="composition-legend">
+                    <div>
+                      <i class="c1"></i> Materials <b>55%</b>
+                    </div>
+                    <div>
+                      <i class="c2"></i> Labour <b>25%</b>
+                    </div>
+                    <div>
+                      <i class="c3"></i> Finishing <b>12%</b>
+                    </div>
+                    <div>
+                      <i class="c4"></i> Overheads <b>8%</b>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="result-divider"></div>
+
+                <div class="result-rows">
+                  <div class="result-row">
+                    <span>Area (sq. ft.)</span>
+                    <span id="rowArea">—</span>
+                  </div>
+                  <div class="result-row">
+                    <span>Rate per sq. ft.</span>
+                    <span id="rowRate">—</span>
+                  </div>
+                  <div class="result-row">
+                    <span>Scope</span>
+                    <span id="rowScope">—</span>
+                  </div>
+                  <div class="result-row">
+                    <span>Material tier</span>
+                    <span id="rowQuality">—</span>
+                  </div>
+                  <div class="result-row">
+                    <span>Area type</span>
+                    <span id="rowAreaType">—</span>
+                  </div>
+                  <div class="result-row">
+                    <span>Country factor</span>
+                    <span id="rowCountry">—</span>
+                  </div>
+                </div>
+
+                <div class="result-note">
+                  Figures are indicative planning ranges and exclude land,
+                  approvals, utility connections and client-supplied items
+                  unless agreed otherwise.
+                </div>
+
+                <div class="result-actions">
+                  <a class="btn btn-primary btn-block" href="consultation.html">
+                    Discuss This Project <span class="arrow">→</span>
+                  </a>
+                  <a
+                    class="btn btn-ghost btn-block"
+                    href="#rate-table"
+                    style="
+                      border-color: rgba(255, 255, 255, 0.22);
+                      color: #fff;
+                      background: transparent;
+                    "
+                  >
+                    See rate breakdown
+                  </a>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= RATE TABLE ================= -->
+      <section class="section light" id="rate-table">
+        <div class="container">
+          <div class="section-head">
+            <div class="reveal">
+              <span class="eyebrow">Rate reference</span>
+              <h2 class="h2">Indicative rate bands.</h2>
+            </div>
+            <div class="reveal" style="--d: 0.12s">
+              <p class="muted">
+                Ranges vary with specification, material selection and site
+                conditions. Use them as a starting point, not a fixed price.
+              </p>
+            </div>
+          </div>
+
+          <div class="rate-table-wrap reveal">
+            <table class="rates">
+              <thead>
+                <tr>
+                  <th>Scope of work</th>
+                  <th>Economy</th>
+                  <th>Standard</th>
+                  <th>Premium</th>
+                  <th>Typical inclusions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Grey structure</td>
+                  <td><span class="rate-pill">Low</span></td>
+                  <td><span class="rate-pill">Mid</span></td>
+                  <td><span class="rate-pill">High</span></td>
+                  <td>Foundation, columns, beams, slab, blockwork, plaster</td>
+                </tr>
+                <tr>
+                  <td>Standard finish (turnkey)</td>
+                  <td><span class="rate-pill">Low</span></td>
+                  <td><span class="rate-pill">Mid</span></td>
+                  <td><span class="rate-pill">High</span></td>
+                  <td>Grey structure, flooring, doors, windows, paint, fittings</td>
+                </tr>
+                <tr>
+                  <td>Premium finish</td>
+                  <td><span class="rate-pill alt">—</span></td>
+                  <td><span class="rate-pill">Mid</span></td>
+                  <td><span class="rate-pill">High</span></td>
+                  <td>Imported / high-end materials, custom joinery, detailing</td>
+                </tr>
+                <tr>
+                  <td>Renovation &amp; remodelling</td>
+                  <td><span class="rate-pill">Low</span></td>
+                  <td><span class="rate-pill">Mid</span></td>
+                  <td><span class="rate-pill">High</span></td>
+                  <td>Demolition, structural changes, new finishes, MEP updates</td>
+                </tr>
+                <tr>
+                  <td>Commercial construction</td>
+                  <td><span class="rate-pill">Low</span></td>
+                  <td><span class="rate-pill">Mid</span></td>
+                  <td><span class="rate-pill">High</span></td>
+                  <td>Functional layouts, durable materials, MEP coordination</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="muted reveal" style="font-size: 0.82rem; margin-top: 1.1rem">
+            Actual rate bands are shared during the estimation stage once the
+            scope, drawings and specifications are reviewed. Contact us for
+            project-specific figures.
+          </p>
+        </div>
+      </section>
+
+      <!-- ================= COST COMPOSITION ================= -->
+      <section class="section">
+        <div class="container composition-split">
+          <div class="reveal">
+            <span class="eyebrow">Where the budget goes</span>
+            <h2 class="h2">What a construction budget is made of.</h2>
+            <p class="muted" style="margin-bottom: 1.2rem">
+              Most construction budgets follow a similar shape. Materials take
+              the largest share, followed by labour. Finishing and overheads
+              round out the picture.
+            </p>
+            <p class="muted">
+              Understanding this split helps explain why small specification
+              changes can move the total more than clients expect.
+            </p>
+          </div>
+
+          <div class="composition-visual reveal" style="--d: 0.15s">
+            <span class="eyebrow">Typical split</span>
+            <h3>How a budget is usually distributed</h3>
+            <p>
+              Indicative composition of a standard turnkey project. Actual
+              splits vary with scope and market.
+            </p>
+
+            <div class="stacked-bar" aria-hidden="true">
+              <span>55%</span>
+              <span>25%</span>
+              <span>12%</span>
+              <span>8%</span>
+            </div>
+
+            <div class="stacked-legend">
+              <div>
+                <i class="c1"></i> Materials <b>55%</b>
+              </div>
+              <div>
+                <i class="c2"></i> Labour <b>25%</b>
+              </div>
+              <div>
+                <i class="c3"></i> Finishing <b>12%</b>
+              </div>
+              <div>
+                <i class="c4"></i> Overheads <b>8%</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= COST FACTORS ================= -->
+      <section class="section light">
+        <div class="container">
+          <div class="section-head">
+            <div class="reveal">
+              <span class="eyebrow">What changes the number</span>
+              <h2 class="h2">Six things that affect construction cost.</h2>
+            </div>
+            <div class="reveal" style="--d: 0.12s">
+              <p class="muted">
+                Two projects of the same size can differ significantly in cost.
+                These are the factors that usually explain why.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid-3" data-stagger>
+            <article class="factor-card reveal">
+              <div class="icon-box">01</div>
+              <h3>Scope &amp; specification</h3>
+              <p class="muted">
+                The biggest driver. A grey-structure build and a fully finished
+                premium home are very different projects.
+              </p>
+            </article>
+
+            <article class="factor-card reveal">
+              <div class="icon-box">02</div>
+              <h3>Material selection</h3>
+              <p class="muted">
+                Flooring, tiles, fittings, joinery and finishes move the cost
+                more than most clients expect.
+              </p>
+            </article>
+
+            <article class="factor-card reveal">
+              <div class="icon-box">03</div>
+              <h3>Site conditions</h3>
+              <p class="muted">
+                Soil, access, water table and existing structures can add
+                significant preparation work.
+              </p>
+            </article>
+
+            <article class="factor-card reveal">
+              <div class="icon-box">04</div>
+              <h3>Location</h3>
+              <p class="muted">
+                Labour availability, transport and local market rates vary
+                between countries, cities and areas.
+              </p>
+            </article>
+
+            <article class="factor-card reveal">
+              <div class="icon-box">05</div>
+              <h3>Design complexity</h3>
+              <p class="muted">
+                Curves, cantilevers, custom detailing and intricate facades
+                require more time and skill.
+              </p>
+            </article>
+
+            <article class="factor-card reveal">
+              <div class="icon-box">06</div>
+              <h3>Timeline &amp; changes</h3>
+              <p class="muted">
+                Compressed schedules and scope changes during construction
+                typically increase final cost.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CTA BANNER ================= -->
+      <section class="banner">
+        <div class="container banner-inner">
+          <div class="reveal">
+            <span class="eyebrow">Want a real number?</span>
+            <h2 class="h2">Get a project-specific estimate.</h2>
+            <p>
+              Share your drawings, property details and intended scope. We'll
+              review them and come back with a proper figure.
+            </p>
+          </div>
+          <div class="banner-cta reveal" style="--d: 0.15s">
+            <a class="btn btn-light" href="consultation.html">
+              Request a Consultation <span class="arrow">→</span>
+            </a>
+            <a
+              class="btn btn-ghost"
+              href="faq.html"
+              style="border-color: rgba(255, 255, 255, 0.3); color: #fff"
+            >
+              Read Cost FAQs <span class="arrow">→</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===== SHARED FOOTER — layout/footer.html ===== -->
+    <div data-include="footer"></div>
+
+    <script src="assets/app.js"></script>
+    <script src="assets/js/cost-index.js"></script>
+    <script src="assets/include.js"></script>
+  </body>
+</html>

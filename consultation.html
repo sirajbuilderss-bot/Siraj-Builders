@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Start with clarity. Then build. Share your project requirements with Siraj Builders and begin with a clear conversation about your property, scope and next steps."
+    />
+    <meta name="theme-color" content="#151C21" />
+    <meta property="og:title" content="Start with clarity. Then build." />
+    <meta
+      property="og:description"
+      content="Share your project requirements with Siraj Builders and begin with a clear conversation about your property, scope and next steps."
+    />
+    <title>Consultation | Siraj Builders</title>
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%23212a31%27/%3E%3Ctext x=%2732%27 y=%2742%27 font-family=%27Manrope,sans-serif%27 font-size=%2726%27 font-weight=%27800%27 fill=%27%239dc1c8%27 text-anchor=%27middle%27%3ESB%3C/text%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Shared site-wide layer (tokens, header, footer, components) -->
+    <link rel="stylesheet" href="assets/style.css" />
+    <!-- Page-specific layer -->
+    <link rel="stylesheet" href="assets/css/consultation.css" />
+  </head>
+
+  <body data-page="consultation.html">
+    <a class="skip" href="#main">Skip to content</a>
+
+    <!-- ===== SHARED HEADER — layout/header.html ===== -->
+    <div data-include="header"></div>
+
+<main id="main">
+      <!-- ================= PAGE HERO ================= -->
+      <section class="page-hero">
+        <div class="page-hero-bg" aria-hidden="true"></div>
+        <div class="blueprint-grid" aria-hidden="true"></div>
+
+        <div class="container">
+          <div class="crumbs">Siraj Builders / Consultation</div>
+          <span class="eyebrow">Start with clarity</span>
+          <h1>Start with clarity. Then build.</h1>
+          <p class="lead">
+            Before construction begins, there are important questions to answer.
+            Share the basics of your project and we'll begin with a clear
+            conversation about your requirements, property and next steps.
+          </p>
+
+          <div class="hero-trust">
+            <span>No obligation</span>
+            <span>Plain conversation</span>
+            <span>Clear next step</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= FORM + SIDEBAR ================= -->
+      <section class="section">
+        <div class="container consult-layout">
+          <!-- ============ FORM ============ -->
+          <div class="reveal">
+            <form
+              class="form-card"
+              id="consultForm"
+              novalidate
+              aria-labelledby="formTitle"
+            >
+              <div class="form-head">
+                <span class="eyebrow">Tell us about your project</span>
+                <h2 id="formTitle">Share a few details to get started.</h2>
+                <p>
+                  The more we understand about your project, the better we can
+                  guide the initial conversation.
+                </p>
+              </div>
+
+              <div class="form-grid">
+                <div class="field">
+                  <label for="name">Full name <span class="req">*</span></label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="e.g. Ahmed Khan"
+                    autocomplete="name"
+                    required
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="phone">Phone <span class="req">*</span></label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="e.g. +92 300 0000000"
+                    autocomplete="tel"
+                    required
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="email">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="projectType">Project type <span class="req">*</span></label>
+                  <select id="projectType" name="projectType" required>
+                    <option value="" disabled selected>Select a type</option>
+                    <option>Residential</option>
+                    <option>Commercial</option>
+                    <option>Renovation &amp; Remodelling</option>
+                    <option>Design &amp; Build</option>
+                    <option>Other / Not sure yet</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="location">Property location</label>
+                  <input
+                    type="text"
+                    id="location"
+                    name="location"
+                    placeholder="City / area"
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="size">Plot / property size</label>
+                  <input
+                    type="text"
+                    id="size"
+                    name="size"
+                    placeholder="e.g. 10 marla / 240 sq yd"
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="budget">Estimated budget</label>
+                  <input
+                    type="text"
+                    id="budget"
+                    name="budget"
+                    placeholder="Optional — approximate range"
+                  />
+                </div>
+
+                <div class="field">
+                  <label for="startDate">Expected start</label>
+                  <input
+                    type="text"
+                    id="startDate"
+                    name="startDate"
+                    placeholder="e.g. Q3 2026 / flexible"
+                  />
+                </div>
+
+                <div class="field full">
+                  <label for="service">Required service</label>
+                  <select id="service" name="service">
+                    <option value="" disabled selected>Select a service</option>
+                    <option>Construction (full project)</option>
+                    <option>Residential Construction</option>
+                    <option>Commercial Construction</option>
+                    <option>Renovation &amp; Remodelling</option>
+                    <option>Grey Structure</option>
+                    <option>Turnkey Construction</option>
+                    <option>Project Management</option>
+                    <option>Design &amp; Architecture</option>
+                    <option>Not sure — need guidance</option>
+                  </select>
+                </div>
+
+                <div class="field full">
+                  <label for="description">Project description</label>
+                  <textarea
+                    id="description"
+                    name="description"
+                    placeholder="Tell us what you are planning, what matters most, and anything else we should know."
+                  ></textarea>
+                </div>
+
+                <div class="form-submit full">
+                  <button class="btn btn-primary btn-block" type="submit">
+                    Discuss My Project <span class="arrow">→</span>
+                  </button>
+
+                  <p class="form-note">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="16"
+                      height="16"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z" />
+                      <path d="M9 12l2 2 4-4" />
+                    </svg>
+                    <span>
+                      Your information is used to understand your project and
+                      determine the appropriate next step. It is not shared with
+                      third parties.
+                    </span>
+                  </p>
+                </div>
+              </div>
+
+              <!-- ============ SUCCESS ============ -->
+              <div class="form-success" id="formSuccess" role="status" aria-live="polite">
+                <div class="success-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="30"
+                    height="30"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M20 6 9 17l-5-5" />
+                  </svg>
+                </div>
+                <h3>Details captured — demo mode.</h3>
+                <p>Your details passed validation and are held in this browser only. No message has been sent yet, because this form is not connected to a backend or email service. Until it is, please reach us directly on <a class="link" href="tel:+920000000000">+92 000 0000000</a> or <a class="link" href="mailto:info@sirajbuilders.com">info@sirajbuilders.com</a>.</p>
+                <button class="btn btn-ghost" type="button" id="resetForm">
+                  Submit another project
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- ============ SIDEBAR ============ -->
+          <aside class="side-stack reveal" style="--d: 0.15s">
+            <!-- What to provide -->
+            <div class="side-card">
+              <span class="eyebrow">What to provide</span>
+              <h3>If available, share:</h3>
+              <ul class="side-list">
+                <li>Property location</li>
+                <li>Plot / property size</li>
+                <li>Any drawings or documents</li>
+                <li>Project type</li>
+                <li>Desired scope</li>
+                <li>Expected start date</li>
+                <li>Approximate budget</li>
+              </ul>
+              <p class="muted" style="font-size: 0.82rem; margin-top: 1.1rem">
+                Don't worry if you don't have everything — a clear conversation
+                can begin without it.
+              </p>
+            </div>
+
+            <!-- Quick contact -->
+            <div class="side-card dark">
+              <span class="eyebrow">Prefer to talk?</span>
+              <h3>Reach us directly.</h3>
+
+              <div class="contact-quick">
+                <a href="tel:+920000000000">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"
+                    />
+                  </svg>
+                  <span>
+                    Call us
+                    <small>Phone — to confirm</small>
+                  </span>
+                </a>
+
+                <a href="contact-us.html">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z"
+                    />
+                  </svg>
+                  <span>
+                    Chat on WhatsApp
+                    <small>WhatsApp — to confirm</small>
+                  </span>
+                </a>
+
+                <a href="mailto:hello@example.com">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                    <path d="m3 7 9 6 9-6" />
+                  </svg>
+                  <span>
+                    Email us
+                    <small>Email — to confirm</small>
+                  </span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Why contact -->
+            <div class="side-card">
+              <span class="eyebrow">Why start here</span>
+              <h3>What a consultation gives you.</h3>
+              <ul class="side-list">
+                <li>Discuss your project requirements</li>
+                <li>Explain your property</li>
+                <li>Understand available services</li>
+                <li>Identify key project considerations</li>
+                <li>Determine the appropriate next step</li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ================= WHAT HAPPENS NEXT ================= -->
+      <section class="section light">
+        <div class="container">
+          <div style="max-width: 640px; margin-bottom: clamp(2rem, 4vw, 3rem)">
+            <span class="eyebrow reveal">What happens next</span>
+            <h2 class="h2 reveal" style="--d: 0.1s">
+              A simple path from first message to first conversation.
+            </h2>
+            <p class="muted reveal" style="--d: 0.18s">
+              No sales pressure. No assumptions. Just a structured way to
+              understand your project and decide whether Siraj Builders is the
+              right fit.
+            </p>
+          </div>
+
+          <div class="steps-band" data-stagger>
+            <article class="step-card reveal">
+              <div class="num">01</div>
+              <h3>You share the basics</h3>
+              <p class="muted">
+                Fill in the form with your project type, property details and
+                what you're planning.
+              </p>
+            </article>
+
+            <article class="step-card reveal">
+              <div class="num">02</div>
+              <h3>We review the details</h3>
+              <p class="muted">
+                Our team reads through your information and considers what the
+                project requires.
+              </p>
+            </article>
+
+            <article class="step-card reveal">
+              <div class="num">03</div>
+              <h3>We reach out</h3>
+              <p class="muted">
+                We contact you to clarify anything unclear and arrange an
+                initial conversation.
+              </p>
+            </article>
+
+            <article class="step-card reveal">
+              <div class="num">04</div>
+              <h3>We agree on next steps</h3>
+              <p class="muted">
+                Together we decide what the appropriate next step looks like —
+                or that it isn't the right fit.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CTA BANNER ================= -->
+      <section class="banner">
+        <div class="container banner-inner">
+          <div class="reveal">
+            <span class="eyebrow">Still planning?</span>
+            <h2 class="h2">Have a project in mind?</h2>
+            <p>
+              Share the basics with our team and start with a clear conversation
+              about your requirements, property and next steps.
+            </p>
+          </div>
+          <div class="banner-cta reveal" style="--d: 0.15s">
+            <a class="btn btn-light" href="market-sectors.html">
+              View Our Projects <span class="arrow">→</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===== SHARED FOOTER — layout/footer.html ===== -->
+    <div data-include="footer"></div>
+
+    <script src="assets/app.js"></script>
+    <script src="assets/js/project-form.js"></script>
+    <script src="assets/include.js"></script>
+  </body>
+</html>
