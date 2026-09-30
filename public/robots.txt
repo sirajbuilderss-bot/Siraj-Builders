@@ -1,0 +1,9 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Case-study URLs are query-driven and have no standalone content
+# until verified projects are published.
+Disallow: /project-detail?
+
+Sitemap: https://www.sirajbuilders.com/sitemap.xml

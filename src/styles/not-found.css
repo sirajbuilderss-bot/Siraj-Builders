@@ -1,0 +1,76 @@
+/* ============================================================
+   404 — NOT FOUND
+   Uses the existing global tokens so it inherits the design system
+   rather than introducing a second visual language.
+   ============================================================ */
+
+.notfound {
+  padding: clamp(6rem, 14vw, 10rem) 0 clamp(4rem, 10vw, 7rem);
+  background: var(--surface, #f6f7f8);
+}
+
+.notfound-inner {
+  max-width: 62rem;
+}
+
+.notfound-title {
+  font-size: clamp(2rem, 5.2vw, 3.4rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0.75rem 0 1rem;
+}
+
+.notfound-lead {
+  font-size: clamp(1rem, 1.6vw, 1.125rem);
+  line-height: 1.7;
+  color: var(--muted, #5c6670);
+  max-width: 48ch;
+  margin-bottom: 2.25rem;
+}
+
+.notfound-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.875rem;
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+
+.notfound-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding-top: clamp(1.75rem, 4vw, 2.5rem);
+  border-top: 1px solid var(--line, rgba(15, 20, 24, 0.12));
+}
+
+.notfound-group h2 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted, #5c6670);
+  margin: 0 0 0.875rem;
+}
+
+.notfound-group a {
+  display: block;
+  padding: 0.4rem 0;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.notfound-group a:hover,
+.notfound-group a:focus-visible {
+  color: var(--accent, #c8892f);
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notfound-group a {
+    transition: none;
+  }
+  .notfound-group a:hover,
+  .notfound-group a:focus-visible {
+    transform: none;
+  }
+}

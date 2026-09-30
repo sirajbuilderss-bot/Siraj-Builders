@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Static sitemap covering every indexable route.
+  Update the domain in src/config/site.js (SITE_URL) and here once the
+  live domain is confirmed. Project case-study URLs are added as verified
+  projects are published.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.sirajbuilders.com/</loc><priority>1.0</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.sirajbuilders.com/who-we-are</loc><priority>0.8</priority></url>
+  <url><loc>https://www.sirajbuilders.com/residential-construction</loc><priority>0.9</priority></url>
+  <url><loc>https://www.sirajbuilders.com/commercial-construction</loc><priority>0.9</priority></url>
+  <url><loc>https://www.sirajbuilders.com/renovation-remodelling</loc><priority>0.9</priority></url>
+  <url><loc>https://www.sirajbuilders.com/design-architecture</loc><priority>0.7</priority></url>
+  <url><loc>https://www.sirajbuilders.com/grey-structure</loc><priority>0.7</priority></url>
+  <url><loc>https://www.sirajbuilders.com/turnkey-construction</loc><priority>0.7</priority></url>
+  <url><loc>https://www.sirajbuilders.com/project-management</loc><priority>0.8</priority></url>
+  <url><loc>https://www.sirajbuilders.com/projects</loc><priority>0.8</priority></url>
+  <url><loc>https://www.sirajbuilders.com/project-showcase</loc><priority>0.6</priority></url>
+  <url><loc>https://www.sirajbuilders.com/our-process</loc><priority>0.8</priority></url>
+  <url><loc>https://www.sirajbuilders.com/locations</loc><priority>0.6</priority></url>
+  <url><loc>https://www.sirajbuilders.com/cost-index</loc><priority>0.6</priority></url>
+  <url><loc>https://www.sirajbuilders.com/leadership</loc><priority>0.5</priority></url>
+  <url><loc>https://www.sirajbuilders.com/role-definition</loc><priority>0.4</priority></url>
+  <url><loc>https://www.sirajbuilders.com/subcontractors</loc><priority>0.4</priority></url>
+  <url><loc>https://www.sirajbuilders.com/international</loc><priority>0.5</priority></url>
+  <url><loc>https://www.sirajbuilders.com/affiliates</loc><priority>0.4</priority></url>
+  <url><loc>https://www.sirajbuilders.com/faq</loc><priority>0.7</priority></url>
+  <url><loc>https://www.sirajbuilders.com/contact-us</loc><priority>0.9</priority></url>
+  <url><loc>https://www.sirajbuilders.com/consultation</loc><priority>0.9</priority></url>
+  <url><loc>https://www.sirajbuilders.com/privacy-policy</loc><priority>0.3</priority></url>
+  <url><loc>https://www.sirajbuilders.com/terms</loc><priority>0.3</priority></url>
+</urlset>

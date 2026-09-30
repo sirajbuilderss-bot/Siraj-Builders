@@ -1,0 +1,2602 @@
+/* ============================================================================
+   ADMIN PANEL STYLES
+   ----------------------------------------------------------------------------
+   Every rule below is scoped under `.admin-root`. Nothing here can reach the
+   public site, and nothing in the public stylesheets is relied on here — the
+   two are fully isolated, which is the point. The public CSS cascade is
+   untouched.
+
+   Custom properties are prefixed `--ad-` so they cannot collide with the
+   tokens in styles/theme.css even if both are loaded on the same page.
+   ========================================================================== */
+
+.admin-root {
+  /* ---------- BRAND ----------
+     These map onto the website's own tokens from theme.css rather than
+     defining a second palette. The panel previously ran on an unrelated gold
+     (#b8863b) against a near-black sidebar, which made it look like a
+     different product bolted onto the site. Everything below now derives
+     from --accent, so changing the brand in theme.css moves the admin panel
+     with it — which is the behaviour theme.css already promises. */
+  --ad-accent:        var(--accent-deep);
+  --ad-accent-hover:  var(--accent-darker);
+  --ad-accent-soft:   var(--accent-soft);
+  --ad-accent-line:   var(--accent);
+  --ad-on-accent:     #ffffff;
+
+  --ad-sidebar:       var(--deeper);
+  --ad-sidebar-2:     var(--deep-2);
+  --ad-sidebar-hover: rgba(157, 193, 200, 0.12);
+
+  --ad-bg:            #f3f6f6;
+  --ad-surface:       var(--white);
+  --ad-surface-2:     var(--off-white);
+
+  --ad-ink:           var(--ink);
+  --ad-ink-2:         var(--ink-2);
+  --ad-muted:         var(--muted);
+  --ad-line:          var(--line);
+  --ad-line-strong:   var(--line-strong);
+
+  --ad-danger:        #a4302a;
+  --ad-danger-soft:   #fbeceb;
+  --ad-ok:            #2f6b46;
+  --ad-ok-soft:       #e9f3ed;
+  --ad-warn:          #8a6412;
+  --ad-warn-soft:     #fbf3e0;
+
+  /* ---------- SCALE ----------
+     One radius ramp and one shadow ramp, so a modal does not have the same
+     corner as a pill and a card does not have the same elevation as a
+     dropdown. Hierarchy was the thing most obviously missing. */
+  --ad-radius-sm:     7px;
+  --ad-radius:        11px;
+  --ad-radius-lg:     16px;
+  --ad-radius-pill:   999px;
+
+  --ad-shadow-xs:     0 1px 2px rgba(16, 26, 31, 0.05);
+  --ad-shadow:        0 1px 2px rgba(16, 26, 31, 0.04), 0 8px 24px rgba(16, 26, 31, 0.06);
+  --ad-shadow-md:     0 2px 6px rgba(16, 26, 31, 0.06), 0 16px 40px rgba(16, 26, 31, 0.10);
+  --ad-shadow-lg:     0 8px 20px rgba(16, 26, 31, 0.10), 0 32px 70px rgba(16, 26, 31, 0.18);
+
+  --ad-gap-xs:        6px;
+  --ad-gap-sm:        10px;
+  --ad-gap:           16px;
+  --ad-gap-md:        22px;
+  --ad-gap-lg:        30px;
+
+  --ad-ease:          cubic-bezier(0.22, 1, 0.36, 1);
+
+  min-height: 100vh;
+  background: var(--ad-bg);
+  color: var(--ad-ink);
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.admin-root *,
+.admin-root *::before,
+.admin-root *::after {
+  box-sizing: border-box;
+}
+
+.admin-root h1,
+.admin-root h2,
+.admin-root h3,
+.admin-root p {
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------- shell -- */
+
+.ad-shell {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  min-height: 100vh;
+}
+
+.ad-sidebar {
+  background: var(--ad-sidebar);
+  color: #f3f3f1;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.ad-brand {
+  padding: 22px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.ad-brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--ad-accent);
+  color: #16171a;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+.ad-brand-text b {
+  display: block;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+
+.ad-brand-text span {
+  display: block;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.ad-nav {
+  padding: 14px 12px;
+  flex: 1;
+}
+
+.ad-nav-group {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.35);
+  padding: 16px 10px 7px;
+}
+
+.ad-nav .ad-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 7px;
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.ad-nav .ad-nav-link:hover {
+  background: var(--ad-sidebar-hover);
+  color: #fff;
+}
+
+.ad-nav .ad-nav-link.is-active {
+  background: var(--ad-accent);
+  color: #16171a;
+  font-weight: 600;
+}
+
+.ad-nav .ad-nav-link .ad-count {
+  margin-left: auto;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 1px 7px;
+  border-radius: 999px;
+}
+
+.ad-nav .ad-nav-link.is-active .ad-count {
+  background: rgba(0, 0, 0, 0.14);
+}
+
+.ad-sidebar-foot {
+  padding: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 12.5px;
+}
+
+.ad-sidebar-foot .ad-user {
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 9px;
+  word-break: break-all;
+}
+
+.ad-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ad-topbar {
+  background: var(--ad-surface);
+  border-bottom: 1px solid var(--ad-line);
+  padding: 17px 26px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.ad-topbar h1 {
+  font-size: 19px;
+  letter-spacing: -0.015em;
+}
+
+.ad-topbar .ad-sub {
+  font-size: 13px;
+  color: var(--ad-muted);
+}
+
+.ad-topbar-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.ad-content {
+  padding: 26px;
+  flex: 1;
+}
+
+/* --------------------------------------------------------------- burger -- */
+
+.ad-burger {
+  display: none;
+  background: none;
+  border: 1px solid var(--ad-line);
+  border-radius: 7px;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0;
+}
+
+.ad-burger span {
+  display: block;
+  width: 16px;
+  height: 1.5px;
+  background: var(--ad-ink);
+}
+
+/* -------------------------------------------------------------- buttons -- */
+
+.ad-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  padding: 8px 15px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+.ad-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ad-btn-primary {
+  background: var(--ad-ink);
+  color: #fff;
+}
+.ad-btn-primary:hover:not(:disabled) {
+  background: #2c2e33;
+}
+
+.ad-btn-accent {
+  background: var(--ad-accent);
+  color: #16171a;
+}
+.ad-btn-accent:hover:not(:disabled) {
+  background: #a5762f;
+}
+
+.ad-btn-ghost {
+  background: var(--ad-surface);
+  border-color: var(--ad-line);
+  color: var(--ad-ink);
+}
+.ad-btn-ghost:hover:not(:disabled) {
+  border-color: #b9b9b4;
+}
+
+.ad-btn-danger {
+  background: var(--ad-danger-soft);
+  color: var(--ad-danger);
+  border-color: #f0d4d2;
+}
+.ad-btn-danger:hover:not(:disabled) {
+  background: #f7dedc;
+}
+
+.ad-btn-sm {
+  padding: 5px 10px;
+  font-size: 12.5px;
+}
+
+.ad-btn-link {
+  background: none;
+  border: none;
+  color: var(--ad-accent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+/* ---------------------------------------------------------------- cards -- */
+
+.ad-card {
+  background: var(--ad-surface);
+  border: 1px solid var(--ad-line);
+  border-radius: var(--ad-radius);
+  overflow: hidden;
+}
+
+.ad-card-head {
+  padding: 16px 19px;
+  border-bottom: 1px solid var(--ad-line);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ad-card-head h2 {
+  font-size: 15px;
+  letter-spacing: -0.01em;
+}
+
+.ad-card-body {
+  padding: 19px;
+}
+
+/* ------------------------------------------------------------- dashboard -- */
+
+.ad-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(178px, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.ad-stat {
+  background: var(--ad-surface);
+  border: 1px solid var(--ad-line);
+  border-radius: var(--ad-radius);
+  padding: 17px 19px;
+}
+
+.ad-stat-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--ad-muted);
+  margin-bottom: 7px;
+}
+
+.ad-stat-value {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+
+.ad-stat-note {
+  font-size: 12px;
+  color: var(--ad-muted);
+  margin-top: 6px;
+}
+
+.ad-stat.is-flag .ad-stat-value {
+  color: var(--ad-accent);
+}
+
+.ad-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+/* ---------------------------------------------------------------- table -- */
+
+.ad-table-wrap {
+  overflow-x: auto;
+}
+
+.ad-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.ad-table th {
+  text-align: left;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--ad-muted);
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--ad-line);
+  background: #fafafa;
+  white-space: nowrap;
+}
+
+.ad-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--ad-line);
+  vertical-align: top;
+}
+
+.ad-table tr:last-child td {
+  border-bottom: none;
+}
+
+.ad-table tr.is-unread td:first-child {
+  box-shadow: inset 3px 0 0 var(--ad-accent);
+}
+
+.ad-table .ad-row-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.ad-cell-strong {
+  font-weight: 600;
+}
+
+.ad-cell-muted {
+  color: var(--ad-muted);
+  font-size: 12.5px;
+}
+
+.ad-cell-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 340px;
+}
+
+/* --------------------------------------------------------------- pills --- */
+
+.ad-pill {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--ad-line);
+  color: var(--ad-muted);
+  white-space: nowrap;
+}
+
+.ad-pill.is-new {
+  background: var(--ad-accent-soft);
+  border-color: #e7d6b6;
+  color: #8a6425;
+}
+.ad-pill.is-ok {
+  background: var(--ad-ok-soft);
+  border-color: #cfe4d8;
+  color: var(--ad-ok);
+}
+.ad-pill.is-off {
+  background: #f2f2f0;
+}
+.ad-pill.is-danger {
+  background: var(--ad-danger-soft);
+  border-color: #f0d4d2;
+  color: var(--ad-danger);
+}
+
+/* ---------------------------------------------------------------- forms -- */
+
+.ad-field {
+  display: block;
+  margin-bottom: 15px;
+}
+
+.ad-field > .ad-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-bottom: 5px;
+}
+
+.ad-field .ad-req {
+  color: var(--ad-danger);
+  margin-left: 2px;
+}
+
+.ad-field input[type="text"],
+.ad-field input[type="email"],
+.ad-field input[type="password"],
+.ad-field input[type="url"],
+.ad-field input[type="number"],
+.ad-field input[type="search"],
+.ad-field select,
+.ad-field textarea {
+  width: 100%;
+  border: 1px solid var(--ad-line);
+  border-radius: 7px;
+  padding: 9px 11px;
+  font: inherit;
+  font-size: 14px;
+  background: var(--ad-surface);
+  color: var(--ad-ink);
+}
+
+.ad-field textarea {
+  resize: vertical;
+  min-height: 84px;
+  line-height: 1.55;
+}
+
+.ad-field input:focus-visible,
+.ad-field select:focus-visible,
+.ad-field textarea:focus-visible {
+  outline: 2px solid var(--ad-accent);
+  outline-offset: 1px;
+  border-color: var(--ad-accent);
+}
+
+.ad-field.has-error input,
+.ad-field.has-error select,
+.ad-field.has-error textarea {
+  border-color: var(--ad-danger);
+  border-width: 2px;
+}
+
+.ad-field-error {
+  display: block;
+  font-size: 12px;
+  color: var(--ad-danger);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.ad-field-help {
+  display: block;
+  font-size: 12px;
+  color: var(--ad-muted);
+  margin-top: 4px;
+}
+
+.ad-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.ad-check input {
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 0;
+  accent-color: var(--ad-accent);
+  flex-shrink: 0;
+}
+
+.ad-check-text b {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.ad-check-text span {
+  display: block;
+  font-size: 12px;
+  color: var(--ad-muted);
+}
+
+.ad-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 15px;
+}
+
+.ad-field-wide {
+  grid-column: 1 / -1;
+}
+
+/* ------------------------------------------------------- media url field -- */
+
+.ad-media-note {
+  background: var(--ad-accent-soft);
+  border: 1px solid #ecdcc0;
+  border-radius: 7px;
+  padding: 9px 11px;
+  font-size: 12.5px;
+  color: #7d5c22;
+  margin-top: 6px;
+}
+
+.ad-media-preview {
+  margin-top: 9px;
+  border: 1px solid var(--ad-line);
+  border-radius: 7px;
+  overflow: hidden;
+  background: #fafafa;
+  max-width: 260px;
+}
+
+.ad-media-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 150px;
+  object-fit: cover;
+}
+
+.ad-media-preview .ad-media-fail {
+  padding: 13px;
+  font-size: 12px;
+  color: var(--ad-muted);
+}
+
+/* ---------------------------------------------------------------- modal -- */
+
+.ad-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 16, 18, 0.5);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 36px 18px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.ad-modal {
+  background: var(--ad-surface);
+  border-radius: 12px;
+  box-shadow: var(--ad-shadow);
+  width: 100%;
+  max-width: 660px;
+  margin: auto;
+}
+
+.ad-modal-sm {
+  max-width: 420px;
+}
+
+.ad-modal-head {
+  padding: 18px 21px;
+  border-bottom: 1px solid var(--ad-line);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ad-modal-head h2 {
+  font-size: 16.5px;
+  letter-spacing: -0.015em;
+}
+
+.ad-modal-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--ad-muted);
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+
+.ad-modal-close:hover {
+  background: #f2f2f0;
+  color: var(--ad-ink);
+}
+
+.ad-modal-body {
+  padding: 21px;
+}
+
+.ad-modal-foot {
+  padding: 15px 21px;
+  border-top: 1px solid var(--ad-line);
+  display: flex;
+  gap: 9px;
+  justify-content: flex-end;
+  background: #fafafa;
+  border-radius: 0 0 12px 12px;
+}
+
+/* --------------------------------------------------------------- toolbar -- */
+
+.ad-toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.ad-toolbar .ad-search {
+  flex: 1;
+  min-width: 190px;
+}
+
+.ad-toolbar input[type="search"],
+.ad-toolbar select {
+  width: 100%;
+  border: 1px solid var(--ad-line);
+  border-radius: 7px;
+  padding: 9px 11px;
+  font: inherit;
+  font-size: 14px;
+  background: var(--ad-surface);
+}
+
+.ad-toolbar select {
+  width: auto;
+  min-width: 140px;
+}
+
+/* ------------------------------------------------------------ pagination -- */
+
+.ad-pager {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 19px;
+  border-top: 1px solid var(--ad-line);
+  font-size: 13px;
+  color: var(--ad-muted);
+  flex-wrap: wrap;
+}
+
+.ad-pager-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 7px;
+}
+
+/* --------------------------------------------------------------- states -- */
+
+.ad-empty {
+  padding: 46px 22px;
+  text-align: center;
+  color: var(--ad-muted);
+}
+
+.ad-empty b {
+  display: block;
+  color: var(--ad-ink);
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.ad-loading {
+  padding: 42px;
+  text-align: center;
+  color: var(--ad-muted);
+  font-size: 14px;
+}
+
+.ad-alert {
+  border-radius: 8px;
+  padding: 12px 15px;
+  font-size: 13.5px;
+  margin-bottom: 16px;
+  border: 1px solid;
+}
+
+.ad-alert-error {
+  background: var(--ad-danger-soft);
+  border-color: #f0d4d2;
+  color: var(--ad-danger);
+}
+
+.ad-alert-info {
+  background: var(--ad-accent-soft);
+  border-color: #ecdcc0;
+  color: #7d5c22;
+}
+
+.ad-alert-ok {
+  background: var(--ad-ok-soft);
+  border-color: #cfe4d8;
+  color: var(--ad-ok);
+}
+
+.ad-alert b {
+  display: block;
+  margin-bottom: 3px;
+}
+
+/* ---------------------------------------------------------------- toast -- */
+
+.ad-toast {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  background: var(--ad-ink);
+  color: #fff;
+  padding: 12px 17px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  box-shadow: var(--ad-shadow);
+  z-index: 200;
+  max-width: 340px;
+}
+
+.ad-toast.is-error {
+  background: var(--ad-danger);
+}
+
+/* ---------------------------------------------------------------- login -- */
+
+.ad-login {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: var(--ad-bg);
+}
+
+.ad-login-card {
+  background: var(--ad-surface);
+  border: 1px solid var(--ad-line);
+  border-radius: 12px;
+  box-shadow: var(--ad-shadow);
+  width: 100%;
+  max-width: 400px;
+  padding: 32px;
+}
+
+.ad-login-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 22px;
+}
+
+.ad-login-card h1 {
+  font-size: 21px;
+  letter-spacing: -0.02em;
+  margin-bottom: 5px;
+}
+
+.ad-login-card .ad-login-sub {
+  font-size: 13.5px;
+  color: var(--ad-muted);
+  margin-bottom: 22px;
+}
+
+.ad-login-card .ad-btn {
+  width: 100%;
+  padding: 11px;
+  margin-top: 4px;
+}
+
+.ad-login-foot {
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px solid var(--ad-line);
+  font-size: 12.5px;
+  color: var(--ad-muted);
+  text-align: center;
+}
+
+.ad-login-foot a {
+  color: var(--ad-accent);
+}
+
+/* -------------------------------------------------------------- detail --- */
+
+.ad-detail-grid {
+  display: grid;
+  grid-template-columns: 145px 1fr;
+  gap: 0;
+}
+
+.ad-detail-grid dt {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ad-muted);
+  padding: 9px 0;
+  border-bottom: 1px solid var(--ad-line);
+}
+
+.ad-detail-grid dd {
+  margin: 0;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--ad-line);
+  font-size: 13.5px;
+  word-break: break-word;
+}
+
+.ad-detail-block {
+  margin-top: 17px;
+}
+
+.ad-detail-block .ad-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ad-muted);
+  margin-bottom: 5px;
+  display: block;
+}
+
+.ad-detail-block p {
+  font-size: 13.5px;
+  white-space: pre-wrap;
+  border-left: 2px solid var(--ad-line);
+  padding-left: 12px;
+}
+
+/* -------------------------------------------------------------- activity -- */
+
+.ad-activity {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ad-activity li {
+  display: flex;
+  gap: 11px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--ad-line);
+  font-size: 13px;
+}
+
+.ad-activity li:last-child {
+  border-bottom: none;
+}
+
+.ad-activity .ad-act-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ad-accent);
+  margin-top: 7px;
+  flex-shrink: 0;
+}
+
+.ad-activity .ad-act-time {
+  margin-left: auto;
+  color: var(--ad-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- misc --- */
+
+.ad-section-note {
+  font-size: 13px;
+  color: var(--ad-muted);
+  margin-bottom: 16px;
+  max-width: 62ch;
+}
+
+.ad-settings-group {
+  margin-bottom: 26px;
+}
+
+.ad-settings-group > h3 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  color: var(--ad-muted);
+  margin-bottom: 13px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--ad-line);
+}
+
+/* --------------------------------------------------------- responsive --- */
+
+@media (max-width: 1000px) {
+  .ad-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 860px) {
+  .ad-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .ad-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: 260px;
+    z-index: 90;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  .ad-sidebar.is-open {
+    transform: translateX(0);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .ad-scrim {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 16, 18, 0.45);
+    z-index: 80;
+    border: none;
+    padding: 0;
+  }
+
+  .ad-burger {
+    display: flex;
+  }
+
+  .ad-content,
+  .ad-topbar {
+    padding-left: 17px;
+    padding-right: 17px;
+  }
+
+  .ad-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ad-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .ad-detail-grid dt {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .ad-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ad-stat-value {
+    font-size: 25px;
+  }
+
+  .ad-topbar {
+    flex-wrap: wrap;
+  }
+
+  .ad-topbar-actions {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .ad-modal-backdrop {
+    padding: 0;
+  }
+
+  .ad-modal {
+    border-radius: 0;
+    min-height: 100vh;
+  }
+
+  .ad-modal-foot {
+    border-radius: 0;
+  }
+}
+
+/* Motion is opt-out here just as it is on the public site. */
+@media (prefers-reduced-motion: reduce) {
+  .admin-root * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ------------------------------------------------------- inline select --- */
+/* Used by the Admin users roster, where the role control sits inside a table
+   cell rather than inside an .ad-field wrapper. Admin-only: this stylesheet
+   is imported by AdminApp alone and never reaches a public page. */
+
+.ad-inline-select {
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--ad-ink);
+  background: var(--ad-surface);
+  border: 1px solid var(--ad-line);
+  border-radius: 7px;
+  padding: 6px 8px;
+  max-width: 190px;
+  width: 100%;
+}
+
+.ad-inline-select:focus-visible {
+  outline: 2px solid var(--ad-accent);
+  outline-offset: 1px;
+}
+
+.ad-inline-select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   PAGE BUILDER
+   --------------------------------------------------------------------------
+   The visual site map: pages down the left, sections down the middle.
+   Uses the same tokens as the public website (theme.css) so the panel reads
+   as part of the same product rather than a bolted-on dashboard.
+   ========================================================================== */
+
+.ad-builder {
+  display: grid;
+  grid-template-columns: minmax(200px, 250px) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+/* ---------- PAGE RAIL ---------- */
+
+.ad-builder-rail {
+  position: sticky;
+  top: 1rem;
+  display: grid;
+  gap: 1.1rem;
+  padding: 0.9rem;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.ad-rail-group { display: grid; gap: 0.15rem; }
+
+.ad-rail-title {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  padding: 0 0.55rem 0.35rem;
+}
+
+.ad-rail-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.18s var(--ease-out), color 0.18s var(--ease-out),
+    border-color 0.18s var(--ease-out);
+}
+
+.ad-rail-item:hover { background: var(--accent-soft); }
+
+.ad-rail-item:focus-visible {
+  outline: 2px solid var(--accent-deep);
+  outline-offset: 2px;
+}
+
+.ad-rail-item.is-active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-darker);
+}
+
+.ad-rail-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ad-rail-count {
+  flex: none;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.ad-rail-item.is-active .ad-rail-count { color: var(--accent-deep); }
+
+/* ---------- SECTION PANE ---------- */
+
+.ad-builder-main {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  padding: 1.1rem 1.15rem 1.3rem;
+  min-width: 0;
+}
+
+.ad-builder-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.9rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.ad-builder-head h2 {
+  margin: 0;
+  font-size: 1.22rem;
+  letter-spacing: -0.02em;
+}
+
+.ad-builder-path {
+  margin: 0.2rem 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.ad-builder-head-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* ---------- SECTION ROWS ---------- */
+
+.ad-sec-list {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ad-sec {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.9rem;
+  align-items: center;
+  padding: 0.85rem 0.95rem;
+  background: var(--off-white);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  transition: border-color 0.18s var(--ease-out), background 0.18s var(--ease-out),
+    box-shadow 0.18s var(--ease-out);
+}
+
+.ad-sec:hover {
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+}
+
+/* A hidden section stays legible — greying it out to the point of being hard
+   to read would make it harder to find the one you came to switch back on. */
+.ad-sec.is-off {
+  border-left-color: var(--line-strong);
+  background: transparent;
+}
+
+.ad-sec.is-off .ad-sec-name,
+.ad-sec.is-off .ad-sec-title { opacity: 0.6; }
+
+.ad-sec.is-busy { opacity: 0.55; pointer-events: none; }
+
+.ad-sec-order {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--accent-darker);
+  font-size: 0.8rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.ad-sec-body { min-width: 0; }
+
+.ad-sec-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.ad-sec-name {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+
+.ad-sec-title {
+  margin: 0.25rem 0 0;
+  font-size: 0.83rem;
+  color: var(--ink-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ad-sec-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.9rem;
+  margin-top: 0.35rem;
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.ad-sec-meta b { color: var(--ink-2); font-weight: 700; }
+.ad-sec-meta code {
+  font-size: 0.72rem;
+  padding: 0.05rem 0.3rem;
+  border-radius: 4px;
+  background: var(--light-2);
+}
+
+.ad-sec-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.ad-sec-move { display: flex; gap: 0.2rem; }
+
+.ad-icon-btn {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--white);
+  color: var(--ink-2);
+  font-size: 0.9rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.16s var(--ease-out), border-color 0.16s var(--ease-out),
+    color 0.16s var(--ease-out);
+}
+
+.ad-icon-btn:hover:not(:disabled) {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-darker);
+}
+
+.ad-icon-btn:focus-visible {
+  outline: 2px solid var(--accent-deep);
+  outline-offset: 2px;
+}
+
+.ad-icon-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.ad-btn-danger-ghost:hover:not(:disabled) {
+  border-color: #c0483d;
+  color: #c0483d;
+}
+
+/* ---------- PAGE / SECTION / POSITION MAP ---------- */
+
+.ad-map {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+  padding: 0.85rem 0.95rem;
+  margin-bottom: 1.1rem;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+}
+
+.ad-map-item { display: grid; gap: 0.1rem; min-width: 0; }
+
+.ad-map-key {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--accent-darker);
+}
+
+.ad-map-val {
+  font-size: 0.92rem;
+  font-weight: 750;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ad-map-sub { font-size: 0.74rem; color: var(--muted); }
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 900px) {
+  .ad-builder { grid-template-columns: 1fr; }
+
+  /* The rail becomes a horizontal strip rather than a tall list that pushes
+     the sections off-screen on a phone. */
+  .ad-builder-rail {
+    position: static;
+    max-height: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(150px, max-content);
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 1.25rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ad-rail-group { grid-auto-flow: column; grid-auto-columns: max-content; }
+  .ad-rail-title { grid-row: 1; }
+}
+
+@media (max-width: 640px) {
+  .ad-sec {
+    grid-template-columns: auto minmax(0, 1fr);
+    row-gap: 0.7rem;
+  }
+
+  .ad-sec-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+
+  .ad-builder-head { align-items: flex-start; }
+  .ad-builder-head-actions { width: 100%; }
+  .ad-builder-head-actions .ad-btn { flex: 1; justify-content: center; }
+}
+
+
+/* ============================================================================
+   ADMIN REFINEMENT LAYER
+   ----------------------------------------------------------------------------
+   Appended deliberately, so these rules win on source order rather than by
+   piling on specificity. Every value below comes from the tokens at the top
+   of this file, which now derive from theme.css — so the panel and the
+   website move together.
+
+   The aim is a SaaS dashboard that reads as the same product as the site:
+   one radius ramp, one elevation ramp, one accent, and hierarchy carried by
+   weight and space rather than by borders everywhere.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- SHELL -- */
+
+.ad-shell { grid-template-columns: 264px 1fr; }
+
+/* ------------------------------------------------------------- SIDEBAR -- */
+
+.ad-sidebar {
+  background:
+    linear-gradient(180deg, var(--ad-sidebar-2) 0%, var(--ad-sidebar) 55%);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 0;
+}
+
+.ad-sidebar::-webkit-scrollbar { width: 6px; }
+.ad-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+}
+
+.ad-brand {
+  padding: 20px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  gap: 12px;
+}
+
+.ad-brand-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--grad-accent);
+  color: #0d1216;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: -0.02em;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 18px -8px rgba(157, 193, 200, 0.9);
+}
+
+.ad-brand-text b { font-size: 14.5px; letter-spacing: -0.01em; }
+.ad-brand-text span {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.05em;
+}
+
+.ad-nav { padding: 10px 12px 18px; }
+
+.ad-nav-group {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.32);
+  padding: 18px 10px 6px;
+}
+
+/* The active item is marked with an accent bar on the leading edge rather
+   than a solid accent fill. A filled row shouts; a bar reads as "you are
+   here" and keeps the sidebar calm when several groups are on screen. */
+.ad-nav .ad-nav-link {
+  position: relative;
+  padding: 9px 11px 9px 13px;
+  border-radius: var(--ad-radius-sm);
+  font-size: 13.8px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.68);
+  transition: background 0.16s var(--ad-ease), color 0.16s var(--ad-ease);
+}
+
+.ad-nav .ad-nav-link::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 0;
+  border-radius: 0 3px 3px 0;
+  background: var(--ad-accent-line);
+  transform: translateY(-50%);
+  transition: height 0.2s var(--ad-ease);
+}
+
+.ad-nav .ad-nav-link:hover {
+  background: var(--ad-sidebar-hover);
+  color: #fff;
+}
+
+.ad-nav .ad-nav-link.is-active {
+  background: var(--ad-sidebar-hover);
+  color: #fff;
+  font-weight: 650;
+}
+
+.ad-nav .ad-nav-link.is-active::before { height: 60%; }
+
+.ad-nav .ad-nav-link:focus-visible {
+  outline: 2px solid var(--ad-accent-line);
+  outline-offset: -2px;
+}
+
+.ad-sidebar-foot {
+  padding: 14px 16px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(0, 0, 0, 0.18);
+  position: sticky;
+  bottom: 0;
+}
+
+.ad-sidebar-foot .ad-user {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.ad-sidebar-foot .ad-btn-ghost {
+  border-color: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.82);
+  background: transparent;
+}
+.ad-sidebar-foot .ad-btn-ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+/* -------------------------------------------------------------- TOPBAR -- */
+
+.ad-topbar {
+  padding: 15px 28px;
+  gap: 18px;
+  border-bottom: 1px solid var(--ad-line);
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+}
+
+.ad-topbar h1 {
+  font-size: 20px;
+  font-weight: 750;
+  letter-spacing: -0.022em;
+}
+
+.ad-topbar .ad-sub {
+  font-size: 12.8px;
+  color: var(--ad-muted);
+  margin-top: 1px;
+}
+
+.ad-content {
+  padding: 26px 28px 56px;
+  display: grid;
+  gap: var(--ad-gap);
+  align-content: start;
+}
+
+/* ------------------------------------------------------------- BUTTONS -- */
+
+.ad-btn {
+  border-radius: var(--ad-radius-sm);
+  font-weight: 650;
+  letter-spacing: 0.005em;
+  transition:
+    background 0.16s var(--ad-ease),
+    border-color 0.16s var(--ad-ease),
+    color 0.16s var(--ad-ease),
+    box-shadow 0.16s var(--ad-ease),
+    transform 0.16s var(--ad-ease);
+}
+
+.ad-btn:focus-visible {
+  outline: 2px solid var(--ad-accent);
+  outline-offset: 2px;
+}
+
+.ad-btn:active:not(:disabled) { transform: translateY(1px); }
+
+.ad-btn-primary {
+  background: var(--ad-accent);
+  color: var(--ad-on-accent);
+  border-color: transparent;
+  box-shadow: 0 6px 16px -10px rgba(78, 124, 134, 0.9);
+}
+.ad-btn-primary:hover:not(:disabled) {
+  background: var(--ad-accent-hover);
+  box-shadow: 0 10px 22px -12px rgba(53, 90, 99, 0.95);
+}
+
+.ad-btn-ghost {
+  background: var(--ad-surface);
+  border-color: var(--ad-line-strong);
+  color: var(--ad-ink-2);
+}
+.ad-btn-ghost:hover:not(:disabled) {
+  background: var(--ad-accent-soft);
+  border-color: var(--ad-accent-line);
+  color: var(--ad-accent-hover);
+}
+
+.ad-btn-danger {
+  background: var(--ad-danger);
+  color: #fff;
+  border-color: transparent;
+}
+.ad-btn-danger:hover:not(:disabled) { background: #8c2822; }
+
+/* --------------------------------------------------------------- CARDS -- */
+
+.ad-card {
+  border-radius: var(--ad-radius);
+  border: 1px solid var(--ad-line);
+  box-shadow: var(--ad-shadow-xs);
+  overflow: hidden;
+}
+
+.ad-card-head {
+  padding: 15px 18px;
+  background: var(--ad-surface-2);
+  border-bottom: 1px solid var(--ad-line);
+  gap: 12px;
+}
+
+.ad-card-head h2 {
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+}
+
+.ad-card-body { padding: 18px; }
+
+/* --------------------------------------------------------------- STATS -- */
+
+.ad-stats {
+  gap: var(--ad-gap);
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+.ad-stat {
+  position: relative;
+  padding: 18px;
+  border-radius: var(--ad-radius);
+  border: 1px solid var(--ad-line);
+  background: var(--ad-surface);
+  box-shadow: var(--ad-shadow-xs);
+  overflow: hidden;
+  transition: box-shadow 0.2s var(--ad-ease), border-color 0.2s var(--ad-ease);
+}
+
+.ad-stat::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--ad-accent-line);
+  opacity: 0.55;
+}
+
+.ad-stat:hover {
+  box-shadow: var(--ad-shadow);
+  border-color: var(--ad-accent-line);
+}
+
+.ad-stat-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  color: var(--ad-muted);
+}
+
+.ad-stat-value {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--ad-ink);
+}
+
+.ad-stat-note { font-size: 12.2px; color: var(--ad-muted); }
+
+.ad-stat.is-flag::before { background: var(--ad-danger); opacity: 1; }
+.ad-stat.is-flag .ad-stat-value { color: var(--ad-danger); }
+
+/* -------------------------------------------------------------- TABLES -- */
+
+.ad-table-wrap {
+  border: 1px solid var(--ad-line);
+  border-radius: var(--ad-radius);
+  background: var(--ad-surface);
+  box-shadow: var(--ad-shadow-xs);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ad-table { font-size: 14px; }
+
+.ad-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 11px 16px;
+  background: var(--ad-surface-2);
+  border-bottom: 1px solid var(--ad-line);
+  font-size: 11.5px;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  color: var(--ad-muted);
+  white-space: nowrap;
+}
+
+.ad-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--ad-line);
+  vertical-align: middle;
+}
+
+.ad-table tbody tr {
+  transition: background 0.14s var(--ad-ease);
+}
+.ad-table tbody tr:hover { background: var(--ad-accent-soft); }
+
+.ad-table tr.is-unread td:first-child {
+  box-shadow: inset 3px 0 0 var(--ad-accent-line);
+}
+
+.ad-cell-strong { font-weight: 650; letter-spacing: -0.008em; }
+.ad-cell-muted { font-size: 12.3px; color: var(--ad-muted); }
+
+.ad-row-actions { gap: var(--ad-gap-xs); justify-content: flex-end; }
+
+/* --------------------------------------------------------------- PILLS -- */
+
+.ad-pill {
+  border-radius: var(--ad-radius-pill);
+  padding: 2.5px 10px;
+  font-size: 11.2px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+}
+
+.ad-pill.is-new    { background: var(--ad-accent-soft); color: var(--ad-accent-hover); border-color: var(--ad-accent-line); }
+.ad-pill.is-ok     { background: var(--ad-ok-soft); color: var(--ad-ok); }
+.ad-pill.is-off    { background: var(--ad-surface-2); color: var(--ad-muted); border-color: var(--ad-line); }
+.ad-pill.is-danger { background: var(--ad-danger-soft); color: var(--ad-danger); }
+
+/* --------------------------------------------------------------- FORMS -- */
+
+.ad-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--ad-ink-2);
+  margin-bottom: 5px;
+}
+
+.ad-field input[type="text"],
+.ad-field input[type="email"],
+.ad-field input[type="password"],
+.ad-field input[type="url"],
+.ad-field input[type="number"],
+.ad-field input[type="date"],
+.ad-field input[type="search"],
+.ad-field select,
+.ad-field textarea {
+  border-radius: var(--ad-radius-sm);
+  border: 1px solid var(--ad-line-strong);
+  background: var(--ad-surface);
+  padding: 9px 12px;
+  font-size: 14px;
+  color: var(--ad-ink);
+  transition: border-color 0.15s var(--ad-ease), box-shadow 0.15s var(--ad-ease);
+}
+
+.ad-field input:focus,
+.ad-field select:focus,
+.ad-field textarea:focus {
+  outline: none;
+  border-color: var(--ad-accent-line);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.ad-field input::placeholder,
+.ad-field textarea::placeholder { color: var(--ad-muted); opacity: 0.75; }
+
+.ad-field textarea { line-height: 1.6; resize: vertical; min-height: 84px; }
+
+.ad-field.has-error input,
+.ad-field.has-error select,
+.ad-field.has-error textarea {
+  border-color: var(--ad-danger);
+  box-shadow: 0 0 0 3px rgba(164, 48, 42, 0.12);
+}
+
+.ad-field-help { font-size: 12.2px; color: var(--ad-muted); margin-top: 5px; }
+.ad-field-error {
+  font-size: 12.2px;
+  font-weight: 600;
+  color: var(--ad-danger);
+  margin-top: 5px;
+}
+
+.ad-check {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 11px 13px;
+  border: 1px solid var(--ad-line);
+  border-radius: var(--ad-radius-sm);
+  background: var(--ad-surface-2);
+  cursor: pointer;
+  transition: border-color 0.15s var(--ad-ease), background 0.15s var(--ad-ease);
+}
+.ad-check:hover { border-color: var(--ad-accent-line); background: var(--ad-accent-soft); }
+.ad-check input { accent-color: var(--ad-accent); width: 17px; height: 17px; margin-top: 1px; }
+.ad-check-text b { display: block; font-size: 13.6px; font-weight: 650; }
+.ad-check-text span { font-size: 12.2px; color: var(--ad-muted); }
+
+.ad-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: var(--ad-gap);
+}
+.ad-field-wide { grid-column: 1 / -1; }
+
+/* -------------------------------------------------------------- MODALS -- */
+
+.ad-modal-backdrop {
+  background: rgba(15, 20, 24, 0.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  padding: 20px;
+}
+
+.ad-modal {
+  border-radius: var(--ad-radius-lg);
+  box-shadow: var(--ad-shadow-lg);
+  border: 1px solid var(--ad-line);
+  overflow: hidden;
+  animation: ad-modal-in 0.22s var(--ad-ease) both;
+}
+
+@keyframes ad-modal-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.99); }
+  to   { opacity: 1; transform: none; }
+}
+
+.ad-modal-head {
+  padding: 16px 20px;
+  background: var(--ad-surface-2);
+  border-bottom: 1px solid var(--ad-line);
+}
+.ad-modal-head h2 { font-size: 16px; font-weight: 720; letter-spacing: -0.015em; }
+
+.ad-modal-body { padding: 20px; }
+
+.ad-modal-foot {
+  padding: 14px 20px;
+  background: var(--ad-surface-2);
+  border-top: 1px solid var(--ad-line);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ad-gap-sm);
+}
+
+/* ------------------------------------------------- ALERTS / EMPTY / LOAD -- */
+
+.ad-alert {
+  border-radius: var(--ad-radius);
+  padding: 13px 16px;
+  font-size: 13.4px;
+  border: 1px solid;
+  display: grid;
+  gap: 3px;
+}
+.ad-alert b { font-size: 13.6px; font-weight: 720; }
+
+.ad-alert-info  { background: var(--ad-accent-soft); border-color: var(--ad-accent-line); color: var(--ad-ink-2); }
+.ad-alert-ok    { background: var(--ad-ok-soft); border-color: rgba(47, 107, 70, 0.3); color: var(--ad-ok); }
+.ad-alert-error { background: var(--ad-danger-soft); border-color: rgba(164, 48, 42, 0.3); color: var(--ad-danger); }
+
+.ad-empty {
+  display: grid;
+  gap: 6px;
+  padding: 44px 24px;
+  text-align: center;
+  border: 1px dashed var(--ad-line-strong);
+  border-radius: var(--ad-radius);
+  background: var(--ad-surface-2);
+  color: var(--ad-muted);
+  font-size: 13.4px;
+}
+.ad-empty b { font-size: 15px; font-weight: 720; color: var(--ad-ink); }
+
+.ad-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 44px 24px;
+  color: var(--ad-muted);
+  font-size: 13.6px;
+}
+.ad-loading::before {
+  content: "";
+  width: 15px;
+  height: 15px;
+  border: 2px solid var(--ad-accent-line);
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: ad-spin 0.65s linear infinite;
+}
+@keyframes ad-spin { to { transform: rotate(360deg); } }
+
+.ad-toast {
+  border-radius: var(--ad-radius);
+  box-shadow: var(--ad-shadow-md);
+  font-size: 13.4px;
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------- MOBILE -- */
+
+@media (max-width: 1024px) {
+  .ad-shell { grid-template-columns: 1fr; }
+
+  .ad-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: 272px;
+    z-index: 60;
+    transform: translateX(-100%);
+    transition: transform 0.26s var(--ad-ease);
+    box-shadow: var(--ad-shadow-lg);
+  }
+  .ad-sidebar.is-open { transform: none; }
+
+  .ad-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    border: 0;
+    background: rgba(15, 20, 24, 0.5);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    animation: ad-fade 0.18s var(--ad-ease) both;
+  }
+  @keyframes ad-fade { from { opacity: 0; } to { opacity: 1; } }
+
+  .ad-burger { display: inline-grid; }
+}
+
+@media (max-width: 720px) {
+  .ad-topbar { padding: 12px 16px; gap: 12px; }
+  .ad-topbar h1 { font-size: 17px; }
+  .ad-topbar .ad-sub { display: none; }
+  .ad-content { padding: 16px 16px 48px; }
+
+  .ad-card-head,
+  .ad-card-body,
+  .ad-modal-body { padding: 14px; }
+
+  .ad-table th, .ad-table td { padding: 11px 12px; }
+
+  .ad-form-grid { grid-template-columns: 1fr; }
+
+  .ad-modal-backdrop { padding: 0; align-items: flex-end; }
+  .ad-modal {
+    max-height: 92vh;
+    width: 100%;
+    border-radius: var(--ad-radius-lg) var(--ad-radius-lg) 0 0;
+  }
+  .ad-modal-foot { flex-direction: column-reverse; }
+  .ad-modal-foot .ad-btn { width: 100%; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ad-modal, .ad-scrim { animation: none; }
+  .ad-btn:active:not(:disabled) { transform: none; }
+  .ad-loading::before { animation-duration: 1.6s; }
+}
+
+/* ============================================================================
+   SIDEBAR NAVIGATION TREE
+   ----------------------------------------------------------------------------
+   Appended so the cascade above is untouched. Everything here is scoped to
+   .ad-sidebar, so no rule can reach the page body.
+
+   The tree is two levels deep inside one nav item:
+
+       Pages ▾            .ad-nav-tree  →  .ad-nav-row + .ad-tree
+         Home ▸           .ad-tree-page →  .ad-tree-row
+           Hero Section   .ad-tree-section
+
+   The indentation is carried by a single left border per level rather than by
+   padding alone. A vertical rule is what makes a long list of sections read
+   as "belonging to the page above" once it has scrolled past that page's
+   name — padding on its own leaves the relationship to memory.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- top row -- */
+
+.ad-nav-block + .ad-nav-block { margin-top: 2px; }
+
+/* The icon must not shrink when a long label wraps, and it sits slightly
+   dimmer than the text so the label stays the thing being read. */
+.ad-nav-ico {
+  flex: none;
+  opacity: 0.7;
+  transition: opacity 0.16s var(--ad-ease);
+}
+.ad-nav .ad-nav-link:hover .ad-nav-ico,
+.ad-nav .ad-nav-link.is-active .ad-nav-ico { opacity: 1; }
+
+/* "Pages" is a link and a disclosure at the same time. Two separate controls
+   in one row, because merging them means an admin who wants to see the list
+   of pages is forced to navigate away from whatever they were doing. */
+.ad-nav-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.ad-nav-row .ad-nav-link { flex: 1; min-width: 0; }
+
+.ad-nav-caret {
+  flex: none;
+  width: 26px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: var(--ad-radius-sm);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: color 0.16s var(--ad-ease), background 0.16s var(--ad-ease),
+    transform 0.2s var(--ad-ease);
+}
+.ad-nav-caret:hover {
+  background: var(--ad-sidebar-hover);
+  color: #fff;
+}
+.ad-nav-caret:focus-visible {
+  outline: 2px solid var(--ad-accent-line);
+  outline-offset: -2px;
+}
+.ad-nav-tree.is-open > .ad-nav-row > .ad-nav-caret { transform: rotate(90deg); }
+
+/* ------------------------------------------------------------------ tree -- */
+
+.ad-tree {
+  margin: 4px 0 6px 18px;
+  padding-left: 9px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  animation: ad-tree-in 0.16s var(--ad-ease) both;
+}
+
+@keyframes ad-tree-in {
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.ad-tree-group + .ad-tree-group { margin-top: 8px; }
+
+.ad-tree-group-title {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: rgba(255, 255, 255, 0.26);
+  padding: 7px 8px 4px;
+}
+
+.ad-tree-pages,
+.ad-tree-sections {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* ------------------------------------------------------------- page row -- */
+
+.ad-tree-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border-radius: var(--ad-radius-sm);
+  transition: background 0.16s var(--ad-ease);
+}
+.ad-tree-row:hover { background: rgba(255, 255, 255, 0.05); }
+
+.ad-tree-name {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px 6px 8px;
+  border-radius: var(--ad-radius-sm);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.62);
+  text-decoration: none;
+  transition: color 0.16s var(--ad-ease);
+}
+.ad-tree-name:hover { color: #fff; }
+
+.ad-tree-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* live/total, e.g. "6/7". Reads as "six of these seven sections are actually
+   on the website", which is the question an admin asks before editing one. */
+.ad-tree-count {
+  margin-left: auto;
+  flex: none;
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.3);
+  padding-left: 6px;
+}
+
+.ad-tree-page.is-current > .ad-tree-row {
+  background: rgba(255, 255, 255, 0.07);
+}
+.ad-tree-page.is-current > .ad-tree-row .ad-tree-name {
+  color: #fff;
+  font-weight: 600;
+}
+.ad-tree-page.is-current > .ad-tree-row .ad-tree-count {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.ad-tree-toggle {
+  flex: none;
+  width: 22px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: color 0.16s var(--ad-ease), transform 0.2s var(--ad-ease);
+}
+.ad-tree-toggle:hover { color: #fff; }
+.ad-tree-toggle:focus-visible {
+  outline: 2px solid var(--ad-accent-line);
+  outline-offset: -2px;
+}
+.ad-tree-page.is-open > .ad-tree-row > .ad-tree-toggle { transform: rotate(90deg); }
+
+/* ---------------------------------------------------------- section leaf -- */
+
+.ad-tree-sections {
+  margin: 2px 0 6px 12px;
+  padding-left: 9px;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ad-tree-section {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-size: 12.4px;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  transition: background 0.16s var(--ad-ease), color 0.16s var(--ad-ease);
+}
+.ad-tree-section:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+.ad-tree-section:focus-visible {
+  outline: 2px solid var(--ad-accent-line);
+  outline-offset: -2px;
+}
+
+.ad-tree-ico {
+  flex: none;
+  opacity: 0.55;
+}
+.ad-tree-section:hover .ad-tree-ico,
+.ad-tree-section.is-active .ad-tree-ico { opacity: 1; }
+
+/* The open section is marked with an accent bar rather than a fill, the same
+   signal the top-level nav uses for "you are here". */
+.ad-tree-section.is-active {
+  background: var(--ad-sidebar-hover);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: inset 2px 0 0 var(--ad-accent-line);
+}
+
+/* A hidden section is still listed — it exists, and hiding it is reversible —
+   but it is dimmed and labelled so it is never mistaken for a live one. */
+.ad-tree-section.is-off { color: rgba(255, 255, 255, 0.32); }
+.ad-tree-section.is-off .ad-tree-label { text-decoration: line-through; }
+
+.ad-tree-flag {
+  margin-left: auto;
+  flex: none;
+  font-size: 9px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  padding: 1px 6px;
+}
+
+/* ---------------------------------------------------------------- search -- */
+
+.ad-tree-search {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 6px 4px 8px;
+  padding: 0 9px;
+  border-radius: var(--ad-radius-sm);
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: rgba(255, 255, 255, 0.4);
+  transition: border-color 0.16s var(--ad-ease);
+}
+.ad-tree-search:focus-within {
+  border-color: var(--ad-accent-line);
+  color: rgba(255, 255, 255, 0.7);
+}
+.ad-tree-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: 12.4px;
+  padding: 7px 0;
+}
+.ad-tree-search input::placeholder { color: rgba(255, 255, 255, 0.3); }
+/* Safari draws its own clear button, which collides with the dark field. */
+.ad-tree-search input::-webkit-search-cancel-button { filter: invert(1) opacity(0.5); }
+
+.ad-tree-note {
+  margin: 6px 8px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.4);
+}
+.ad-tree-note-warn { color: #e3c07b; }
+
+.ad-tree-collapse {
+  display: block;
+  width: calc(100% - 8px);
+  margin: 8px 4px 2px;
+  padding: 6px;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  border-radius: var(--ad-radius-sm);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.4);
+  font: inherit;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: color 0.16s var(--ad-ease), border-color 0.16s var(--ad-ease);
+}
+.ad-tree-collapse:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ------------------------------------------------------------------ foot -- */
+
+.ad-sidebar-foot .ad-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  word-break: normal;
+}
+.ad-user-dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4f9d6d;
+  box-shadow: 0 0 0 3px rgba(79, 157, 109, 0.18);
+}
+.ad-user-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.35;
+}
+.ad-user-text b {
+  font-weight: 600;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ad-user-text i {
+  font-style: normal;
+  font-size: 10.5px;
+  text-transform: capitalize;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ---------------------------------------------------------------- topbar -- */
+
+.ad-topbar-title { min-width: 0; }
+.ad-topbar-title h1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ad-topbar-actions .ad-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.ad-topbar-actions .ad-btn svg { flex: none; }
+
+/* ------------------------------------------------- builder row highlight -- */
+
+/* The row whose editor is open, so closing the modal does not leave the
+   admin hunting for where they were in a list of a dozen sections. */
+.ad-sec.is-open {
+  border-color: var(--ad-accent-line);
+  box-shadow: 0 0 0 1px var(--ad-accent-line), var(--ad-shadow);
+}
+
+/* --------------------------------------------------------------- mobile -- */
+
+@media (max-width: 860px) {
+  /* The drawer is the only navigation on a phone, so the tree has to be
+     comfortably tappable rather than compact. */
+  .ad-sidebar { width: 288px; }
+  .ad-tree-name { padding-top: 8px; padding-bottom: 8px; }
+  .ad-tree-section { padding-top: 8px; padding-bottom: 8px; }
+  .ad-tree-toggle { width: 34px; height: 34px; }
+  .ad-nav-caret { width: 34px; height: 34px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ad-tree { animation: none; }
+  .ad-nav-caret,
+  .ad-tree-toggle { transition: none; }
+}
+
+/* ============================================================================
+   SETUP NOTICE
+   ----------------------------------------------------------------------------
+   Shown when the panel cannot read the database. Deliberately not styled as
+   an error banner: a red strip says "something is broken" and stops there,
+   while this screen's whole job is to say "here is the file to run". So it
+   reads as instructions with a warning at the top, not as an alarm.
+   ========================================================================== */
+
+.ad-setup {
+  background: var(--ad-surface);
+  border: 1px solid var(--ad-line);
+  border-radius: var(--ad-radius-lg);
+  box-shadow: var(--ad-shadow);
+  padding: 24px;
+  max-width: 720px;
+}
+
+.ad-setup-head {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.ad-setup-mark {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--ad-warn-soft);
+  color: var(--ad-warn);
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.ad-setup-head h2 {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin-bottom: 5px;
+}
+
+.ad-setup-head p {
+  font-size: 14px;
+  color: var(--ad-ink-2);
+  line-height: 1.6;
+}
+
+/* ---- The fix ---- */
+
+.ad-setup-fix {
+  margin-top: 20px;
+  padding: 18px 20px;
+  border-radius: var(--ad-radius);
+  background: var(--ad-surface-2);
+  border: 1px solid var(--ad-line);
+}
+
+.ad-setup-fix h3 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ad-muted);
+  margin: 0 0 12px;
+}
+
+.ad-setup-fix ol {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.ad-setup-fix li::marker {
+  color: var(--ad-accent);
+  font-weight: 700;
+}
+
+/* The filename is the single thing on this screen the admin has to get
+   right, so it is given its own line and made selectable at a glance. */
+.ad-setup-file {
+  display: block;
+  margin-top: 7px;
+  padding: 9px 12px;
+  border-radius: var(--ad-radius-sm);
+  background: var(--ad-sidebar);
+  color: #e8f0f1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.8px;
+  user-select: all;
+  overflow-wrap: anywhere;
+}
+
+.ad-setup-safe {
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid var(--ad-line);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--ad-ink-2);
+}
+.ad-setup-safe b { color: var(--ad-ok); }
+
+/* ---- Actions and the raw error ---- */
+
+.ad-setup-actions {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.ad-setup-raw {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border-radius: var(--ad-radius-sm);
+  background: var(--ad-surface-2);
+  border: 1px solid var(--ad-line);
+  font-size: 12.2px;
+  line-height: 1.55;
+  color: var(--ad-ink-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ad-tree-note-warn a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+@media (max-width: 720px) {
+  .ad-setup { padding: 18px 16px; }
+  .ad-setup-fix { padding: 14px; }
+  .ad-setup-actions .ad-btn { flex: 1 1 auto; justify-content: center; }
+}

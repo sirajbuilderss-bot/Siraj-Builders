@@ -1,0 +1,600 @@
+/* ==========================================================================
+   SIRAJ BUILDERS — MASTER THEME FILE
+   --------------------------------------------------------------------------
+   Change colors HERE and the ENTIRE website updates automatically.
+   ========================================================================== */
+
+:root {
+  /* ---------- PRIMARY BRAND COLORS ---------- */
+  --accent:              #9dc1c8;
+  --accent-light:        #b6d6dc;
+  --accent-deep:         #4e7c86;
+  --accent-darker:       #355a63;
+  --accent-strong:       #6f9aa3;
+  --accent-glow:         rgba(157, 193, 200, 0.28);
+  --accent-soft:         rgba(157, 193, 200, 0.12);
+
+  /* ---------- DARK BACKGROUNDS ---------- */
+  --deeper:              #0f1418;
+  --deep:                #151c21;
+  --deep-2:              #1b242a;
+  --deep-3:              #232f36;
+
+  /* ---------- LIGHT BACKGROUNDS ---------- */
+  --light:               #f4f6f5;
+  --light-2:             #eef2f2;
+  --white:               #ffffff;
+  --off-white:           #fafbfb;
+
+  /* ---------- TEXT COLORS ---------- */
+  --ink:                 #212a31;
+  --ink-2:               #2f3a42;
+  --ink-soft:            #2f3a42;   /* alias used by some pages */
+  --muted:               #6b7a80;
+  --muted-dark:          #93a2a7;
+  --text-on-dark:        #ffffff;
+  --text-on-dark-soft:   rgba(255, 255, 255, 0.82);
+  --text-on-dark-mute:   rgba(255, 255, 255, 0.62);
+
+  /* ---------- BORDERS & LINES ---------- */
+  --line:                rgba(33, 42, 49, 0.12);
+  --line-dark:           rgba(255, 255, 255, 0.12);
+  --line-strong:         rgba(33, 42, 49, 0.22);
+
+  /* ---------- SHADOWS ---------- */
+  --shadow-sm:           0 10px 30px -18px rgba(10, 20, 26, 0.35);
+  --shadow-md:           0 30px 60px -40px rgba(10, 20, 26, 0.55);
+  --shadow-lg:           0 45px 85px -50px rgba(10, 20, 26, 0.65);
+  --shadow-xl:           0 60px 110px -55px rgba(10, 20, 26, 0.75);
+  --shadow-accent:       0 20px 45px -20px rgba(111, 154, 163, 0.55);
+
+  /* ---------- GRADIENTS ---------- */
+  --grad-accent:         linear-gradient(135deg, #b6d6dc 0%, #6f9aa3 100%);
+  --grad-accent-soft:    linear-gradient(135deg, rgba(182,214,220,.9) 0%, rgba(111,154,163,.9) 100%);
+  --grad-dark:           linear-gradient(120deg, #2b3a42 0%, #151d22 62%);
+  --grad-hero-overlay:   linear-gradient(
+                            100deg,
+                            rgba(9, 13, 17, 0.96) 0%,
+                            rgba(9, 13, 17, 0.82) 48%,
+                            rgba(9, 13, 17, 0.5) 100%
+                          );
+
+  /* ---------- RADIUS ---------- */
+  --radius-sm:           12px;
+  --radius:              22px;
+  --radius-lg:           28px;
+  --radius-xl:           36px;
+  --radius-pill:         999px;
+
+  /* ---------- SPACING / LAYOUT ---------- */
+  --header-h:            76px;
+  --container-w:         1240px;
+  --container:           1240px;    /* alias */
+  --section-y:           clamp(64px, 8vw, 116px);
+
+  /* ---------- TYPOGRAPHY ---------- */
+  --font-sans:           "Manrope", "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-display:        "Manrope", "Inter", "Segoe UI", system-ui, sans-serif;
+
+  /* ---------- TRANSITIONS ---------- */
+  --ease:                cubic-bezier(0.22, 1, 0.36, 1); /* alias */
+  --ease-out:            cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out:         cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast:            0.3s;
+  --dur:                 0.55s;
+  --dur-slow:            0.9s;
+}
+
+/* ==========================================================================
+   OPTIONAL THEME PRESETS — uncomment ONE block to switch the whole site
+   ========================================================================== */
+
+/* --- THEME PRESET: WARM BRONZE ---
+:root {
+  --accent:         #c9a27a;
+  --accent-light:   #e0c19d;
+  --accent-deep:    #a67c52;
+  --accent-darker:  #7d5a3a;
+  --accent-strong:  #b98d61;
+  --accent-glow:    rgba(201, 162, 122, 0.28);
+  --accent-soft:    rgba(201, 162, 122, 0.12);
+  --grad-accent:    linear-gradient(135deg, #e0c19d 0%, #a67c52 100%);
+}
+*/
+
+/* --- THEME PRESET: DEEP EMERALD ---
+:root {
+  --accent:         #7fb39a;
+  --accent-light:   #a8d0bc;
+  --accent-deep:    #4d8a6e;
+  --accent-darker:  #2f5f4a;
+  --accent-strong:  #5e9a80;
+  --accent-glow:    rgba(127, 179, 154, 0.28);
+  --accent-soft:    rgba(127, 179, 154, 0.12);
+  --grad-accent:    linear-gradient(135deg, #a8d0bc 0%, #4d8a6e 100%);
+}
+*/
+
+/* --- THEME PRESET: MIDNIGHT SLATE ---
+:root {
+  --accent:         #8fa3b8;
+  --accent-light:   #b3c4d6;
+  --accent-deep:    #5f7891;
+  --accent-darker:  #3e5468;
+  --accent-strong:  #7289a0;
+  --accent-glow:    rgba(143, 163, 184, 0.28);
+  --accent-soft:    rgba(143, 163, 184, 0.12);
+  --grad-accent:    linear-gradient(135deg, #b3c4d6 0%, #5f7891 100%);
+}
+*/
+
+/* ==========================================================================
+   BASE PRIMITIVES
+   (Agar aap ki global stylesheet mein pehle se maujood hain to skip kar dein)
+   ========================================================================== */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+
+/* ---------- CONTAINER ---------- */
+.container {
+  width: min(100% - 2.5rem, var(--container-w));
+  margin-inline: auto;
+}
+
+/* ---------- BUTTONS ---------- */
+.btn {
+  --btn-bg: var(--accent);
+  --btn-fg: #0d1216;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.95rem 1.7rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  white-space: nowrap;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  transition:
+    transform 0.35s var(--ease-out),
+    box-shadow 0.35s var(--ease-out),
+    background 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-out),
+    color 0.35s var(--ease-out);
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+.btn:focus-visible {
+  outline: 2px solid var(--accent-deep);
+  outline-offset: 3px;
+}
+
+.btn-primary {
+  background: var(--grad-accent);
+  color: #0d1216;
+  box-shadow: var(--shadow-accent);
+}
+.btn-primary:hover { box-shadow: 0 26px 50px -20px rgba(111,154,163,.7); }
+
+.btn-light {
+  background: #fff;
+  color: var(--ink);
+}
+.btn-light:hover { box-shadow: 0 20px 40px -22px rgba(0,0,0,.6); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+.btn-ghost:hover {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+
+.btn-block { width: 100%; }
+
+/* `.arrow` now wraps an inline SVG rather than a "→" character. inline-flex
+   with line-height:0 keeps the icon optically centred against the label and
+   stops the button growing by the SVG's line box. */
+.btn .arrow {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+  transition: transform 0.35s var(--ease-out);
+}
+.btn .arrow svg { display: block; }
+.btn:hover .arrow { transform: translateX(4px); }
+
+/* ---------- INLINE LINK ---------- */
+.link {
+  color: var(--accent-deep);
+  font-weight: 700;
+  border-bottom: 1px solid currentColor;
+  transition: color 0.3s var(--ease-out);
+}
+.link:hover { color: var(--accent-darker); }
+
+/* ---------- SKIP LINK ---------- */
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 999;
+  padding: 0.8rem 1.2rem;
+  background: var(--deep);
+  color: #fff;
+  border-radius: 0 0 var(--radius-sm) 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.skip:focus { left: 0; }
+
+/* ---------- SCROLL REVEAL ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.85s var(--ease-out) var(--d, 0s),
+    transform 0.85s var(--ease-out) var(--d, 0s);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- REDUCED MOTION ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+
+/* ==========================================================================
+   REFINEMENT LAYER
+   --------------------------------------------------------------------------
+   Added after the original tokens, deliberately. Everything below is either
+   a new token or a new class — no existing selector is redefined — so the
+   established look of the site is unchanged and nothing can silently lose a
+   specificity fight with the page stylesheets loaded after this file.
+
+   The palette is untouched. The brand is the muted slate-teal above; this
+   layer only makes the scale, rhythm and interaction states consistent.
+   ========================================================================== */
+
+:root {
+  /* ---------- TYPE SCALE ----------
+     A 1.25 (major third) scale, fluid between a 360px phone and a 1240px
+     container. Fluid rather than stepped so headings do not jump at a
+     breakpoint mid-scroll. */
+  --step--1:  clamp(0.80rem, 0.77rem + 0.14vw, 0.88rem);
+  --step-0:   clamp(0.95rem, 0.91rem + 0.19vw, 1.06rem);
+  --step-1:   clamp(1.19rem, 1.12rem + 0.31vw, 1.38rem);
+  --step-2:   clamp(1.48rem, 1.37rem + 0.51vw, 1.79rem);
+  --step-3:   clamp(1.86rem, 1.67rem + 0.82vw, 2.33rem);
+  --step-4:   clamp(2.32rem, 2.03rem + 1.28vw, 3.03rem);
+  --step-5:   clamp(2.90rem, 2.45rem + 1.96vw, 3.94rem);
+
+  /* Long-form text wants a shorter line than a full container gives it.
+     ~68 characters at the body size. */
+  --measure:             34rem;
+  --measure-wide:        46rem;
+
+  /* ---------- SPACING SCALE ----------
+     One ratio, so vertical rhythm is consistent between components that were
+     written at different times. */
+  --space-3xs:           0.25rem;
+  --space-2xs:           0.5rem;
+  --space-xs:            0.75rem;
+  --space-s:             1rem;
+  --space-m:             1.5rem;
+  --space-l:             2rem;
+  --space-xl:            3rem;
+  --space-2xl:           4rem;
+  --space-3xl:           6rem;
+
+  /* ---------- INTERACTION ---------- */
+  --focus-ring:          0 0 0 3px var(--accent-glow);
+  --focus-outline:       2px solid var(--accent-deep);
+  --focus-offset:        3px;
+  --tap-min:             44px;   /* WCAG 2.5.8 target size */
+
+  --lift-sm:             translateY(-2px);
+  --lift:                translateY(-4px);
+}
+
+/* ==========================================================================
+   ACCESSIBILITY FLOOR
+   ========================================================================== */
+
+/* One visible, consistent focus style for everything that takes focus.
+   :focus-visible only, so a mouse click does not leave a ring behind. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-offset);
+  border-radius: 4px;
+}
+
+/* Touch targets. Applied at the coarse-pointer breakpoint only, so the
+   desktop layout keeps its tighter proportions. */
+@media (pointer: coarse) {
+  a[class*="btn"],
+  button,
+  [role="button"],
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: var(--tap-min);
+  }
+
+  a[class*="btn"],
+  button,
+  [role="button"] {
+    min-width: var(--tap-min);
+  }
+}
+
+/* Selection in brand colours rather than the browser default blue. */
+::selection {
+  background: var(--accent-deep);
+  color: #fff;
+}
+
+/* A scroll anchor that accounts for the fixed header, so an in-page link does
+   not drop its target underneath the navigation. */
+:target { scroll-margin-top: calc(var(--header-h) + var(--space-m)); }
+
+/* ==========================================================================
+   TYPOGRAPHY UTILITIES
+   ========================================================================== */
+
+.u-measure      { max-width: var(--measure); }
+.u-measure-wide { max-width: var(--measure-wide); }
+
+.u-step--1 { font-size: var(--step--1); }
+.u-step-0  { font-size: var(--step-0); }
+.u-step-1  { font-size: var(--step-1); }
+.u-step-2  { font-size: var(--step-2); }
+.u-step-3  { font-size: var(--step-3); }
+.u-step-4  { font-size: var(--step-4); }
+.u-step-5  { font-size: var(--step-5); }
+
+/* Headings carry tighter tracking as they get larger — optical compensation,
+   the same reason a display cut is drawn tighter than a text cut. */
+.u-display {
+  font-family: var(--font-display);
+  font-size: var(--step-5);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+
+/* Numerals that line up in a column — for stats, prices, tables. */
+.u-tnum { font-variant-numeric: tabular-nums; }
+
+/* Visually hidden, still read by screen readers. */
+.u-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   CARD SURFACE
+   --------------------------------------------------------------------------
+   One card treatment, opt-in via .u-card. Hover lifts and warms the border
+   rather than only deepening a grey shadow, which reads as a surface
+   responding rather than a drop shadow animating.
+   ========================================================================== */
+
+.u-card {
+  position: relative;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.4s var(--ease-out),
+    box-shadow 0.4s var(--ease-out),
+    border-color 0.4s var(--ease-out);
+}
+
+.u-card:hover {
+  transform: var(--lift);
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent);
+}
+
+/* Makes the whole card clickable from one link inside it, without nesting
+   interactive elements or wrapping the card in an anchor. */
+.u-card-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.u-card:focus-within {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md), var(--focus-ring);
+}
+
+/* ==========================================================================
+   LOADING STATES
+   --------------------------------------------------------------------------
+   A skeleton that matches the shape of what is arriving beats a spinner that
+   tells the reader only that something is happening somewhere.
+   ========================================================================== */
+
+.u-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--light-2);
+  border-radius: var(--radius-sm);
+  min-height: 1rem;
+}
+
+.u-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.65) 50%,
+    transparent 100%
+  );
+  animation: u-shimmer 1.4s var(--ease-in-out) infinite;
+}
+
+@keyframes u-shimmer {
+  to { transform: translateX(100%); }
+}
+
+.u-skeleton-text {
+  height: 0.7rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: 0.55rem;
+}
+.u-skeleton-text:last-child { width: 65%; margin-bottom: 0; }
+
+.u-skeleton-title { height: 1.3rem; width: 55%; border-radius: 6px; }
+.u-skeleton-media { aspect-ratio: 16 / 10; border-radius: var(--radius-sm); }
+
+/* A spinner for the cases a skeleton cannot describe — a form submitting,
+   say, where the shape of the result is not a block of content. */
+.u-spinner {
+  width: 1.05em;
+  height: 1.05em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: -0.15em;
+  animation: u-spin 0.65s linear infinite;
+}
+
+@keyframes u-spin { to { transform: rotate(360deg); } }
+
+/* A button that is working: the label stays put, so the button does not
+   change width and shift the layout around it. */
+.is-busy,
+[aria-busy="true"] { cursor: progress; }
+
+.btn[aria-busy="true"] { opacity: 0.75; pointer-events: none; }
+
+/* ==========================================================================
+   MOTION
+   --------------------------------------------------------------------------
+   Staggered reveal for lists. The delay is set per item with --d in markup;
+   this only supplies the ramp so every grid does not have to invent one.
+   ========================================================================== */
+
+.u-stagger > * { --d: calc(var(--i, 0) * 70ms); }
+
+/* Motion that answers an action: a panel opening, a row expanding. */
+@keyframes u-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.u-rise { animation: u-rise 0.3s var(--ease-out) both; }
+
+/* ==========================================================================
+   SCROLLBAR
+   ========================================================================== */
+
+@supports (scrollbar-width: thin) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+}
+
+/* ==========================================================================
+   PRINT
+   --------------------------------------------------------------------------
+   Clients do print project pages. Without this they print the navigation,
+   the back-to-top button and a lot of dark background.
+   ========================================================================== */
+
+@media print {
+  .site-header,
+  .site-footer,
+  .back-to-top,
+  .skip,
+  [data-print="hide"] { display: none !important; }
+
+  body { background: #fff; color: #000; }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #555;
+  }
+
+  .u-card, img { break-inside: avoid; }
+}
+
+/* ==========================================================================
+   REDUCED MOTION — extends the block above to the new animations
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .u-skeleton::after { animation: none; }
+  .u-spinner { animation-duration: 1.6s; }
+  .u-card:hover { transform: none; }
+  .u-rise { animation: none; }
+}
