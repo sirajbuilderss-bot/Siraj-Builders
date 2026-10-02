@@ -131,14 +131,6 @@ function AdminGate() {
     );
   }
 
-  /* ---- Signed out ----
-     Four screens are reachable without a session, and no more. The reset
-     screen in particular must stay public: the whole point of a password
-     reset is that the person cannot sign in.
-
-     `signup` does not bypass the gate — the account it creates is inactive
-     unless it is the first one, so a stranger who completes it arrives back
-     here with nothing. See claim_admin_access() in database/schema.sql. */
   if (!isSignedIn) {
     return (
       <Routes>

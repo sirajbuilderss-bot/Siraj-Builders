@@ -1,31 +1,4 @@
--- ============================================================================
---  SIRAJ BUILDERS — MIGRATION 01
---  Visual Section CMS + expanded project fields
---  ----------------------------------------------------------------------------
---  Run this ONCE against a database that already has schema.sql + policies.sql
---  applied. Safe to re-run: every statement is guarded.
---
---  On a brand-new database you do not need this file — schema.sql and
---  policies.sql already contain everything below.
---
---  HOW TO RUN
---    1. Supabase dashboard → SQL Editor → New query
---    2. Paste this whole file
---    3. Run
--- ============================================================================
 
-
--- ----------------------------------------------------------------------------
---  1. PAGE SECTIONS
---  ----------------------------------------------------------------------------
---  One row = one section on one page. `page_path` is the route the section
---  belongs to ('/' for the homepage), which is deliberately a plain text
---  column rather than a foreign key to public.pages: the bespoke pages
---  (home, faq, consultation, contact) own their layouts and have no row in
---  that table, but their sections still need to be manageable here.
---
---  `position` drives the order sections render in, and is what the reorder
---  buttons in the admin panel rewrite.
 -- ----------------------------------------------------------------------------
 create table if not exists public.page_sections (
   id            uuid primary key default gen_random_uuid(),

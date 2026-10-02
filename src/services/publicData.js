@@ -18,6 +18,7 @@ import {
   toProjectShape,
   toServiceCardShape,
 } from "./content";
+import { PAGE_CONTENT_STORAGE_KEY, PAGE_CONTENT_UPDATED } from "./pageContentEvents";
 import DEFAULTS from "../content/defaults.json";
 
 const TTL = 60 * 1000;
@@ -115,6 +116,16 @@ export function clearPublicCache() {
   cache.clear();
 }
 
+// Admin writes broadcast through the same signal used by page sections. Clear
+// this module's in-memory cache too, including when the public site is open in
+// a different browser tab.
+if (typeof window !== "undefined") {
+  window.addEventListener(PAGE_CONTENT_UPDATED, clearPublicCache);
+  window.addEventListener("storage", (event) => {
+    if (event.key === PAGE_CONTENT_STORAGE_KEY) clearPublicCache();
+  });
+}
+
 /* ---------------- projects ---------------- */
 
 export const getProjects = () =>
@@ -127,9 +138,12 @@ export const getProjects = () =>
 /** One project with its ordered images and videos. */
 export const getProjectBySlug = (slug) =>
   cached(`project:${slug}`, async () => {
-    if (CONCEPT_BY_SLUG.has(slug)) return CONCEPT_BY_SLUG.get(slug);
+    // Keep the bundled concept studies as an offline fallback, but always
+    // prefer the database when it is configured so admin edits win.
+    if (!isConfigured()) return CONCEPT_BY_SLUG.get(slug) || null;
     const row = await projectService.getBySlug(slug);
-    if (!row || row.is_active === false) return null;
+    if (!row) return CONCEPT_BY_SLUG.get(slug) || null;
+    if (row.is_active === false) return null;
     const project = toProjectShape(row);
     let media = [];
     try {

@@ -274,6 +274,292 @@ update public.page_sections set items = '[{"title":"Structural engineering","bod
 update public.page_sections set items = '[{"title":"Property assessment","body":"","image":""},{"title":"Access and logistics","body":"","image":""},{"title":"Local coordination","body":"","image":""},{"title":"Project-specific planning","body":"","image":""}]'::jsonb where page_path = '/locations' and section_key = 'detail' and (items is null or items = '[]'::jsonb);
 update public.page_sections set items = '[{"title":"Scope","body":"","image":""},{"title":"Size and site","body":"","image":""},{"title":"Materials","body":"","image":""},{"title":"Finishes and services","body":"","image":""}]'::jsonb where page_path = '/cost-index' and section_key = 'detail' and (items is null or items = '[]'::jsonb);
 
+-- 3b. Editorial media: fill only blank fields that an admin has not overridden
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/' and section_key = 'intro'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/' and section_key = 'why-us'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4'
+ where page_path = '/' and section_key = 'process'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/who-we-are' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/who-we-are' and section_key = 'who'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/who-we-are' and section_key = 'story'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/who-we-are' and section_key = 'approach'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4'
+ where page_path = '/who-we-are' and section_key = 'approach'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/services' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/services' and section_key = 'intro'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/services' and section_key = 'proof'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4'
+ where page_path = '/services' and section_key = 'proof'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/residential-construction' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/residential-construction' and section_key = 'deliver'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4'
+ where page_path = '/residential-construction' and section_key = 'deliver'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/residential-construction' and section_key = 'needs'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/commercial-construction' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/commercial-construction' and section_key = 'approach'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4'
+ where page_path = '/commercial-construction' and section_key = 'approach'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/commercial-construction' and section_key = 'focus'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/renovation-remodelling' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/renovation-remodelling' and section_key = 'intro'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/renovation-remodelling' and section_key = 'objective'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4'
+ where page_path = '/renovation-remodelling' and section_key = 'objective'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/design-architecture' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/design-architecture' and section_key = 'scope'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4'
+ where page_path = '/design-architecture' and section_key = 'scope'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/grey-structure' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/grey-structure' and section_key = 'detail'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4'
+ where page_path = '/grey-structure' and section_key = 'detail'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/turnkey-construction' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/turnkey-construction' and section_key = 'detail'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4'
+ where page_path = '/turnkey-construction' and section_key = 'detail'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/project-management' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/project-management' and section_key = 'detail'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4'
+ where page_path = '/project-management' and section_key = 'detail'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1541971875076-8f970d573be6?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/projects' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4'
+ where page_path = '/projects' and section_key = 'grid'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/our-process' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4'
+ where page_path = '/our-process' and section_key = 'steps'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/testimonials' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/faq' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4'
+ where page_path = '/faq' and section_key = 'list'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/contact-us' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/consultation' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4'
+ where page_path = '/consultation' and section_key = 'next'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/leadership' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/leadership' and section_key = 'detail'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4'
+ where page_path = '/leadership' and section_key = 'detail'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/project-showcase' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/project-showcase' and section_key = 'detail'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4'
+ where page_path = '/project-showcase' and section_key = 'detail'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/role-definition' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/role-definition' and section_key = 'detail'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4'
+ where page_path = '/role-definition' and section_key = 'detail'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1541971875076-8f970d573be6?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/subcontractors' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/subcontractors' and section_key = 'detail'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4'
+ where page_path = '/subcontractors' and section_key = 'detail'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/international' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/international' and section_key = 'detail'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4'
+ where page_path = '/international' and section_key = 'detail'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/affiliates' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/affiliates' and section_key = 'intro'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/affiliates' and section_key = 'partners'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4'
+ where page_path = '/affiliates' and section_key = 'partners'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/locations' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/locations' and section_key = 'detail'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4'
+ where page_path = '/locations' and section_key = 'detail'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/cost-index' and section_key = 'hero'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set media_url = 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80'
+ where page_path = '/cost-index' and section_key = 'detail'
+   and coalesce(media_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'media_url', 'false') <> 'true';
+update public.page_sections set video_url = 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4'
+ where page_path = '/cost-index' and section_key = 'detail'
+   and coalesce(video_url, '') = ''
+   and coalesce(settings->'editor_overrides'->>'video_url', 'false') <> 'true';
+
 -- 4. Old 'Page copy' edits carried into the new hero sections ------------
 update public.page_sections s
    set title = p.title,

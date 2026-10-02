@@ -2783,6 +2783,36 @@
 /* ---------- Reorder column ---------- */
 .admin-root .ad-col-order { width: 84px; white-space: nowrap; }
 .admin-root .ad-order-btns { display: inline-flex; gap: 4px; }
+.admin-root .ad-row-drag {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  margin-right: 4px;
+  padding: 0;
+  border: 1px solid var(--ad-line-strong);
+  border-radius: var(--ad-radius-sm);
+  background: var(--ad-surface);
+  color: var(--ad-ink-2);
+  font: inherit;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: grab;
+  touch-action: none;
+}
+.admin-root .ad-row-drag:hover,
+.admin-root .ad-row-drag:focus-visible {
+  border-color: var(--ad-accent);
+  background: var(--ad-accent-soft);
+  color: var(--ad-accent-darker);
+  outline: none;
+}
+.admin-root .ad-row-drag:active { cursor: grabbing; }
+.admin-root .ad-row-drag:disabled { opacity: 0.35; cursor: not-allowed; }
+.admin-root .ad-table tbody tr { transition: opacity 0.18s ease, background 0.18s ease; }
+.admin-root .ad-table tr.is-dragging { opacity: 0.35; }
+.admin-root .ad-table tr.is-drop-target { background: var(--ad-accent-soft); }
+.admin-root .ad-table tr.is-drop-target td { box-shadow: inset 0 3px 0 var(--ad-accent), inset 0 -3px 0 var(--ad-accent); }
 .admin-root .ad-icon-btn {
   width: 30px;
   height: 30px;

@@ -1,21 +1,4 @@
--- ============================================================================
---  SIRAJ BUILDERS — SECTION SEED, PART 2
---  Run after seed-sections.sql. Safe to re-run.
---  ----------------------------------------------------------------------------
---  Part 1 covered the eight main pages. This file covers the remaining
---  fifteen, so EVERY page in the site appears in the page builder with its
---  real sections listed rather than showing as empty.
---
---  Thirteen of these pages render through src/pages/ContentPage.jsx, which
---  draws its copy from the `pages` table. Their rows carry
---  settings = {"source":"pages"} so the builder can point the admin at the
---  Pages screen instead of letting them type into a form that would not be
---  the one the website reads. Two pages — Commercial Construction and
---  Affiliates — have bespoke markup and are marked {"source":"page"}.
---
---  Nothing here changes what the website renders. It makes the structure
---  visible and correctly attributed, which is the thing that was missing.
--- ============================================================================
+
 
 insert into public.page_sections
   (page_path, page_label, section_key, label, section_type, title, body, settings, position, is_enabled)

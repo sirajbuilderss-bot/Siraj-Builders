@@ -1,26 +1,4 @@
--- ============================================================================
---  SIRAJ BUILDERS — INSTALL VERIFICATION
---  ---------------------------------------------------------------------------
---  install.sql chalane ke BAAD yeh file chalayein.
---
---  Supabase Dashboard → SQL Editor → New query → paste → Run
---
---  "status" column dekhein. Step 1 se 11 tak sab jagah OK hona chahiye.
---  Step 12 shuru mein KHALI hoga — yeh bilkul theek hai.
--- ============================================================================
 
--- ----------------------------------------------------------------------------
---  Ek chhota helper.
---
---  Agar koi table ghayab ho aur hum usay seedha `select count(*) from ...`
---  se ginein, to POORI query parse error de kar ruk jati hai — matlab jis
---  masle ko dhoondhne aaye thay, wohi masla report hi nahi hota. Yeh helper
---  pehle dekh leta hai ke table mojood bhi hai ya nahi, aur na hone par -1
---  laut'ta hai.
---
---  pg_temp mein hai, is liye sirf isi session ke liye banta hai aur database
---  mein kuch nahi chhorta.
--- ----------------------------------------------------------------------------
 create or replace function pg_temp.row_count(tbl text)
 returns bigint
 language plpgsql

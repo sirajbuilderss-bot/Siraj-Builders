@@ -579,6 +579,11 @@ function SectionRow({
           <span>
             <b>Position:</b> {positionLabel(index, total)}
           </span>
+          {(row.media_url || row.video_url) && (
+            <span>
+              <b>Media:</b> {[row.media_url && "Image", row.video_url && "Video"].filter(Boolean).join(" + ")}
+            </span>
+          )}
           {!source.editable && (
             <span>
               <b>Copy:</b> {source.label}

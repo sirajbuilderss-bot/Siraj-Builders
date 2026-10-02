@@ -130,6 +130,19 @@ for (const page of pages) {
   }
 }
 w();
+w("-- 3b. Editorial media: fill only blank fields that an admin has not overridden");
+for (const page of pages) {
+  for (const s of page.sections) {
+    for (const field of ["media_url", "video_url"]) {
+      if (!s[field]) continue;
+      w(`update public.page_sections set ${field} = ${q(s[field])}`);
+      w(` where page_path = ${q(page.path)} and section_key = ${q(s.key)}`);
+      w(`   and coalesce(${field}, '') = ''`);
+      w(`   and coalesce(settings->'editor_overrides'->>${q(field)}, 'false') <> 'true';`);
+    }
+  }
+}
+w();
 w("-- 4. Old 'Page copy' edits carried into the new hero sections ------------");
 w("update public.page_sections s");
 w("   set title = p.title,");

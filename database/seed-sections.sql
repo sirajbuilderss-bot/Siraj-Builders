@@ -1,14 +1,4 @@
--- ============================================================================
---  SIRAJ BUILDERS — SECTION SEED
---  Run after migration-01-sections.sql.
---  ----------------------------------------------------------------------------
---  This maps the sections that already exist on the live site into the
---  page_sections table, so the admin panel opens showing the real website
---  rather than an empty builder.
---
---  Safe to re-run: `on conflict (page_path, section_key) do nothing` means an
---  admin's edits are never overwritten by running this file a second time.
--- ============================================================================
+
 
 insert into public.page_sections
   (page_path, page_label, section_key, label, section_type, eyebrow, title, subtitle, body, cta_label, cta_href, position, is_enabled)

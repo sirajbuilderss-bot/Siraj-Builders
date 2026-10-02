@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.ef8bab73.css",
-    "main.js": "/static/js/main.06345a3f.js",
+    "main.js": "/static/js/main.2f5ee84b.js",
     "static/js/505.fef26d90.chunk.js": "/static/js/505.fef26d90.chunk.js",
     "static/js/67.a4f303cc.chunk.js": "/static/js/67.a4f303cc.chunk.js",
     "static/js/417.9690f798.chunk.js": "/static/js/417.9690f798.chunk.js",
@@ -29,11 +29,11 @@
     "static/js/581.7f283ae3.chunk.js": "/static/js/581.7f283ae3.chunk.js",
     "static/js/570.201cce4a.chunk.js": "/static/js/570.201cce4a.chunk.js",
     "static/js/532.76aebefc.chunk.js": "/static/js/532.76aebefc.chunk.js",
-    "static/css/81.1ae6fe1e.chunk.css": "/static/css/81.1ae6fe1e.chunk.css",
-    "static/js/81.4bd0dfb6.chunk.js": "/static/js/81.4bd0dfb6.chunk.js",
+    "static/css/81.105394da.chunk.css": "/static/css/81.105394da.chunk.css",
+    "static/js/81.0b80bf9c.chunk.js": "/static/js/81.0b80bf9c.chunk.js",
     "index.html": "/index.html",
     "main.ef8bab73.css.map": "/static/css/main.ef8bab73.css.map",
-    "main.06345a3f.js.map": "/static/js/main.06345a3f.js.map",
+    "main.2f5ee84b.js.map": "/static/js/main.2f5ee84b.js.map",
     "505.fef26d90.chunk.js.map": "/static/js/505.fef26d90.chunk.js.map",
     "67.a4f303cc.chunk.js.map": "/static/js/67.a4f303cc.chunk.js.map",
     "417.9690f798.chunk.js.map": "/static/js/417.9690f798.chunk.js.map",
@@ -61,11 +61,11 @@
     "581.7f283ae3.chunk.js.map": "/static/js/581.7f283ae3.chunk.js.map",
     "570.201cce4a.chunk.js.map": "/static/js/570.201cce4a.chunk.js.map",
     "532.76aebefc.chunk.js.map": "/static/js/532.76aebefc.chunk.js.map",
-    "81.1ae6fe1e.chunk.css.map": "/static/css/81.1ae6fe1e.chunk.css.map",
-    "81.4bd0dfb6.chunk.js.map": "/static/js/81.4bd0dfb6.chunk.js.map"
+    "81.105394da.chunk.css.map": "/static/css/81.105394da.chunk.css.map",
+    "81.0b80bf9c.chunk.js.map": "/static/js/81.0b80bf9c.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ef8bab73.css",
-    "static/js/main.06345a3f.js"
+    "static/js/main.2f5ee84b.js"
   ]
 }

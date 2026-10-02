@@ -78,6 +78,8 @@ export default function ResourceManager({
   const [isDeleting, setIsDeleting] = useState(false);
   const [busyId, setBusyId] = useState(null);
   const [activeFilter, setActiveFilter] = useState("all");
+  const [draggingId, setDraggingId] = useState(null);
+  const [dropTargetId, setDropTargetId] = useState(null);
 
   const toast = useToast();
 
@@ -138,6 +140,56 @@ export default function ResourceManager({
       setBusyId(null);
     }
   }
+
+  function onDragStart(event, row) {
+    const grip = event.target.closest?.(".ad-row-drag");
+    const control = event.target.closest?.("button, a, select, input, textarea");
+    if ((control && !grip) || !canReorder || busyId) {
+      event.preventDefault();
+      return;
+    }
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", String(row.id));
+    setDraggingId(row.id);
+  }
+
+  function onDragOver(event, row) {
+    if (draggingId == null || String(draggingId) === String(row.id)) return;
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+    setDropTargetId(row.id);
+  }
+
+  async function onDrop(event, targetRow) {
+    event.preventDefault();
+    const sourceId = draggingId ?? event.dataTransfer.getData("text/plain");
+    setDraggingId(null);
+    setDropTargetId(null);
+    if (!sourceId || String(sourceId) === String(targetRow.id) || busyId) return;
+
+    const next = rows.slice();
+    const from = next.findIndex((row) => String(row.id) === String(sourceId));
+    const to = next.findIndex((row) => String(row.id) === String(targetRow.id));
+    if (from < 0 || to < 0) return;
+    const [row] = next.splice(from, 1);
+    next.splice(to, 0, row);
+    setRows(next);
+    setBusyId(sourceId);
+    try {
+      await reorder(next.map((item) => item.id));
+      toast.show(`${singular} order saved.`);
+    } catch (error) {
+      toast.show(error?.message || "Could not save the new order.", "error");
+      await refresh();
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  const onDragEnd = () => {
+    setDraggingId(null);
+    setDropTargetId(null);
+  };
 
   async function flip(row) {
     if (!toggle) return;
@@ -373,9 +425,27 @@ export default function ResourceManager({
               </thead>
               <tbody>
                 {visible.map((row) => (
-                  <tr key={row.id} className={busyId === row.id ? "is-busy" : undefined}>
+                  <tr
+                    key={row.id}
+                    className={`${busyId === row.id ? "is-busy" : ""}${draggingId === row.id ? " is-dragging" : ""}${dropTargetId === row.id ? " is-drop-target" : ""}`.trim()}
+                    draggable={canReorder && !busyId}
+                    onDragStart={(event) => onDragStart(event, row)}
+                    onDragOver={(event) => onDragOver(event, row)}
+                    onDrop={(event) => onDrop(event, row)}
+                    onDragEnd={onDragEnd}
+                  >
                     {reorder && (
                       <td className="ad-col-order">
+                        <button
+                          type="button"
+                          className="ad-row-drag"
+                          draggable={canReorder && !busyId}
+                          disabled={!canReorder || Boolean(busyId)}
+                          aria-label={`Drag “${labelOf(row)}” to reorder`}
+                          title={canReorder ? "Drag to reorder" : "Clear search and filters to reorder"}
+                        >
+                          <span aria-hidden="true">⠿</span>
+                        </button>
                         <div className="ad-order-btns">
                           <button
                             type="button"

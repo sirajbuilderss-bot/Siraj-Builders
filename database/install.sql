@@ -1070,11 +1070,11 @@ create policy page_sections_admin_all on public.page_sections
 --  the site to read from the database is therefore a no-op visually: the same
 --  words render, from a different source.
 --
---  Four tables are seeded EMPTY on purpose — projects, testimonials,
---  team_members and stats. TO-CONFIRM.md is explicit that no project, quote,
---  biography or metric has been verified, and that inventing them is the one
---  thing the client documentation forbids. The pages already render designed
---  empty states for exactly this. Add real rows from the admin panel.
+--  Projects, testimonials, team_members and stats are handled conservatively.
+--  The three documented concept studies are seeded by migration-02-cms.sql
+--  because their expanded fields and editable media table are created there.
+--  Testimonials, team_members and stats remain empty until verified content is
+--  supplied through the admin panel.
 -- ============================================================================
 
 
@@ -1306,7 +1306,7 @@ select '04 · Renovation & Remodelling', 'Improve the space you already have.', 
 where not exists (select 1 from public.hero_slides where title = 'Improve the space you already have.');
 
 -- ---------- Deliberately empty ----------
--- public.projects      — TO-CONFIRM.md §3: no verified projects supplied.
+-- public.projects      — concept studies are added by migration-02-cms.sql.
 -- public.testimonials  — TO-CONFIRM.md §4: only verified testimonials may appear.
 -- public.team_members  — TO-CONFIRM.md §6: no verified biographies supplied.
 -- public.stats         — TO-CONFIRM.md §5: "Do not fill these with invented numbers."
@@ -1620,6 +1620,68 @@ alter table public.projects add column if not exists is_featured       boolean n
 
 create index if not exists projects_service_idx on public.projects (service_slug);
 
+-- --------------------------------------------------------------------------
+--  1b. EXISTING PORTFOLIO PROJECTS
+--      These concept studies were previously fallback-only website content.
+--      Seed them once so the admin panel and public portfolio share records.
+-- --------------------------------------------------------------------------
+insert into public.projects (
+  slug, title, category, location, status, year, area, timeline, scope,
+  client_name, image_url, banner_url, short_description, full_description,
+  features, requirement, challenge, solution, approach, quality, result,
+  service_slug, is_active, is_featured, sort_order
+)
+values
+(
+  'concept-courtyard-home', 'Courtyard home — concept study', 'Residential',
+  '', 'Completed', '', '', '', '', 'Design brief',
+  'https://images.pexels.com/photos/15794759/pexels-photo-15794759.jpeg?auto=compress&cs=tinysrgb&w=1600',
+  'https://images.pexels.com/photos/15794759/pexels-photo-15794759.jpeg?auto=compress&cs=tinysrgb&w=1600',
+  'A courtyard-led home design focused on daylight, privacy and the way shared and quiet spaces connect.',
+  'The brief brings the main living spaces around a private courtyard, using daylight and clear circulation to connect indoors and outdoors. Shared rooms stay easy to reach while quieter areas retain a sense of separation.',
+  '["Courtyard-led planning", "Daylight balanced with privacy", "Distinct shared and quiet zones", "Clear routes through the home"]'::jsonb,
+  'Create a practical home layout that connects shared living areas with quieter private rooms.',
+  'Balance daylight, privacy and movement through the home without making the plan feel fragmented.',
+  'Arrange the principal living spaces around a central courtyard and make transitions between rooms direct and legible.',
+  'Start with the household''s room brief, map everyday movement and review the layout before developing material choices.',
+  'Check the drawings against the agreed brief, coordinate decisions before work begins and keep scope changes documented.',
+  'A considered layout direction that gives the design team a clear basis for the next planning stage.',
+  'residential-construction', true, false, 10
+),
+(
+  'concept-workplace', 'Neighbourhood workplace — concept study', 'Commercial',
+  '', 'Completed', '', '', '', '', 'Design brief',
+  'https://images.pexels.com/photos/6285152/pexels-photo-6285152.jpeg?auto=compress&cs=tinysrgb&w=1600',
+  'https://images.pexels.com/photos/6285152/pexels-photo-6285152.jpeg?auto=compress&cs=tinysrgb&w=1600',
+  'A flexible workplace layout that separates focused work, team meetings and shared daily use.',
+  'The layout balances quiet work zones with meeting and shared spaces, while keeping arrival and circulation straightforward. Early coordination makes services, furniture and future adjustments part of the same brief.',
+  '["Flexible work zones", "Clear visitor circulation", "Meeting and focus areas", "Adaptable shared spaces"]'::jsonb,
+  'Plan a flexible workplace for focused work, meetings and the shared routines of a small team.',
+  'Fit different work styles into one legible plan and allow rooms to adapt as needs change.',
+  'Set out work zones, meeting rooms and service needs before the plan moves into detailed design.',
+  'Document how each area will be used, coordinate design and construction requirements, then confirm the scope and sequence.',
+  'Review the design against the brief and specifications, and keep decisions and outstanding items visible through handover.',
+  'A workplace planning direction with clear zones, direct circulation and room for future adjustment.',
+  'commercial-construction', true, false, 20
+),
+(
+  'concept-interior-renewal', 'Interior renewal — concept study', 'Renovation',
+  '', 'Completed', '', '', '', '', 'Design brief',
+  'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=80',
+  'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=80',
+  'A room-by-room renovation plan that begins with the existing property and the changes that matter most.',
+  'This renovation brief begins with the current layout and how each room is used. Priorities are grouped into essential work and optional improvements, with a sequence that limits disruption and keeps finishes coordinated.',
+  '["Existing conditions reviewed first", "Priorities agreed before scoping", "Work sequenced around daily use", "Finishes coordinated room by room"]'::jsonb,
+  'Make the interior more useful while retaining the existing features that still serve the property.',
+  'Separate essential repairs from optional upgrades and sequence the work around the existing building.',
+  'Review the rooms, agree priorities and coordinate disruptive work before final finishes are selected.',
+  'Record existing conditions, confirm scope room by room and keep decisions visible as the work is planned.',
+  'Review transitions, finish details and agreed specifications before marking each area complete.',
+  'A clearer renovation direction, with priorities and work sequence ready for detailed scoping.',
+  'renovation-remodelling', true, false, 30
+)
+on conflict (slug) do nothing;
+
 -- ----------------------------------------------------------------------------
 --  2. PROJECT MEDIA — one row per image or video
 --     projects.image_url stays the FEATURED image (used on cards and the
@@ -1640,6 +1702,38 @@ create table if not exists public.project_media (
 
 create index if not exists project_media_project_idx
   on public.project_media (project_id, kind, sort_order);
+
+-- Preserve the gallery and video content that was previously embedded in the
+-- website fallback. The existence check keeps later admin edits untouched.
+with media(slug, kind, url, caption, alt_text, sort_order) as (
+  values
+    ('concept-courtyard-home', 'image', 'https://images.pexels.com/photos/15794759/pexels-photo-15794759.jpeg?auto=compress&cs=tinysrgb&w=1600', 'Planning discussion', 'Planning discussion', 0),
+    ('concept-courtyard-home', 'image', 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1600&q=80', 'Contemporary home exterior', 'Contemporary home exterior', 1),
+    ('concept-courtyard-home', 'image', 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=80', 'Interior space', 'Interior space', 2),
+    ('concept-courtyard-home', 'image', 'https://images.pexels.com/photos/10202865/pexels-photo-10202865.jpeg?auto=compress&cs=tinysrgb&w=1600', 'Construction site activity', 'Construction site activity', 3),
+    ('concept-courtyard-home', 'video', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', 'Construction activity', '', 0),
+    ('concept-courtyard-home', 'video', 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4', 'Site machinery and progress', '', 1),
+    ('concept-workplace', 'image', 'https://images.pexels.com/photos/6285152/pexels-photo-6285152.jpeg?auto=compress&cs=tinysrgb&w=1600', 'Reviewing a plan', 'Reviewing a plan', 0),
+    ('concept-workplace', 'image', 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1600&q=80', 'Workplace interior', 'Workplace interior', 1),
+    ('concept-workplace', 'image', 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80', 'Commercial building exterior', 'Commercial building exterior', 2),
+    ('concept-workplace', 'image', 'https://images.pexels.com/photos/10202865/pexels-photo-10202865.jpeg?auto=compress&cs=tinysrgb&w=1600', 'Construction site activity', 'Construction site activity', 3),
+    ('concept-workplace', 'video', 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4', 'Site activity', '', 0),
+    ('concept-workplace', 'video', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', 'Workers coordinating at a site', '', 1),
+    ('concept-interior-renewal', 'image', 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1600&q=80', 'Interior concept', 'Interior concept', 0),
+    ('concept-interior-renewal', 'image', 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118d?auto=format&fit=crop&w=1600&q=80', 'Living area', 'Living area', 1),
+    ('concept-interior-renewal', 'image', 'https://images.pexels.com/photos/15794759/pexels-photo-15794759.jpeg?auto=compress&cs=tinysrgb&w=1600', 'Reviewing a plan', 'Reviewing a plan', 2),
+    ('concept-interior-renewal', 'image', 'https://images.unsplash.com/photo-1600607687644-c7171b42498f?auto=format&fit=crop&w=1600&q=80', 'Interior finishes', 'Interior finishes', 3),
+    ('concept-interior-renewal', 'video', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', 'Construction activity', '', 0),
+    ('concept-interior-renewal', 'video', 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4', 'Site machinery and progress', '', 1)
+)
+insert into public.project_media (project_id, kind, url, caption, alt_text, sort_order)
+select p.id, m.kind, m.url, m.caption, m.alt_text, m.sort_order
+from media m
+join public.projects p on p.slug = m.slug
+where not exists (
+  select 1 from public.project_media existing
+  where existing.project_id = p.id and existing.kind = m.kind and existing.url = m.url
+);
 
 drop trigger if exists project_media_touch on public.project_media;
 create trigger project_media_touch before update on public.project_media
