@@ -334,10 +334,10 @@ const registered = new Set(
   Array.from(appSource.matchAll(/path="([^"]+)"/g)).map((m) => m[1])
 );
 
-const sectionsSource = fs.readFileSync(path.join(SRC, "services", "sections.js"), "utf8");
-const registryPaths = Array.from(
-  sectionsSource.matchAll(/\{\s*path:\s*"([^"]+)"/g)
-).map((m) => m[1]);
+// The registry is generated from database/content-source.cjs.
+const registryPaths = JSON.parse(
+  fs.readFileSync(path.join(SRC, "content", "defaults.json"), "utf8")
+).registry.map((entry) => entry.path);
 
 let missingRoutes = 0;
 for (const p of registryPaths) {
@@ -385,4 +385,3 @@ console.log(`\n  ${problems.length} problem(s):\n`);
 for (const problem of problems) console.log("   ✗", problem);
 console.log("");
 process.exit(1);
-mink

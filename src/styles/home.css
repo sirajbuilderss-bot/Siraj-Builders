@@ -1221,6 +1221,47 @@
   }
 }
 
+/* The homepage carousel uses the same construction graphics with one
+   different technical motif per slide, layered below the copy. */
+.hero-slide .construction-graphic {
+  position: absolute;
+  z-index: 2;
+  inset: 0 0 0 auto;
+  width: min(58vw, 820px);
+  height: 100%;
+  color: rgba(220, 238, 240, 0.92);
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 28%, #000 86%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 28%, #000 86%, transparent);
+  transition: opacity 0.8s ease;
+}
+.hero-slide.is-active .construction-graphic { opacity: 0.38; }
+.hero-slide .cg-grid { stroke: currentColor; stroke-width: 0.7; opacity: 0.18; }
+.hero-slide .cg-chart, .hero-slide .cg-bars, .hero-slide .cg-blueprint { opacity: 0; }
+.hero-slide .cg-line { stroke: currentColor; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.hero-slide .cg-line--secondary { opacity: 0.4; stroke-width: 1.2; }
+.hero-slide .cg-node { fill: #dceef0; stroke: #13242b; stroke-width: 2; transform-box: fill-box; transform-origin: center; }
+.hero-slide .cg-bar { fill: rgba(157,193,200,.16); stroke: currentColor; stroke-width: 1.2; transform-box: fill-box; transform-origin: bottom; }
+.hero-slide .cg-scan { stroke: rgba(220,238,240,.35); stroke-width: 1; stroke-dasharray: 2 8; }
+.hero-slide.is-active .construction-graphic--0 .cg-grid { animation: cg-grid-drift 22s linear infinite; }
+.hero-slide.is-active .construction-graphic--0 .cg-scan { animation: cg-scan 9s ease-in-out infinite alternate; }
+.hero-slide.is-active .construction-graphic--1 .cg-chart { opacity: .72; }
+.hero-slide.is-active .construction-graphic--1 .cg-line { stroke-dasharray: 900; stroke-dashoffset: 900; animation: cg-draw 2.4s var(--ease) .35s forwards, cg-glow 5s ease-in-out 2.8s infinite; }
+.hero-slide.is-active .construction-graphic--1 .cg-node { animation: cg-node-pulse 3.6s ease-in-out infinite; }
+.hero-slide.is-active .construction-graphic--2 .cg-bars { opacity: .72; }
+.hero-slide.is-active .construction-graphic--2 .cg-bar { transform: scaleY(.08); animation: cg-bar-rise 1.2s var(--ease) calc(.25s + var(--bar-delay, 0s)) forwards; }
+.hero-slide.is-active .construction-graphic--2 .cg-bar:nth-child(2) { --bar-delay: .12s; }
+.hero-slide.is-active .construction-graphic--2 .cg-bar:nth-child(3) { --bar-delay: .24s; }
+.hero-slide.is-active .construction-graphic--2 .cg-bar:nth-child(4) { --bar-delay: .36s; }
+.hero-slide.is-active .construction-graphic--2 .cg-bar:nth-child(5) { --bar-delay: .48s; }
+.hero-slide.is-active .construction-graphic--3 .cg-blueprint { opacity: .78; }
+.hero-slide.is-active .construction-graphic--3 .cg-blueprint .cg-line { stroke-dasharray: 800; stroke-dashoffset: 800; animation: cg-draw 2.6s var(--ease) .25s forwards; }
+@media (max-width: 780px) {
+  .hero-slide .construction-graphic { width: 100%; opacity: .2; -webkit-mask-image: linear-gradient(180deg, transparent, #000 22%, #000 82%, transparent); mask-image: linear-gradient(180deg, transparent, #000 22%, #000 82%, transparent); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     opacity: 1;
@@ -1230,6 +1271,12 @@
     opacity: 1;
     transform: none;
   }
+  .hero-slide .construction-graphic *,
+  .hero-slide.is-active .cg-grid,
+  .hero-slide.is-active .cg-scan,
+  .hero-slide.is-active .cg-line,
+  .hero-slide.is-active .cg-node,
+  .hero-slide.is-active .cg-bar { animation: none !important; stroke-dashoffset: 0; transform: none; }
   .dash-bar {
     animation: none;
     transform: scaleY(1);
@@ -1241,6 +1288,9 @@
   .hero-slide.is-active .hero-bg {
     animation: none;
   }
+  .hero-slide,
+  .hero-bg,
+  .hero-slide .construction-graphic,
   .hero-arrow,
   .hero-arrow svg,
   .hero-pause {

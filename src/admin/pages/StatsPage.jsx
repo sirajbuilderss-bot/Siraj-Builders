@@ -19,6 +19,8 @@ export default function StatsPage() {
         emptyTitle="No statistics yet"
         emptyBody="The homepage currently shows brand pillars instead, which are positioning rather than unverifiable metrics."
         load={stats.listAll}
+        reorder={stats.reorder}
+        toggle={{ field: "is_active", on: "Show", off: "Hide" }}
         create={stats.create}
         update={stats.update}
         remove={stats.remove}

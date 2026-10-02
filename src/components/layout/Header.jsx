@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { PRIMARY_NAV, CTA } from "../../config/site";
 import { useSiteData } from "../../context/SiteDataContext";
+import { ArrowRight, Mail, Phone } from "../ui/Icons";
 
 /* ---------------- DATA ----------------
    Navigation now comes from src/config/site.js so the header, footer,
@@ -14,43 +15,6 @@ const MOBILE_EXTRA = [
 ];
 
 /* ---------------- ICONS ---------------- */
-
-function PhoneIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="14"
-      height="14"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z" />
-    </svg>
-  );
-}
-
-function MailIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="14"
-      height="14"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="3" y="5" width="18" height="14" rx="2" />
-      <path d="m3 7 9 6 9-6" />
-    </svg>
-  );
-}
 
 function ChevronIcon() {
   return (
@@ -78,13 +42,20 @@ export default function Header() {
 
   /* Company details, contact details and the service list now come from the
      database, falling back to src/config/site.js when it cannot answer. They
-     are destructured under their original names so the markup below is
-     unchanged — the header renders exactly as it did before. */
+   are destructured under the original names. Only confirmed contact details
+   appear in the public header. */
   const {
     company: COMPANY,
     contact: CONTACT,
     serviceLinks: SERVICE_LINKS,
+    settingValue,
   } = useSiteData();
+
+  /* Header button — editable in Admin → Settings → Navigation. */
+  const headerCta = {
+    label: settingValue("header_cta_label", CTA.primary.label),
+    to: settingValue("header_cta_href", CTA.primary.to),
+  };
 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -94,9 +65,11 @@ export default function Header() {
   const dropdownRef = useRef(null);
   const closeTimer = useRef(null);
 
-  const isServicePage = SERVICE_LINKS.some(
-    (s) => pathname === s.to || pathname.startsWith(s.to + "/")
-  );
+  const isServicePage =
+    pathname === "/services" ||
+    SERVICE_LINKS.some(
+      (s) => pathname === s.to || pathname.startsWith(s.to + "/")
+    );
 
   /* ---- scroll state ---- */
   useEffect(() => {
@@ -188,33 +161,23 @@ export default function Header() {
                   href={`tel:${CONTACT.phone.value}`}
                   aria-label={`Call ${COMPANY.name}`}
                 >
-                  <PhoneIcon />
+                  <Phone size={14} />
                   <span>{CONTACT.phone.value}</span>
                 </a>
-              ) : (
-                <span className="topbar-pending">
-                  <PhoneIcon />
-                  <span>{CONTACT.phone.display}</span>
-                </span>
-              )}
+              ) : null}
               {CONTACT.email.confirmed ? (
                 <a
                   href={`mailto:${CONTACT.email.value}`}
                   aria-label={`Email ${COMPANY.name}`}
                 >
-                  <MailIcon />
+                  <Mail size={14} />
                   <span>{CONTACT.email.value}</span>
                 </a>
-              ) : (
-                <span className="topbar-pending">
-                  <MailIcon />
-                  <span>{CONTACT.email.display}</span>
-                </span>
-              )}
+              ) : null}
             </div>
 
-            <Link to={CTA.primary.to} className="topbar-cta">
-              {CTA.primary.label} <span aria-hidden="true">→</span>
+            <Link to={headerCta.to} className="topbar-cta">
+              {headerCta.label} <ArrowRight size={15} />
             </Link>
           </div>
         </div>
@@ -253,6 +216,14 @@ export default function Header() {
                 </button>
 
                 <div className="drop-panel" role="menu">
+                  <Link
+                    to="/services"
+                    role="menuitem"
+                    className="drop-all"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    All services
+                  </Link>
                   {SERVICE_LINKS.map((item) => (
                     <Link
                       key={item.to}
@@ -277,8 +248,8 @@ export default function Header() {
                 </Link>
               ))}
 
-              <Link className="btn btn-primary nav-cta" to={CTA.primary.to}>
-                {CTA.primary.label} <span className="arrow">→</span>
+              <Link className="btn btn-primary nav-cta" to={headerCta.to}>
+                {headerCta.label} <span className="arrow"><ArrowRight size={17} /></span>
               </Link>
             </nav>
 
@@ -337,6 +308,9 @@ export default function Header() {
           id="mservices"
         >
           <div className="mobile-sub-inner">
+            <Link to="/services" onClick={() => setMenuOpen(false)}>
+              All services
+            </Link>
             {SERVICE_LINKS.map((item) => (
               <Link
                 key={item.to}
@@ -373,10 +347,10 @@ export default function Header() {
 
         <Link
           className="btn btn-primary"
-          to={CTA.primary.to}
+          to={headerCta.to}
           onClick={() => setMenuOpen(false)}
         >
-          {CTA.primary.label} <span className="arrow">→</span>
+          {headerCta.label} <span className="arrow"><ArrowRight size={17} /></span>
         </Link>
       </nav>
     </>

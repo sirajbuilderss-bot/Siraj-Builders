@@ -3,8 +3,10 @@ import {
   COMPANY_LINKS,
   RESOURCE_LINKS,
   LEGAL_LINKS,
+  CTA,
 } from "../../config/site";
 import { useSiteData } from "../../context/SiteDataContext";
+import { ArrowRight, Mail, MapPin, Phone } from "../ui/Icons";
 
 /* ---------------- ICONS ---------------- */
 
@@ -46,90 +48,30 @@ function SocialIcon({ name }) {
   );
 }
 
-function PhoneIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z" />
-    </svg>
-  );
-}
-
-function MailIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="3" y="5" width="18" height="14" rx="2" />
-      <path d="m3 7 9 6 9-6" />
-    </svg>
-  );
-}
-
-function MapPinIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-      <circle cx="12" cy="10" r="3" />
-    </svg>
-  );
-}
-
 /**
- * Renders a contact row. When a detail is still unconfirmed it renders as
- * plain text rather than a link, because a `tel:+920000000000` link is a
- * dead click that looks functional — worse than showing nothing.
+ * Only confirmed contact details are shown to visitors. Unconfirmed values
+ * are setup notes for the admin, not copy for the public site.
  */
 function ContactRow({ icon, label, detail, href }) {
+  if (!detail.confirmed || !detail.value) return null;
   const body = (
     <>
       <span className="footer-contact-icon">{icon}</span>
       <span className="footer-contact-body">
         <small>{label}</small>
-        <span>{detail.confirmed ? detail.value : detail.display}</span>
+        <span>{detail.value}</span>
       </span>
     </>
   );
 
-  if (detail.confirmed && href) {
+  if (href) {
     return (
       <a className="footer-contact-item" href={href}>
         {body}
       </a>
     );
   }
-  return (
-    <div className="footer-contact-item is-pending" aria-label={`${label} — to be confirmed`}>
-      {body}
-    </div>
-  );
+  return <div className="footer-contact-item">{body}</div>;
 }
 
 /* ---------------- COMPONENT ---------------- */
@@ -144,7 +86,15 @@ export default function Footer() {
     contact: CONTACT,
     serviceLinks: SERVICE_LINKS,
     socials: SOCIAL_PROFILES,
+    settingValue,
   } = useSiteData();
+
+  /* Documentation, FOOTER CTA — editable in Admin → Settings → Footer. */
+  const footerCta = {
+    title: settingValue("footer_cta_title", "Have a project in mind? Let's talk."),
+    label: settingValue("footer_cta_label", CTA.primary.label),
+    to: settingValue("footer_cta_href", CTA.primary.to),
+  };
 
   /* Unchanged rule: a profile appears only when it is confirmed AND has a
      URL, so the social row stays hidden rather than linking to a platform
@@ -154,6 +104,13 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="container">
+        <div className="footer-cta">
+          <p className="footer-cta-title">{footerCta.title}</p>
+          <Link className="btn btn-light" to={footerCta.to}>
+            {footerCta.label} <span className="arrow"><ArrowRight size={17} /></span>
+          </Link>
+        </div>
+
         <div className="footer-grid">
           {/* ---- BRAND ---- */}
           <div className="footer-brand">
@@ -166,7 +123,7 @@ export default function Footer() {
                 "Building excellence across Pakistan" copy, which claimed
                 unverified geographic coverage and used the superlative
                 language the brand guidelines rule out. */}
-            <p>{COMPANY.tagline}</p>
+            <p>{settingValue("footer_tagline", COMPANY.tagline)}</p>
 
             {activeSocials.length > 0 && (
               <div className="footer-social">
@@ -188,6 +145,7 @@ export default function Footer() {
           {/* ---- SERVICES ---- */}
           <nav className="footer-col" aria-label="Services">
             <h3>Services</h3>
+            <Link to="/services">All services</Link>
             {SERVICE_LINKS.map((item) => (
               <Link key={item.to} to={item.to}>
                 {item.label}
@@ -220,22 +178,27 @@ export default function Footer() {
             <h3>Get in Touch</h3>
             <div className="footer-contact-list">
               <ContactRow
-                icon={<PhoneIcon />}
+                icon={<Phone size={16} />}
                 label="Phone"
                 detail={CONTACT.phone}
                 href={`tel:${CONTACT.phone.value}`}
               />
               <ContactRow
-                icon={<MailIcon />}
+                icon={<Mail size={16} />}
                 label="Email"
                 detail={CONTACT.email}
                 href={`mailto:${CONTACT.email.value}`}
               />
               <ContactRow
-                icon={<MapPinIcon />}
+                icon={<MapPin size={16} />}
                 label="Office"
                 detail={CONTACT.address}
               />
+              {!CONTACT.phone.confirmed && !CONTACT.email.confirmed && !CONTACT.address.confirmed && (
+                <p className="footer-contact-note">
+                  <Link to="/contact-us">Use the project enquiry form to tell us what you are planning.</Link>
+                </p>
+              )}
             </div>
           </div>
         </div>

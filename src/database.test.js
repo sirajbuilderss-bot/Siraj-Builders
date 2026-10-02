@@ -77,6 +77,30 @@ const FIXTURES = {
       motif: null, is_published: true, sort_order: 10,
     },
   ],
+  page_sections: [
+    {
+      id: "section-who-database",
+      page_path: "/who-we-are",
+      section_key: "who",
+      label: "Database intro",
+      section_type: "intro",
+      eyebrow: "Who we are",
+      title: "Title served from the page_sections table",
+      subtitle: "",
+      body: "Intro paragraph served from the database for the who-we-are route.",
+      items: [
+        { title: "Database point one", body: "", image: "" },
+        { title: "Database point two", body: "", image: "" },
+      ],
+      media_url: "https://example.test/page.jpg",
+      video_url: "",
+      cta_label: "",
+      cta_href: "",
+      settings: {},
+      is_enabled: true,
+      position: 0,
+    },
+  ],
   faq_categories: [
     { id: "c1", key: "services", label: "Database FAQ Category", is_active: true, sort_order: 10 },
   ],
@@ -171,10 +195,10 @@ describe("database content reaches the page", () => {
     expect(screen.getByText(/Database CTA/)).toBeInTheDocument();
   });
 
-  test("content page renders copy from the pages table", async () => {
+  test("content page renders copy from the page_sections table", async () => {
     visit("/who-we-are");
-    expect(await screen.findByText("Title served from the pages table")).toBeInTheDocument();
-    expect(screen.getByText("Heading served from the database")).toBeInTheDocument();
+    expect(await screen.findByText("Title served from the page_sections table")).toBeInTheDocument();
+    expect(screen.getByText("Intro paragraph served from the database for the who-we-are route.")).toBeInTheDocument();
     expect(screen.getByText("Database point one")).toBeInTheDocument();
   });
 
@@ -244,7 +268,7 @@ describe("form submissions become database rows", () => {
     fill(container, "projectType", "residential");
     fill(container, "description", "A description comfortably longer than the twenty character minimum.");
 
-    fireEvent.submit(container.querySelector("form.project-form"));
+    fireEvent.submit(container.querySelector("form.cform"));
 
     await waitFor(() => {
       expect(
@@ -329,7 +353,7 @@ describe("form submissions become database rows", () => {
     fill(container, "projectType", "residential");
     fill(container, "description", "This submission will be rejected by the database policy.");
 
-    fireEvent.submit(container.querySelector("form.project-form"));
+    fireEvent.submit(container.querySelector("form.cform"));
 
     await waitFor(() => {
       expect(screen.getByText(/could not send your details/i)).toBeInTheDocument();

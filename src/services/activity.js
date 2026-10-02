@@ -1,9 +1,8 @@
 /**
  * ACTIVITY LOG SERVICE
  * ============================================================================
- * Append-only audit trail. The RLS policies allow admins to insert and read
- * but never to update or delete — an audit trail that can be rewritten is not
- * an audit trail.
+ * Audit trail. Entries are immutable, but an active admin may remove an
+ * individual entry or prune entries before a chosen retention cutoff.
  *
  * Logging must never break the action it is describing, so every call here
  * swallows its own errors. A project that saved but whose log line failed is
@@ -48,5 +47,24 @@ export async function recent(limit = 12) {
   }
 }
 
-const activity = { log, recent };
+export async function removeEntry(id) {
+  if (!id) throw new Error("Choose an activity entry to delete.");
+  await db.from("activity_logs").delete().eq("id", id).run();
+}
+
+export async function removeOlderThan(cutoff) {
+  const cutoffDate = new Date(cutoff);
+  if (Number.isNaN(cutoffDate.getTime())) {
+    throw new Error("Choose a valid date before deleting old activity.");
+  }
+  const { count } = await db
+    .from("activity_logs")
+    .delete()
+    .lte("created_at", cutoffDate.toISOString())
+    .withCount()
+    .run();
+  return count;
+}
+
+const activity = { log, recent, removeEntry, removeOlderThan };
 export default activity;

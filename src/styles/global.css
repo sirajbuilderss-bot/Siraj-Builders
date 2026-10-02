@@ -554,12 +554,17 @@ ul {
   flex-direction: column;
   background: linear-gradient(180deg, #141b20, #0e1317);
   border-left: 1px solid var(--line-dark);
-  box-shadow: -30px 0 70px -40px rgba(0, 0, 0, 1);
   transform: translateX(102%);
-  transition: transform 0.55s var(--ease);
+  /* Hidden (not just off-screen) while closed: its shadow no longer bleeds
+     onto the edge of every page, and its links are not reachable by Tab. */
+  visibility: hidden;
+  transition: transform 0.55s var(--ease), visibility 0s linear 0.55s;
 }
 .mobile-menu.is-open {
   transform: translateX(0);
+  visibility: visible;
+  box-shadow: -30px 0 70px -40px rgba(0, 0, 0, 1);
+  transition: transform 0.55s var(--ease), visibility 0s;
 }
 
 .mobile-menu > a:not(.btn),
@@ -1323,10 +1328,10 @@ ul {
    ============================================================ */
 .reveal {
   opacity: 0;
-  transform: translateY(36px);
+  transform: translateY(22px);
   transition:
-    opacity 0.9s var(--ease),
-    transform 0.9s var(--ease);
+    opacity 0.68s var(--ease),
+    transform 0.68s var(--ease);
   transition-delay: var(--d, 0s);
   will-change: opacity, transform;
 }
@@ -2304,4 +2309,33 @@ figure.card figcaption {
 
 figure.card figcaption b {
   font-weight: 700;
+}
+
+/* ============================================================
+   FOOTER CALL TO ACTION (documentation: "Have a project in mind?
+   Let's talk." above the footer columns)
+   ============================================================ */
+.footer-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding-bottom: clamp(2rem, 4vw, 2.75rem);
+  margin-bottom: clamp(2rem, 4vw, 2.75rem);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.footer-cta-title {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.35rem, 2.6vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  max-width: 24ch;
+}
+
+/* "All services" link at the top of the Services dropdown */
+.drop-panel .drop-all {
+  font-weight: 700;
+  border-bottom: 1px solid var(--line);
 }

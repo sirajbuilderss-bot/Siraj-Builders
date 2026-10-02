@@ -693,3 +693,65 @@ Agar koi cheez samajh nahi aa rahi, ya kuch kharab ho gaya hai:
 
 *Yeh guide Siraj Builders ke admin panel ke liye hai. Panel mein koi nayi
 cheez shaamil ho to yeh guide bhi update honi chahiye.*
+
+
+---
+
+# NAYE FEATURES (CMS release)
+
+## Website ka har page ab admin se badalta hai
+**Pages** screen kholein → baen taraf page chunein → section par **Edit**.
+- Heading, text, tasveer, buttons (do buttons tak), background (safaid /
+  halka grey / dark) aur layout yahan se badlein.
+- **List items** (cards, bullet points, steps): "+ Add item" se naya, ↑ ↓ se
+  tarteeb, × se hatayein.
+- Section chhupana ho to **Hide**; tarteeb badalni ho to ↑ ↓.
+- Kuch sections par neela note hai "Note from the project documentation" —
+  yeh woh cheezein hain jo Siraj Builders ne abhi confirm karni hain. Asli
+  maloomat likh kar hi section ko **Show** karein.
+
+## Tasveer upload karna
+Har tasveer wale khane ke saath **Upload** button hai. JPG/PNG/WebP (10 MB
+tak) chunein — tasveer khud upload ho kar lag jaye gi. Link paste karna bhi
+ab bhi kaam karta hai.
+
+## Projects — poori case study
+1. **Projects → Add project** → naam, type, card description bharein →
+   **Save**.
+2. Save ke baad form khula rehta hai aur neeche **Photos** aur **Videos**
+   aa jate hain:
+   - **Upload photos** se ek saath kai tasveerein
+   - ← → se tarteeb, **Set featured** se card wali tasveer
+   - Caption aur "describe the photo" (andhe afraad ke liye) likhein
+   - Video: YouTube/Vimeo/Google Drive link paste karein ya MP4 upload
+3. Requirement, challenge, solution, approach, quality, result bharein.
+4. Client ki raye sirf tab dikhegi jab "genuine … agreed to publish" tick ho.
+5. Tayyar ho jaye to list mein **Publish**.
+
+## SEO & publishing
+- Har page ko **Publish / Unpublish** kar sakte hain. Unpublished page
+  visitors ko "not found" dikhata hai; aap (login hon to) dekh sakte hain.
+- **SEO** button: Google mein dikhne wala title/description aur WhatsApp/
+  Facebook share ki tasveer. Khali chhorein to documentation wala default
+  chalega.
+
+## FAQs
+- **Needs answer** filter: documentation ke [TO CONFIRM] sawal. Jawab likh
+  kar **Publish** karein. Bina jawab ke publish nahi ho sakta.
+- "Show on homepage" tick karein to sawal homepage par bhi aaye ga (4 tak).
+
+## Services
+- Service tab tak publish nahi hogi jab tak "confirmed" tick na ho.
+- **Edit page** se us service ke page ka content khulta hai.
+- Agar service publish karein to **SEO & publishing** mein us ka page bhi
+  **Publish** karein.
+
+## Settings
+- **Contact information**: number/email likh kar *Confirmed* tick karein —
+  tabhi website par click hone wala link banega.
+- **Header & navigation / Footer**: upar aur neeche wale button ka text/link.
+- **WhatsApp message**: WhatsApp button dabane par jo message pehle se likha
+  aata hai.
+- **Forms**: form bhejne ke baad ka "Thank you" message.
+
+Kya kya abhi confirm hona baqi hai — `TO-CONFIRM.md` dekhein.

@@ -1,5 +1,5 @@
-import ContentPage from "./ContentPage";
+import SectionPage from "./SectionPage";
 
-export default function Locations() {
-  return <ContentPage />;
+export default function Page() {
+  return <SectionPage />;
 }

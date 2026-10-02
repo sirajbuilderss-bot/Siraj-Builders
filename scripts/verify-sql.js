@@ -242,11 +242,14 @@ function checkInsertArity(file, sql) {
 
 /** Every route the page builder offers must have at least one seeded section. */
 function checkRouteCoverage(file, sql) {
-  const registry = fs.readFileSync(path.join(ROOT, "src/services/sections.js"), "utf8");
-  const routes = [...registry.matchAll(/\{\s*path:\s*"([^"]+)"/g)].map((m) => m[1]);
-  const seeded = new Set([...sql.matchAll(/^\('(\/[a-z0-9-]*)',/gm)].map((m) => m[1]));
+  const routes = JSON.parse(
+    fs.readFileSync(path.join(ROOT, "src/content/defaults.json"), "utf8")
+  ).registry.map((entry) => entry.path);
+  const seeded = new Set([...sql.matchAll(/^\s*\('(\/[a-z0-9-]*)',/gm)].map((m) => m[1]));
 
-  const missing = routes.filter((route) => !seeded.has(route));
+  // The repair file restores the original section table only; the current
+  // documented content comes from migration-03 (included in install.sql).
+  const missing = file === "repair-page-sections.sql" ? [] : routes.filter((route) => !seeded.has(route));
   if (missing.length) {
     problems.push(
       `${file}: no sections seeded for ${missing.length} route(s) the page builder lists: ${missing.join(", ")}`

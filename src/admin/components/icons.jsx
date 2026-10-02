@@ -182,6 +182,19 @@ export const IconClose = (p) => (
   </Svg>
 );
 
+export const IconCheck = (p) => (
+  <Svg {...p}>
+    <path d="m5 12.5 4.2 4.2L19 7" />
+  </Svg>
+);
+
+export const IconTrash = (p) => (
+  <Svg {...p}>
+    <path d="M4 6h16M9 6V4h6v2m3 0-.8 14H6.8L6 6" />
+    <path d="M10 10v6m4-6v6" />
+  </Svg>
+);
+
 /* ------------------------------------------------------------------ mapping */
 
 /**
@@ -230,6 +243,8 @@ const icons = {
   IconSearch,
   IconDot,
   IconClose,
+  IconCheck,
+  IconTrash,
   sectionTypeIcon,
 };
 

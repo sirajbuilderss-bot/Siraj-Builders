@@ -23,7 +23,8 @@
     "lint": "eslint src --ext .js,.jsx",
     "verify": "node scripts/verify-static.js && node scripts/verify-sql.js",
     "verify:sql": "node scripts/verify-sql.js",
-    "build:sql": "node database/build-sql.js"
+    "build:sql": "node database/build-content.cjs && node database/build-sql.js",
+    "build:content": "node database/build-content.cjs"
   },
   "eslintConfig": {
     "extends": [
@@ -43,6 +44,6 @@
       "last 1 safari version"
     ]
   },
-  "description": "Siraj Builders — professional construction and building services website.",
+  "description": "Siraj Builders \u2014 professional construction and building services website.",
   "homepage": "/"
 }

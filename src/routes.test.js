@@ -19,7 +19,13 @@
  */
 
 import { render, screen, waitFor } from "@testing-library/react";
-import App from "./App";
+
+// This suite verifies documented fallback content. Keep it independent from
+// any developer .env file or reachable Supabase project.
+process.env.REACT_APP_SUPABASE_URL = "";
+process.env.REACT_APP_SUPABASE_ANON_KEY = "";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const App = require("./App").default;
 
 const PUBLIC_ROUTES = [
   "/",
@@ -36,7 +42,11 @@ const PUBLIC_ROUTES = [
   "/grey-structure",
   "/turnkey-construction",
   "/project-management",
+  "/services",
+  "/testimonials",
   "/projects",
+  "/projects/a-project-that-does-not-exist",
+  "/project-detail?project=legacy-link",
   "/project-showcase",
   "/our-process",
   "/locations",
@@ -78,6 +88,7 @@ const IGNORED = [
   /Supabase is not configured/i,
   /No content configured/i,
   /Not implemented: window\.scrollTo/i,
+  /Using documented defaults/i,
 ];
 
 function significant(list) {

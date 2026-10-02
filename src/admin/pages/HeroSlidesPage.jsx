@@ -15,6 +15,8 @@ export default function HeroSlidesPage() {
       entity="hero_slides"
       description="The homepage carousel. The first slide's heading is rendered as the page H1, so it carries the most SEO weight."
       load={heroSlides.listAll}
+      reorder={heroSlides.reorder}
+      toggle={{ field: "is_active", on: "Show", off: "Hide" }}
       create={heroSlides.create}
       update={heroSlides.update}
       remove={heroSlides.remove}

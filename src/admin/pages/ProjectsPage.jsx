@@ -1,260 +1,255 @@
 import ResourceManager from "../components/ResourceManager";
+import ProjectMediaManager from "../components/ProjectMediaManager";
 import { projects } from "../../services/content";
-import { Alert, Pill } from "../components/ui";
+import { clearPublicCache } from "../../services/publicData";
+import { Pill } from "../components/ui";
+import DEFAULTS from "../../content/defaults.json";
 
 const CATEGORIES = ["Residential", "Commercial", "Renovation", "Design & Build"];
 
 /**
- * Projects are the portfolio case studies. The site's documentation is
- * explicit that only verified work may be published, which is why the table
- * ships empty and why `is_active` exists — a half-written case study can be
- * saved and kept off the live site until it is ready.
+ * PROJECTS — portfolio case studies.
  *
- * `features`, `tags` and `gallery` are jsonb arrays in the database and plain
- * textareas in this form. mapRowToForm converts on the way in, beforeSave
- * converts on the way out. Asking a non-technical admin to type valid JSON to
- * add a bullet point would be a poor trade.
+ * The form follows the documented case-study template in order:
+ *   basics → project details → story (requirement → challenge → solution →
+ *   construction approach → quality & management → result) → feedback → SEO
+ * and, once the project has been saved, a media manager for its photos and
+ * videos (uploads go to Supabase Storage, or paste a link).
+ *
+ * Only verified work should be published — "Show on the live site" stays
+ * off until the case study is complete.
  */
-
-/* ---- jsonb array <-> text ---- */
 
 const linesToArray = (text) =>
   String(text || "")
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean);
-
 const arrayToLines = (value) => (Array.isArray(value) ? value.join("\n") : "");
-
 const commasToArray = (text) =>
   String(text || "")
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
-
 const arrayToCommas = (value) => (Array.isArray(value) ? value.join(", ") : "");
+const slugify = (value) =>
+  String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+const SERVICE_OPTIONS = [
+  { value: "", label: "— None —" },
+  ...DEFAULTS.services.map((s) => ({ value: s.slug, label: s.title })),
+];
+
+const withCacheClear = (fn) => async (...args) => {
+  const result = await fn(...args);
+  clearPublicCache();
+  return result;
+};
 
 export default function ProjectsPage() {
   return (
-    <>
-      <Alert tone="info" title="Images and video">
-        Nothing is uploaded here. Host the file somewhere public — Google Drive,
-        Cloudinary, YouTube, Vimeo or any image host — and paste the link. Each
-        URL field previews what it finds, so a wrong link is obvious before you
-        save.
-      </Alert>
-
-      <ResourceManager
-        title="Projects"
-        singular="Project"
-        entity="projects"
-        description="Case studies shown on /projects and /project-detail. Deactivate a project to keep it out of the live portfolio without deleting it."
-        emptyTitle="No projects yet"
-        emptyBody="The portfolio page shows its documented empty state until the first project is added. Add only verified work."
-        load={projects.listAll}
-        create={projects.create}
-        update={projects.update}
-        remove={projects.remove}
-        labelOf={(row) => row.title}
-        searchKeys={[
-          "title",
-          "slug",
-          "location",
-          "category",
-          "summary",
-          "client_name",
-          "short_description",
-        ]}
-        columns={[
-          {
-            key: "title",
-            label: "Project",
-            render: (row) => (
-              <>
+    <ResourceManager
+      title="Projects"
+      singular="Project"
+      entity="projects"
+      description="Case studies shown on /projects and /projects/<slug>. Featured projects appear first. Keep a project hidden until its case study is complete and verified."
+      emptyTitle="No projects yet"
+      emptyBody="The portfolio shows its honest empty state until the first project is published. Add only real, verified work."
+      load={projects.listAll}
+      create={withCacheClear(projects.create)}
+      update={withCacheClear(projects.update)}
+      remove={withCacheClear(projects.remove)}
+      reorder={withCacheClear(projects.reorder)}
+      toggle={{ field: "is_active", on: "Publish", off: "Hide" }}
+      stayOpenAfterCreate
+      wideModal
+      labelOf={(row) => row.title}
+      searchKeys={["title", "slug", "location", "category", "short_description", "client_name"]}
+      filters={[
+        { key: "live", label: "Live", test: (row) => row.is_active },
+        { key: "hidden", label: "Hidden", test: (row) => !row.is_active },
+        { key: "featured", label: "Featured", test: (row) => row.is_featured },
+      ]}
+      renderFormExtras={(row, { toast, markChanged }) => (
+        <ProjectMediaManager project={row} toast={toast} onProjectChanged={markChanged} />
+      )}
+      columns={[
+        {
+          key: "title",
+          label: "Project",
+          render: (row) => (
+            <div className="ad-cell-media">
+              {row.image_url ? (
+                <img src={row.image_url} alt="" loading="lazy" />
+              ) : (
+                <span className="ad-cell-media-empty" aria-hidden="true">—</span>
+              )}
+              <div>
                 <div className="ad-cell-strong">
-                  {row.title}
-                  {row.is_featured ? (
-                    <>
-                      {" "}
-                      <Pill tone="new">Featured</Pill>
-                    </>
-                  ) : null}
+                  {row.title} {row.is_featured ? <Pill tone="new">Featured</Pill> : null}
                 </div>
-                <div className="ad-cell-muted">/{row.slug}</div>
-              </>
-            ),
-          },
-          { key: "category", label: "Category" },
-          { key: "client_name", label: "Client" },
-          { key: "location", label: "Location" },
-          { key: "year", label: "Year" },
-          {
-            key: "is_active",
-            label: "Live",
-            render: (row) =>
-              row.is_active ? <Pill tone="ok">Live</Pill> : <Pill tone="off">Hidden</Pill>,
-          },
-        ]}
-        defaults={{
-          slug: "",
-          title: "",
-          category: "Residential",
-          location: "",
-          status: "Completed",
-          year: "",
-          area: "",
-          client_name: "",
-          completion_date: "",
-          image_url: "",
-          banner_url: "",
-          video_url: "",
-          gallery: "",
-          short_description: "",
-          full_description: "",
-          features: "",
-          tags: "",
-          summary: "",
-          requirement: "",
-          challenge: "",
-          solution: "",
-          result: "",
-          is_active: true,
-          is_featured: false,
-          sort_order: 0,
-        }}
-        mapRowToForm={(form) => ({
-          ...form,
-          features: arrayToLines(form.features),
-          gallery: arrayToLines(form.gallery),
-          tags: arrayToCommas(form.tags),
-          completion_date: form.completion_date || "",
-        })}
-        fields={[
-          { name: "title", label: "Project name", required: true },
-          {
-            name: "slug",
-            label: "URL slug",
-            required: true,
-            help: "Lowercase, hyphenated. Used as /project-detail?project=slug",
-          },
-          {
-            name: "category",
-            label: "Category",
-            type: "select",
-            required: true,
-            options: CATEGORIES.map((c) => ({ value: c, label: c })),
-          },
-          {
-            name: "status",
-            label: "Status",
-            type: "select",
-            options: [
-              { value: "Completed", label: "Completed" },
-              { value: "Ongoing", label: "Ongoing" },
-            ],
-          },
+                <div className="ad-cell-muted">/projects/{row.slug}</div>
+              </div>
+            </div>
+          ),
+        },
+        { key: "category", label: "Type" },
+        { key: "location", label: "Location" },
+        {
+          key: "status",
+          label: "Status",
+          render: (row) => [row.status, row.year].filter(Boolean).join(" · ") || "—",
+        },
+        {
+          key: "is_active",
+          label: "Website",
+          render: (row) => (row.is_active ? <Pill tone="ok">Live</Pill> : <Pill tone="off">Hidden</Pill>),
+        },
+      ]}
+      defaults={{
+        slug: "",
+        title: "",
+        category: "Residential",
+        service_slug: "",
+        location: "",
+        status: "Completed",
+        year: "",
+        area: "",
+        timeline: "",
+        scope: "",
+        client_name: "",
+        completion_date: "",
+        banner_url: "",
+        short_description: "",
+        full_description: "",
+        features: "",
+        tags: "",
+        requirement: "",
+        challenge: "",
+        solution: "",
+        approach: "",
+        quality: "",
+        result: "",
+        client_feedback: "",
+        feedback_verified: false,
+        seo_title: "",
+        seo_description: "",
+        is_active: false,
+        is_featured: false,
+      }}
+      mapRowToForm={(form) => ({
+        ...form,
+        features: arrayToLines(form.features),
+        tags: arrayToCommas(form.tags),
+        completion_date: form.completion_date || "",
+      })}
+      validate={(values) => {
+        const errors = {};
+        const slug = slugify(values.slug || values.title);
+        if (!slug) errors.slug = "Enter a URL slug, e.g. gulberg-residence";
+        if (values.is_active && String(values.short_description || "").trim().length < 20) {
+          errors.short_description = "A published project needs a short description for its card.";
+        }
+        if (values.feedback_verified && !String(values.client_feedback || "").trim()) {
+          errors.client_feedback = "Add the client's words, or untick “verified”.";
+        }
+        return errors;
+      }}
+      fields={[
+        { type: "heading", label: "Basics", help: "Name, type and where it appears." },
+        { name: "title", label: "Project name", required: true },
+        {
+          name: "slug",
+          label: "URL slug",
+          help: "Lowercase words joined by hyphens. Leave blank to build it from the name. The page will be /projects/<slug>.",
+        },
+        {
+          name: "category",
+          label: "Project type",
+          type: "select",
+          required: true,
+          options: CATEGORIES.map((c) => ({ value: c, label: c })),
+        },
+        {
+          name: "service_slug",
+          label: "Related service",
+          type: "select",
+          options: SERVICE_OPTIONS,
+          help: "Adds an “Explore the service behind this project” link.",
+        },
+        {
+          name: "short_description",
+          label: "Card description",
+          type: "textarea",
+          rows: 3,
+          help: "40–60 words. Shown on the project card and under the case-study title.",
+        },
 
-          { name: "client_name", label: "Client name", help: "Only with the client's permission." },
-          { name: "location", label: "Location" },
-          {
-            name: "completion_date",
-            label: "Completion date",
-            type: "date",
-            help: "Leave blank for ongoing work.",
-          },
-          { name: "year", label: "Year", help: "Shown on the card. e.g. 2025" },
-          { name: "area", label: "Area", help: "e.g. 10 marla, 2,400 sq ft" },
-          { name: "sort_order", label: "Sort order", type: "number" },
+        { type: "heading", label: "Project details", help: "Shown in the details panel. Leave any field blank to hide it." },
+        {
+          name: "status",
+          label: "Status",
+          type: "select",
+          options: [
+            { value: "Completed", label: "Completed" },
+            { value: "Ongoing", label: "Ongoing" },
+          ],
+        },
+        { name: "year", label: "Year", help: "e.g. 2025" },
+        { name: "location", label: "Location" },
+        { name: "area", label: "Area", help: "e.g. 10 marla, 2,400 sq ft" },
+        { name: "timeline", label: "Timeline", help: "e.g. 14 months" },
+        { name: "scope", label: "Scope", help: "e.g. Grey structure and finishing" },
+        { name: "client_name", label: "Client name", help: "Only with the client's permission." },
+        { name: "completion_date", label: "Completion date", type: "date", help: "Leave blank for ongoing work." },
 
-          {
-            name: "image_url",
-            label: "Thumbnail URL",
-            type: "media",
-            help: "The image on the portfolio card. Landscape works best.",
-          },
-          {
-            name: "banner_url",
-            label: "Banner URL",
-            type: "media",
-            help: "The wide image at the top of the case study page.",
-          },
-          {
-            name: "video_url",
-            label: "Video URL",
-            type: "media",
-            kind: "video",
-            help: "YouTube or Vimeo link. Optional.",
-          },
-          {
-            name: "gallery",
-            label: "Gallery URLs",
-            type: "textarea",
-            rows: 4,
-            help: "One image URL per line.",
-          },
+        { type: "heading", label: "The case study", help: "Client requirement → challenge → approach → execution → result. Use real, verified details only." },
+        { name: "full_description", label: "Project overview", type: "textarea", rows: 4 },
+        { name: "requirement", label: "The client requirement", type: "textarea", rows: 3 },
+        { name: "challenge", label: "The challenge", type: "textarea", rows: 3 },
+        { name: "solution", label: "Our solution", type: "textarea", rows: 3 },
+        { name: "approach", label: "Construction approach", type: "textarea", rows: 3 },
+        { name: "quality", label: "Quality & management", type: "textarea", rows: 3 },
+        { name: "result", label: "The result", type: "textarea", rows: 3 },
+        { name: "features", label: "Key features", type: "textarea", rows: 4, help: "One per line, e.g. Basement parking" },
 
-          {
-            name: "short_description",
-            label: "Short description",
-            type: "textarea",
-            rows: 3,
-            help: "40–60 words. Shown on the portfolio card.",
-          },
-          {
-            name: "full_description",
-            label: "Full description",
-            type: "textarea",
-            rows: 5,
-            help: "The opening passage of the case study page.",
-          },
-          {
-            name: "features",
-            label: "Features",
-            type: "textarea",
-            rows: 5,
-            help: "One per line. e.g. Basement parking",
-          },
-          {
-            name: "tags",
-            label: "Tags",
-            help: "Separated by commas. e.g. turnkey, 10 marla, Narowal",
-          },
+        { type: "heading", label: "Client feedback" },
+        { name: "client_feedback", label: "What the client said", type: "textarea", rows: 3 },
+        {
+          name: "feedback_verified",
+          label: "This feedback is genuine and the client agreed to publish it",
+          type: "checkbox",
+          help: "Feedback only appears on the website when this is ticked.",
+        },
 
-          { name: "requirement", label: "Client requirement", type: "textarea", rows: 3 },
-          { name: "challenge", label: "Challenge", type: "textarea", rows: 3 },
-          { name: "solution", label: "Our approach", type: "textarea", rows: 3 },
-          { name: "result", label: "Result", type: "textarea", rows: 3 },
+        { type: "heading", label: "Cover image & SEO" },
+        {
+          name: "banner_url",
+          label: "Wide cover image (optional)",
+          type: "media",
+          folder: "projects",
+          help: "Only if the top of the case study should use a different photo from the featured photo.",
+        },
+        { name: "seo_title", label: "SEO title", help: "Leave blank to use “<Project> | <Type> Project | Siraj Builders”." },
+        { name: "seo_description", label: "SEO description", type: "textarea", rows: 2, help: "Leave blank to use the card description." },
+        { name: "tags", label: "Internal tags", help: "Comma separated. Not shown on the website." },
 
-          {
-            name: "is_featured",
-            label: "Feature this project",
-            type: "checkbox",
-            help: "Featured projects carry a badge and sort to the front of the portfolio.",
-          },
-          {
-            name: "is_active",
-            label: "Show on the live site",
-            type: "checkbox",
-            help: "Uncheck to keep this project saved but hidden from visitors.",
-          },
-        ]}
-        beforeSave={(values) => ({
-          ...values,
-          slug: String(values.slug)
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/^-|-$/g, ""),
-          features: linesToArray(values.features),
-          gallery: linesToArray(values.gallery),
-          tags: commasToArray(values.tags),
-          // An empty date input submits "", which Postgres rejects for a
-          // `date` column. null is what "no completion date yet" means.
-          completion_date: values.completion_date ? values.completion_date : null,
-          // `summary` predates short_description and still feeds the older
-          // card components. Keeping them in step means neither renders blank.
-          summary: values.short_description || values.summary || "",
-        })}
-      />
-    </>
+        { type: "heading", label: "Publishing" },
+        { name: "is_featured", label: "Feature this project", type: "checkbox", help: "Featured projects show first and carry a badge." },
+        { name: "is_active", label: "Show on the live site", type: "checkbox", help: "Keep off until the case study is complete." },
+      ]}
+      beforeSave={(values) => ({
+        ...values,
+        slug: slugify(values.slug || values.title),
+        features: linesToArray(values.features),
+        tags: commasToArray(values.tags),
+        completion_date: values.completion_date ? values.completion_date : null,
+        // `summary` predates short_description; keep both in step.
+        summary: values.short_description || "",
+      })}
+    />
   );
 }

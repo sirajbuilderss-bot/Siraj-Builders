@@ -135,10 +135,10 @@ export const NAV = [
       },
       {
         to: "/admin/pages",
-        label: "Page copy",
+        label: "SEO & publishing",
         icon: IconFile,
-        title: "Page copy",
-        sub: "Hero and body text for the content-driven pages",
+        title: "SEO & publishing",
+        sub: "Which pages are live, and how they appear in search",
       },
       {
         to: "/admin/faqs",

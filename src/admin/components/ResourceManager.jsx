@@ -15,7 +15,7 @@
  * rather than forking the component.
  */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Field,
   Check,
@@ -55,6 +55,14 @@ export default function ResourceManager({
   mapRowToForm,
   renderExtraActions,
   searchKeys = [],
+
+  /* ---- added in the CMS release ---- */
+  reorder,              // async (orderedIds) => void — shows up/down controls
+  toggle,               // { field, on, off } — one-click publish / hide
+  renderFormExtras,     // (row, { refresh, toast }) => node, edit mode only
+  stayOpenAfterCreate,  // reopen a new row in edit mode (e.g. to add photos)
+  wideModal,            // larger editor for long forms
+  filters,              // [{ key, label, test: (row) => bool }]
 }) {
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -68,6 +76,8 @@ export default function ResourceManager({
 
   const [deleting, setDeleting] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [busyId, setBusyId] = useState(null);
+  const [activeFilter, setActiveFilter] = useState("all");
 
   const toast = useToast();
 
@@ -97,14 +107,57 @@ export default function ResourceManager({
 
   const visible = useMemo(() => {
     const term = search.trim().toLowerCase();
-    if (!term) return rows;
+    const filter = (filters || []).find((item) => item.key === activeFilter);
+    const base = filter ? rows.filter(filter.test) : rows;
+    if (!term) return base;
     const keys = searchKeys.length
       ? searchKeys
       : columns.map((column) => column.key);
-    return rows.filter((row) =>
+    return base.filter((row) =>
       keys.some((key) => String(row[key] ?? "").toLowerCase().includes(term))
     );
-  }, [rows, search, searchKeys, columns]);
+  }, [rows, search, searchKeys, columns, filters, activeFilter]);
+
+  /* Reordering only makes sense on the full, unfiltered list. */
+  const canReorder = Boolean(reorder) && !search.trim() && activeFilter === "all";
+
+  async function move(row, direction) {
+    const from = rows.findIndex((item) => item.id === row.id);
+    const to = direction === "up" ? from - 1 : from + 1;
+    if (from < 0 || to < 0 || to >= rows.length) return;
+    const next = rows.slice();
+    [next[from], next[to]] = [next[to], next[from]];
+    setRows(next);
+    setBusyId(row.id);
+    try {
+      await reorder(next.map((item) => item.id));
+    } catch (error) {
+      toast.show(error?.message || "Could not save the new order.", "error");
+      await refresh();
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  async function flip(row) {
+    if (!toggle) return;
+    setBusyId(row.id);
+    try {
+      await update(row.id, { [toggle.field]: !row[toggle.field] });
+      log("update", entity, {
+        entityId: row.id,
+        summary: `${row[toggle.field] ? "Hid" : "Published"} ${singular.toLowerCase()} “${labelOf(row)}”`,
+      });
+      setRows((current) =>
+        current.map((item) => (item.id === row.id ? { ...item, [toggle.field]: !row[toggle.field] } : item))
+      );
+      toast.show(row[toggle.field] ? `${singular} hidden.` : `${singular} published.`);
+    } catch (error) {
+      toast.show(error?.message || "Could not update.", "error");
+    } finally {
+      setBusyId(null);
+    }
+  }
 
   /* ---------------------------------------------------------------- form */
 
@@ -119,6 +172,7 @@ export default function ResourceManager({
     // (id, created_at, updated_at) are never echoed back in the update.
     const next = { ...defaults };
     fields.forEach((field) => {
+      if (field.type === "heading" || field.type === "custom") return;
       next[field.name] = row[field.name] ?? defaults[field.name] ?? "";
     });
     // Screens whose form shape differs from the row shape — a jsonb array
@@ -128,10 +182,19 @@ export default function ResourceManager({
     setEditing(row);
   }
 
+  /* Set by form extras (the project media manager) when they change the
+     row behind the form, so the table refreshes once the editor closes
+     rather than re-rendering the open editor mid-task. */
+  const extrasChanged = useRef(false);
+
   function closeForm() {
     if (isSaving) return;
     setEditing(null);
     setErrors({});
+    if (extrasChanged.current) {
+      extrasChanged.current = false;
+      refresh();
+    }
   }
 
   function setValue(name, value) {
@@ -148,6 +211,7 @@ export default function ResourceManager({
     const next = {};
 
     fields.forEach((field) => {
+      if (field.type === "heading" || field.type === "custom") return;
       const raw = values[field.name];
       const value = typeof raw === "string" ? raw.trim() : raw;
 
@@ -195,6 +259,12 @@ export default function ResourceManager({
           entityId: created?.id,
           summary: `Created ${singular.toLowerCase()} “${labelOf(created || payload)}”`,
         });
+        if (stayOpenAfterCreate && created?.id) {
+          toast.show(`${singular} created — you can now add the rest below.`);
+          setEditing(created);
+          await refresh();
+          return;
+        }
         toast.show(`${singular} created.`);
       } else {
         const updated = await update(editing.id, payload);
@@ -246,6 +316,23 @@ export default function ResourceManager({
         </Alert>
       )}
 
+      {filters && filters.length > 0 && (
+        <div className="ad-filter-tabs" role="group" aria-label={`Filter ${title.toLowerCase()}`}>
+          {[{ key: "all", label: "All", test: () => true }, ...filters].map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              className={activeFilter === item.key ? "is-active" : ""}
+              aria-pressed={activeFilter === item.key}
+              onClick={() => setActiveFilter(item.key)}
+            >
+              {item.label}
+              <span>{rows.filter(item.test).length}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="ad-toolbar">
         <div className="ad-search">
           <input
@@ -277,6 +364,7 @@ export default function ResourceManager({
             <table className="ad-table">
               <thead>
                 <tr>
+                  {reorder && <th className="ad-col-order">Order</th>}
                   {columns.map((column) => (
                     <th key={column.key}>{column.label}</th>
                   ))}
@@ -285,7 +373,33 @@ export default function ResourceManager({
               </thead>
               <tbody>
                 {visible.map((row) => (
-                  <tr key={row.id}>
+                  <tr key={row.id} className={busyId === row.id ? "is-busy" : undefined}>
+                    {reorder && (
+                      <td className="ad-col-order">
+                        <div className="ad-order-btns">
+                          <button
+                            type="button"
+                            className="ad-icon-btn"
+                            aria-label={`Move “${labelOf(row)}” up`}
+                            title={canReorder ? "Move up" : "Clear search and filters to reorder"}
+                            disabled={!canReorder || Boolean(busyId) || rows[0]?.id === row.id}
+                            onClick={() => move(row, "up")}
+                          >
+                            ↑
+                          </button>
+                          <button
+                            type="button"
+                            className="ad-icon-btn"
+                            aria-label={`Move “${labelOf(row)}” down`}
+                            title={canReorder ? "Move down" : "Clear search and filters to reorder"}
+                            disabled={!canReorder || Boolean(busyId) || rows[rows.length - 1]?.id === row.id}
+                            onClick={() => move(row, "down")}
+                          >
+                            ↓
+                          </button>
+                        </div>
+                      </td>
+                    )}
                     {columns.map((column) => (
                       <td key={column.key}>
                         {column.render ? column.render(row) : row[column.key] || "—"}
@@ -294,6 +408,16 @@ export default function ResourceManager({
                     <td>
                       <div className="ad-row-actions">
                         {renderExtraActions?.(row, { refresh, toast })}
+                        {toggle && (
+                          <button
+                            className="ad-btn ad-btn-ghost ad-btn-sm"
+                            type="button"
+                            disabled={busyId === row.id}
+                            onClick={() => flip(row)}
+                          >
+                            {row[toggle.field] ? toggle.off || "Hide" : toggle.on || "Publish"}
+                          </button>
+                        )}
                         <button
                           className="ad-btn ad-btn-ghost ad-btn-sm"
                           type="button"
@@ -331,6 +455,7 @@ export default function ResourceManager({
         <Modal
           title={editing === "new" ? `Add ${singular.toLowerCase()}` : `Edit ${singular.toLowerCase()}`}
           onClose={closeForm}
+          wide={wideModal}
           footer={
             <>
               <button
@@ -361,6 +486,23 @@ export default function ResourceManager({
 
             <div className="ad-form-grid">
               {fields.map((field) => {
+                if (field.type === "heading") {
+                  return (
+                    <div className="ad-form-heading ad-field-wide" key={`h-${field.label}`}>
+                      <h3>{field.label}</h3>
+                      {field.help && <p>{field.help}</p>}
+                    </div>
+                  );
+                }
+
+                if (field.type === "custom") {
+                  return (
+                    <div className={field.wide === false ? "ad-field" : "ad-field ad-field-wide"} key={field.name}>
+                      {field.render({ values, setValue, errors, editing })}
+                    </div>
+                  );
+                }
+
                 if (field.type === "checkbox") {
                   return (
                     <div className="ad-field-wide" key={field.name}>
@@ -382,6 +524,8 @@ export default function ResourceManager({
                       label={field.label}
                       name={field.name}
                       kind={field.kind}
+                      help={field.help}
+                      folder={field.folder || entity}
                       value={values[field.name]}
                       onChange={setValue}
                       error={errors[field.name]}
@@ -403,6 +547,20 @@ export default function ResourceManager({
               })}
             </div>
           </form>
+
+          {editing !== "new" &&
+            renderFormExtras?.(editing, {
+              toast,
+              markChanged: () => {
+                extrasChanged.current = true;
+              },
+            })}
+          {editing === "new" && renderFormExtras && stayOpenAfterCreate && (
+            <p className="ad-form-hint">
+              Save once to unlock the rest of this form — photos and videos
+              are added after the first save.
+            </p>
+          )}
         </Modal>
       )}
 

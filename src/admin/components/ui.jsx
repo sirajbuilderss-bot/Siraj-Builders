@@ -7,6 +7,8 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+import { storage } from "../../lib/supabase";
+import { toEmbed } from "../../lib/video";
 
 /* ==========================================================================
  * FIELD
@@ -138,6 +140,8 @@ export function MediaUrlField({
   error,
   wide,
   kind = "image",
+  help,
+  folder = "uploads",
 }) {
   const [failed, setFailed] = useState(false);
   const previous = useRef(value);
@@ -150,6 +154,7 @@ export function MediaUrlField({
   }, [value]);
 
   const isVideo = kind === "video";
+  const embed = isVideo ? toEmbed(value) : null;
 
   return (
     <div className={`ad-field${error ? " has-error" : ""}${wide ? " ad-field-wide" : ""}`}>
@@ -157,15 +162,33 @@ export function MediaUrlField({
         {label}
       </label>
 
-      <input
-        id={`f-${name}`}
-        name={name}
-        type="url"
-        value={value ?? ""}
-        placeholder="https://…"
-        onChange={(event) => onChange(name, event.target.value)}
-        aria-describedby={`f-${name}-note`}
-      />
+      <div className="ad-media-row">
+        <input
+          id={`f-${name}`}
+          name={name}
+          type="url"
+          value={value ?? ""}
+          placeholder={isVideo ? "Paste a YouTube / Vimeo link, or upload" : "Paste an image link, or upload"}
+          onChange={(event) => onChange(name, event.target.value)}
+          aria-describedby={`f-${name}-note`}
+        />
+        <UploadButton
+          accept={isVideo ? "video/mp4,video/webm" : "image/*"}
+          folder={folder}
+          label="Upload"
+          onUploaded={([file]) => file && onChange(name, file.url)}
+        />
+        {value && (
+          <button
+            type="button"
+            className="ad-btn ad-btn-ghost ad-btn-sm"
+            onClick={() => onChange(name, "")}
+            aria-label={`Clear ${label}`}
+          >
+            Clear
+          </button>
+        )}
+      </div>
 
       {error && (
         <span className="ad-field-error" role="alert">
@@ -173,19 +196,18 @@ export function MediaUrlField({
         </span>
       )}
 
-      <p className="ad-media-note" id={`f-${name}-note`}>
-        Upload your {isVideo ? "video" : "image"} externally and paste the
-        public URL here — {isVideo
-          ? "YouTube, Vimeo or any direct video host"
-          : "Cloudinary, ImgBB, Google Drive (public link) or any image host"}
-        . Files are not stored in Supabase; only the URL is saved.
+      <p className="ad-media-help" id={`f-${name}-note`}>
+        {help ||
+          (isVideo
+            ? "Upload an MP4 (under 50 MB) or paste a YouTube, Vimeo or Google Drive link."
+            : "Upload a JPG, PNG or WebP (under 10 MB), or paste a public image link.")}
       </p>
 
       {value && !isVideo && (
         <div className="ad-media-preview">
           {failed ? (
             <div className="ad-media-fail">
-              That URL did not load. Check it is a direct link to the image and
+              That link did not load. Check it is a direct link to the image and
               that the file is publicly visible.
             </div>
           ) : (
@@ -193,7 +215,93 @@ export function MediaUrlField({
           )}
         </div>
       )}
+      {value && isVideo && (
+        <div className="ad-media-help">
+          {embed ? "Video link recognised — it will play on the website." : "This link is not a recognised video — visitors will see an “Open video” link instead."}
+        </div>
+      )}
     </div>
+  );
+}
+
+/* ==========================================================================
+ * UPLOAD BUTTON
+ * --------------------------------------------------------------------------
+ * Uploads to the public `site-media` Supabase Storage bucket. Only active
+ * editors and admins can upload — the storage policies enforce that.
+ * Calls onUploaded([{ url, path, name, type }]) once every file is done.
+ * ========================================================================== */
+
+const MAX_IMAGE = 10 * 1024 * 1024;
+const MAX_VIDEO = 50 * 1024 * 1024;
+
+export function UploadButton({
+  accept = "image/*",
+  multiple = false,
+  folder = "uploads",
+  label = "Upload",
+  onUploaded,
+  onError,
+  className = "ad-btn ad-btn-ghost ad-btn-sm",
+}) {
+  const input = useRef(null);
+  const [progress, setProgress] = useState(null); // "2 / 5"
+  const [message, setMessage] = useState("");
+
+  async function handle(event) {
+    const files = Array.from(event.target.files || []);
+    event.target.value = "";
+    if (!files.length) return;
+    setMessage("");
+    const done = [];
+    for (let i = 0; i < files.length; i += 1) {
+      const file = files[i];
+      const isVideo = file.type.startsWith("video/");
+      if (file.size > (isVideo ? MAX_VIDEO : MAX_IMAGE)) {
+        const text = `“${file.name}” is too large (${(file.size / 1048576).toFixed(1)} MB). Limit: ${isVideo ? 50 : 10} MB.`;
+        setMessage(text);
+        onError?.(text);
+        continue;
+      }
+      setProgress(files.length > 1 ? `${i + 1} / ${files.length}` : "…");
+      try {
+        const result = await storage.upload(file, { folder });
+        done.push({ ...result, name: file.name, type: file.type });
+      } catch (error) {
+        const text = error?.message || `Could not upload “${file.name}”.`;
+        setMessage(text);
+        onError?.(text);
+      }
+    }
+    setProgress(null);
+    if (done.length) onUploaded?.(done);
+  }
+
+  return (
+    <span className="ad-upload">
+      <input
+        ref={input}
+        type="file"
+        accept={accept}
+        multiple={multiple}
+        onChange={handle}
+        hidden
+        tabIndex={-1}
+      />
+      <button
+        type="button"
+        className={className}
+        onClick={() => input.current?.click()}
+        disabled={Boolean(progress)}
+      >
+        {progress ? `Uploading ${progress}` : label}
+      </button>
+      {message && (
+        <span className="ad-upload-error" role="alert">
+          {message}
+        </span>
+      )}
+    </span>
   );
 }
 
@@ -201,12 +309,18 @@ export function MediaUrlField({
  * MODAL
  * ========================================================================== */
 
-export function Modal({ title, onClose, children, footer, small }) {
+export function Modal({ title, onClose, children, footer, small, wide }) {
   const ref = useRef(null);
+  /* onClose is held in a ref so this effect runs once per opening. It used
+     to depend on onClose directly; callers pass a new function on every
+     render, so each keystroke re-ran the effect and pulled focus back to the
+     first input of the form. */
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
 
   useEffect(() => {
     const onKeyDown = (event) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") closeRef.current();
     };
     document.addEventListener("keydown", onKeyDown);
 
@@ -214,10 +328,10 @@ export function Modal({ title, onClose, children, footer, small }) {
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
-    // Move focus in, so keyboard users are not left at the top of the page.
+    // Move focus in once, so keyboard users start inside the dialog.
     const timer = window.setTimeout(() => {
       const focusable = ref.current?.querySelector(
-        "input, select, textarea, button"
+        ".ad-modal-body input, .ad-modal-body select, .ad-modal-body textarea, button"
       );
       if (focusable) focusable.focus();
     }, 40);
@@ -227,17 +341,17 @@ export function Modal({ title, onClose, children, footer, small }) {
       document.body.style.overflow = previousOverflow;
       window.clearTimeout(timer);
     };
-  }, [onClose]);
+  }, []);
 
   return (
     <div
       className="ad-modal-backdrop"
       onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose();
+        if (event.target === event.currentTarget) closeRef.current();
       }}
     >
       <div
-        className={`ad-modal${small ? " ad-modal-sm" : ""}`}
+        className={`ad-modal${small ? " ad-modal-sm" : ""}${wide ? " ad-modal-wide" : ""}`}
         role="dialog"
         aria-modal="true"
         aria-label={title}

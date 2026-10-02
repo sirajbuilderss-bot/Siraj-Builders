@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { isConfigured } from "../lib/supabase";
+import { PAGE_CONTENT_UPDATED, PAGE_CONTENT_STORAGE_KEY } from "../services/pageContentEvents";
 
 /**
  * DATABASE CONTENT WITH A STATIC SAFETY NET
@@ -72,11 +73,19 @@ export default function useContent(
 
   useEffect(() => {
     let cancelled = false;
-    (async () => {
-      if (!cancelled) await load();
-    })();
+    const refresh = () => {
+      if (!cancelled) load();
+    };
+    const onStorage = (event) => {
+      if (event.key === PAGE_CONTENT_STORAGE_KEY) refresh();
+    };
+    refresh();
+    window.addEventListener(PAGE_CONTENT_UPDATED, refresh);
+    window.addEventListener("storage", onStorage);
     return () => {
       cancelled = true;
+      window.removeEventListener(PAGE_CONTENT_UPDATED, refresh);
+      window.removeEventListener("storage", onStorage);
     };
   }, [load]);
 

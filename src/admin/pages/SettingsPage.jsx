@@ -33,6 +33,8 @@ const GROUP_LABELS = {
   contact: "Contact information",
   seo: "SEO and domain",
   footer: "Footer",
+  navigation: "Header & navigation",
+  forms: "Forms",
   general: "General",
 };
 
@@ -45,6 +47,10 @@ const CONFIRMABLE = new Set([
 ]);
 
 const LONG_FIELDS = new Set([
+  "whatsapp_message",
+  "form_success_message",
+  "form_microcopy",
+  "footer_cta_title",
   "company_tagline",
   "company_proposition",
   "company_trust_line",
@@ -223,7 +229,7 @@ export default function SettingsPage() {
                       {isLong ? (
                         <textarea
                           id={`set-${row.key}`}
-                          rows={2}
+                          rows={row.key === "whatsapp_message" ? 7 : 3}
                           value={current.value}
                           onChange={(event) =>
                             setSetting(row.key, { value: event.target.value })

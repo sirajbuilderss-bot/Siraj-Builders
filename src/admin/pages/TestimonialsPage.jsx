@@ -18,6 +18,8 @@ export default function TestimonialsPage() {
       emptyTitle="No testimonials yet"
       emptyBody="Only verified client testimonials should be added. Ask about communication, quality, site management, responsiveness and the final result."
       load={testimonials.listAll}
+      reorder={testimonials.reorder}
+      toggle={{ field: "is_active", on: "Show", off: "Hide" }}
       create={testimonials.create}
       update={testimonials.update}
       remove={testimonials.remove}

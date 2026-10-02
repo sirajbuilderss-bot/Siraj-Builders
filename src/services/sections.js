@@ -16,6 +16,8 @@
  */
 
 import { db } from "../lib/supabase";
+import DEFAULTS from "../content/defaults.json";
+import { notifyPageContentUpdated } from "./pageContentEvents";
 
 const TABLE = "page_sections";
 
@@ -31,124 +33,56 @@ const TABLE = "page_sections";
  * App.jsx, add it here — and that is the intended friction.
  * ========================================================================== */
 
-export const PAGE_REGISTRY = [
-  { path: "/", label: "Home", group: "Main" },
-  { path: "/who-we-are", label: "About", group: "Main" },
-  { path: "/services", label: "Services", group: "Main" },
-  { path: "/projects", label: "Projects", group: "Main" },
-  { path: "/our-process", label: "Our Process", group: "Main" },
-  { path: "/faq", label: "FAQ", group: "Main" },
-  { path: "/contact-us", label: "Contact", group: "Main" },
-  { path: "/consultation", label: "Consultation", group: "Main" },
-
-  { path: "/residential-construction", label: "Residential Construction", group: "Services" },
-  { path: "/commercial-construction", label: "Commercial Construction", group: "Services" },
-  { path: "/renovation-remodelling", label: "Renovation & Remodelling", group: "Services" },
-  { path: "/design-architecture", label: "Design & Architecture", group: "Services" },
-  { path: "/grey-structure", label: "Grey Structure", group: "Services" },
-  { path: "/turnkey-construction", label: "Turnkey Construction", group: "Services" },
-  { path: "/project-management", label: "Project Management", group: "Services" },
-
-  { path: "/leadership", label: "Leadership", group: "Company" },
-  { path: "/locations", label: "Locations", group: "Company" },
-  { path: "/international", label: "International", group: "Company" },
-  { path: "/affiliates", label: "Affiliates", group: "Company" },
-  { path: "/subcontractors", label: "Subcontractors", group: "Company" },
-  { path: "/role-definition", label: "Role Definition", group: "Company" },
-  { path: "/cost-index", label: "Cost Index", group: "Company" },
-  { path: "/project-showcase", label: "Project Showcase", group: "Company" },
-];
+/** Every CMS-driven page, generated from database/content-source.cjs. */
+export const PAGE_REGISTRY = DEFAULTS.registry;
 
 /**
  * The section shapes an admin may choose, and what each one means in plain
  * language. The admin form uses `fields` to decide which inputs to show, so a
  * "Statistics" section is not asked for a video URL it will never render.
  */
+const LOOK = ["theme"];
 export const SECTION_TYPES = [
-  {
-    value: "hero",
-    label: "Hero",
-    hint: "The large banner at the top of a page.",
-    fields: ["eyebrow", "title", "subtitle", "body", "media_url", "cta"],
-  },
-  {
-    value: "intro",
-    label: "Introduction",
-    hint: "A short opening passage below the hero.",
-    fields: ["eyebrow", "title", "body", "cta"],
-  },
-  {
-    value: "content",
-    label: "Content block",
-    hint: "General heading, text and optional bullet points.",
-    fields: ["eyebrow", "title", "subtitle", "body", "items", "media_url", "cta"],
-  },
-  {
-    value: "services",
-    label: "Services list",
-    hint: "Pulls live rows from the Services manager.",
-    fields: ["eyebrow", "title", "body", "cta"],
-  },
-  {
-    value: "projects",
-    label: "Projects grid",
-    hint: "Pulls live rows from the Projects manager.",
-    fields: ["eyebrow", "title", "body", "cta"],
-  },
-  {
-    value: "testimonials",
-    label: "Testimonials",
-    hint: "Pulls live rows from the Testimonials manager.",
-    fields: ["eyebrow", "title", "body"],
-  },
-  {
-    value: "faq",
-    label: "FAQ",
-    hint: "Pulls live rows from the FAQ manager.",
-    fields: ["eyebrow", "title", "body", "cta"],
-  },
-  {
-    value: "stats",
-    label: "Statistics",
-    hint: "Pulls live rows from the Statistics manager.",
-    fields: ["eyebrow", "title", "body"],
-  },
-  {
-    value: "process",
-    label: "Process steps",
-    hint: "A numbered sequence of stages.",
-    fields: ["eyebrow", "title", "body", "items", "cta"],
-  },
-  {
-    value: "team",
-    label: "Team",
-    hint: "Pulls live rows from the Team manager.",
-    fields: ["eyebrow", "title", "body", "cta"],
-  },
-  {
-    value: "cta",
-    label: "Call to action",
-    hint: "A closing panel that asks the visitor to act.",
-    fields: ["eyebrow", "title", "body", "cta"],
-  },
-  {
-    value: "gallery",
-    label: "Gallery",
-    hint: "A row of images from external URLs.",
-    fields: ["eyebrow", "title", "body", "items"],
-  },
-  {
-    value: "contact",
-    label: "Contact",
-    hint: "Contact details or an enquiry form.",
-    fields: ["eyebrow", "title", "body", "cta"],
-  },
-  {
-    value: "custom",
-    label: "Custom",
-    hint: "Every field available, for anything the other types do not cover.",
-    fields: ["eyebrow", "title", "subtitle", "body", "items", "media_url", "video_url", "cta"],
-  },
+  { value: "hero", label: "Page hero", hint: "A page banner. Home’s original is the slider; duplicating it creates an editable page banner.", fields: ["eyebrow", "title", "subtitle", "body", "media_url", "cta", "cta2"], layouts: [] },
+  { value: "intro", label: "Text + image", hint: "Heading and paragraphs beside an image.", fields: ["eyebrow", "title", "body", "items", "media_url", "video_url", "cta", "cta2", ...LOOK], layouts: [] },
+  { value: "content", label: "Content block", hint: "Heading, paragraphs and an optional checklist, with or without an image.", fields: ["eyebrow", "title", "subtitle", "body", "items", "media_url", "video_url", "cta", "cta2", ...LOOK], layouts: [
+    { value: "split", label: "Text beside image (default)" },
+    { value: "checklist", label: "Checklist" },
+    { value: "centered", label: "Centred text" },
+    { value: "prose", label: "Long text (legal pages)" },
+  ] },
+  { value: "features", label: "Feature cards", hint: "A grid of numbered cards — reasons, principles, focus areas.", fields: ["eyebrow", "title", "subtitle", "body", "items", "media_url", "video_url", "cta", "cta2", ...LOOK], layouts: [
+    { value: "grid", label: "Cards (default)" },
+    { value: "numbered", label: "Numbered list, no boxes" },
+    { value: "duo", label: "Two large statements" },
+  ] },
+  { value: "trust", label: "Trust strip", hint: "Four short promises in a strip (used under the homepage slider).", fields: ["items"], layouts: [] },
+  { value: "process", label: "Process steps", hint: "A numbered sequence of stages.", fields: ["eyebrow", "title", "body", "items", "video_url", "cta", "cta2", ...LOOK], layouts: [
+    { value: "row", label: "Cards in a row (default)" },
+    { value: "timeline", label: "Vertical timeline" },
+  ] },
+  { value: "services", label: "Services cards", hint: "Live: published services from the Services screen.", fields: ["eyebrow", "title", "body", "cta", "cta2", "limit", ...LOOK], layouts: [] },
+  { value: "projects", label: "Projects grid", hint: "Live: published projects from the Projects screen. Hidden automatically when there are none (if “hide when empty”).", fields: ["eyebrow", "title", "body", "video_url", "cta", "cta2", "limit", "category", ...LOOK], layouts: [
+    { value: "grid", label: "Grid (default)" },
+    { value: "portfolio", label: "Full portfolio with filters" },
+  ] },
+  { value: "testimonials", label: "Testimonials", hint: "Live: verified testimonials only. Hidden until one exists.", fields: ["eyebrow", "title", "body", "limit", ...LOOK], layouts: [
+    { value: "grid", label: "Preview (default)" },
+    { value: "full", label: "Full list with empty state" },
+  ] },
+  { value: "faq", label: "FAQ", hint: "Live: published FAQs. The preview shows questions ticked “Show on homepage”.", fields: ["eyebrow", "title", "body", "video_url", "cta", "cta2", "limit", ...LOOK], layouts: [
+    { value: "preview", label: "Preview (default)" },
+    { value: "full", label: "Full FAQ with search and topics" },
+  ] },
+  { value: "stats", label: "Statistics", hint: "Live: verified figures from Statistics. Hidden until one exists.", fields: ["eyebrow", "title", ...LOOK], layouts: [] },
+  { value: "team", label: "Team", hint: "Live: verified people from Team. Hidden until one exists.", fields: ["eyebrow", "title", "body", ...LOOK], layouts: [] },
+  { value: "cta", label: "Call to action", hint: "A closing banner with one or two buttons.", fields: ["eyebrow", "title", "body", "cta", "cta2", ...LOOK], layouts: [] },
+  { value: "gallery", label: "Image gallery", hint: "Add a featured image or a set of image items. Text still displays if an image is missing.", fields: ["eyebrow", "title", "subtitle", "body", "media_url", "video_url", "items", ...LOOK], layouts: [] },
+  { value: "contact", label: "Contact", hint: "Contact channel cards, or the enquiry form.", fields: ["eyebrow", "title", "body", "items", ...LOOK], layouts: [
+    { value: "cards", label: "Contact cards (default)" },
+    { value: "form", label: "Enquiry form" },
+  ] },
+  { value: "custom", label: "Custom", hint: "Every field available.", fields: ["eyebrow", "title", "subtitle", "body", "items", "media_url", "video_url", "cta", "cta2", ...LOOK], layouts: [] },
 ];
 
 /**
@@ -162,23 +96,14 @@ export const SECTION_TYPES = [
  * builder sends the admin to the screen that works.
  */
 export function sourceOf(section) {
-  const source = section?.settings?.source;
-  if (source === "pages") {
+  if (section?.settings?.source === "hero_slides" || (section?.page_path === "/" && section?.section_key === "hero")) {
     return {
-      kind: "pages",
-      label: "Edited on the Pages screen",
-      detail: "This page renders from the pages table, so its wording is managed there.",
-      to: "/admin/pages",
-      linkLabel: "Open Pages",
-      editable: false,
-    };
-  }
-  if (source === "page") {
-    return {
-      kind: "code",
-      label: "Built into the page",
-      detail: "This section has bespoke markup. Its structure is listed here; the copy lives in the page component.",
-      editable: false,
+      kind: "hero_slides",
+      label: "The homepage slider",
+      detail: "The slides themselves are edited on the Hero slides screen. You can still hide or move this section here.",
+      to: "/admin/hero",
+      linkLabel: "Open Hero slides",
+      editable: true,
     };
   }
   return { kind: "builder", label: "Edited here", editable: true };
@@ -318,41 +243,72 @@ export async function create(values) {
   };
 
   const { data } = await db.from(TABLE).insert(row).select("*").run();
+  notifyPageContentUpdated();
   return Array.isArray(data) ? data[0] : data;
 }
 
 export async function update(id, patch) {
   const { data } = await db.from(TABLE).update(patch).eq("id", id).select("*").run();
+  notifyPageContentUpdated();
   return Array.isArray(data) ? data[0] : data;
 }
 
 export async function remove(id) {
   await db.from(TABLE).delete().eq("id", id).run();
+  notifyPageContentUpdated();
 }
 
 export function setEnabled(id, isEnabled) {
   return update(id, { is_enabled: isEnabled });
 }
 
-/**
- * Copies a section to the bottom of the same page, disabled.
- *
- * Disabled is deliberate: a duplicate is almost always the first half of an
- * edit, and appearing live on the website mid-edit as a second identical hero
- * is not what anyone wants.
- */
+/** Copies a section to the bottom of its page and makes the saved copy live. */
 export async function duplicate(id) {
   const { data } = await db.from(TABLE).select("*").eq("id", id).run();
   const source = data?.[0];
   if (!source) throw new Error("That section no longer exists.");
 
   const { id: _drop, created_at: _c, updated_at: _u, ...copy } = source;
+  let values = { ...copy };
+
+  // The homepage's first hero is a pointer to the carousel, not editable hero
+  // copy. Turn its duplicate into a normal, self-contained page hero and use
+  // the first live slide as its initial content.
+  if (source.section_type === "hero" && source.settings?.source === "hero_slides") {
+    const { data: slides } = await db
+      .from("hero_slides")
+      .select("*")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true })
+      .run();
+    const slide = slides?.[0];
+    const settings = { ...(source.settings || {}) };
+    delete settings.source;
+    if (slide) {
+      values = {
+        ...values,
+        eyebrow: slide.eyebrow || "",
+        title: slide.title || "",
+        body: slide.lead || "",
+        media_url: slide.image_url || "",
+        cta_label: slide.primary_label || "",
+        cta_href: slide.primary_to || "",
+        settings: {
+          ...settings,
+          ...(slide.secondary_label ? { cta2_label: slide.secondary_label } : {}),
+          ...(slide.secondary_to ? { cta2_href: slide.secondary_to } : {}),
+        },
+      };
+    } else {
+      values.settings = settings;
+    }
+  }
 
   return create({
-    ...copy,
+    ...values,
     label: `${source.label || source.section_key} (copy)`,
     section_key: source.section_key,
-    is_enabled: false,
+    is_enabled: true,
   });
 }
 

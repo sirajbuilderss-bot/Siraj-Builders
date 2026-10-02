@@ -525,5 +525,107 @@ export const db = {
   },
 };
 
-const supabase = { db, auth, isConfigured, SupabaseError };
+/* ==========================================================================
+ * STORAGE
+ * --------------------------------------------------------------------------
+ * Uploads to the public `site-media` bucket created by
+ * database/migration-02-cms.sql. Who may upload is decided by the storage
+ * policies (is_editor()), not by this file — an anonymous request is refused
+ * by Supabase regardless of what the browser sends.
+ * ======================================================================== */
+
+export const MEDIA_BUCKET = "site-media";
+
+function safeName(name) {
+  const dot = name.lastIndexOf(".");
+  const ext = dot > -1 ? name.slice(dot + 1).toLowerCase().replace(/[^a-z0-9]/g, "") : "";
+  const base = (dot > -1 ? name.slice(0, dot) : name)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 50) || "file";
+  return ext ? `${base}.${ext}` : base;
+}
+
+export const storage = {
+  /** Public URL for an object path inside the media bucket. */
+  publicUrl(objectPath, bucket = MEDIA_BUCKET) {
+    return `${URL_BASE}/storage/v1/object/public/${bucket}/${objectPath
+      .split("/")
+      .map(encodeURIComponent)
+      .join("/")}`;
+  },
+
+  /**
+   * Uploads one File. Returns { path, url }.
+   * `folder` groups files, e.g. "projects/<id>" or "pages".
+   */
+  async upload(file, { folder = "uploads", bucket = MEDIA_BUCKET } = {}) {
+    if (!isConfigured()) throw configError();
+    const token = await accessToken();
+    if (!token) {
+      throw new SupabaseError("Your session has expired. Sign in again to upload.", {
+        code: "NO_TOKEN",
+      });
+    }
+    const stamp = Date.now().toString(36);
+    const random = Math.random().toString(36).slice(2, 7);
+    const objectPath = `${folder.replace(/^\/+|\/+$/g, "")}/${stamp}-${random}-${safeName(file.name || "file")}`;
+
+    const response = await fetch(
+      `${URL_BASE}/storage/v1/object/${bucket}/${objectPath}`,
+      {
+        method: "POST",
+        headers: {
+          apikey: ANON_KEY,
+          Authorization: `Bearer ${token}`,
+          "Content-Type": file.type || "application/octet-stream",
+          "Cache-Control": "max-age=31536000",
+          "x-upsert": "false",
+        },
+        body: file,
+      }
+    );
+    if (!response.ok) {
+      const error = await toError(response);
+      if (/bucket not found/i.test(error.message)) {
+        error.message =
+          "The media bucket does not exist yet. Run database/migration-02-cms.sql in the Supabase SQL editor.";
+      } else if (/row-level security|unauthorized|403/i.test(error.message)) {
+        error.message = "Your account is not allowed to upload. An admin or editor role is required.";
+      } else if (/payload too large|exceeded|size/i.test(error.message)) {
+        error.message = "That file is too large. Images should be under 10 MB; videos under 50 MB.";
+      }
+      throw error;
+    }
+    return { path: objectPath, url: storage.publicUrl(objectPath, bucket) };
+  },
+
+  /** Deletes objects by path. Missing files are not an error. */
+  async remove(paths, { bucket = MEDIA_BUCKET } = {}) {
+    const list = (Array.isArray(paths) ? paths : [paths]).filter(Boolean);
+    if (!list.length || !isConfigured()) return;
+    const token = await accessToken();
+    const response = await fetch(`${URL_BASE}/storage/v1/object/${bucket}`, {
+      method: "DELETE",
+      headers: {
+        apikey: ANON_KEY,
+        Authorization: `Bearer ${token || ANON_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ prefixes: list }),
+    });
+    if (!response.ok) throw await toError(response);
+  },
+
+  /** The object path for a URL that lives in our bucket, or "" if external. */
+  pathFromUrl(url, bucket = MEDIA_BUCKET) {
+    const marker = `/storage/v1/object/public/${bucket}/`;
+    const index = String(url || "").indexOf(marker);
+    if (index === -1) return "";
+    return decodeURIComponent(String(url).slice(index + marker.length));
+  },
+};
+
+const supabase = { db, auth, storage, isConfigured, SupabaseError };
 export default supabase;

@@ -94,14 +94,19 @@ const INSTALL_HEADER = `-- =====================================================
 --  SIRAJ BUILDERS — COMPLETE DATABASE INSTALLER
 --  ---------------------------------------------------------------------------
 --  GENERATED FILE — do not edit by hand.
---  Source: schema.sql + policies.sql + seed.sql
---  Rebuild with: node database/build-sql.js
+--  Source: schema.sql + policies.sql + seed.sql + migration-02-cms.sql
+--          + migration-03-content.sql
+--  Rebuild with: npm run build:sql
 --
 --  Yeh file teenon SQL files ko sahi tarteeb (order) mein jorr deti hai:
 --
 --      1. schema.sql    ->  tables, indexes, triggers, functions
 --      2. policies.sql  ->  Row Level Security (kaun kya parh/likh sakta hai)
---      3. seed.sql      ->  website ka maujooda content + 91 sections
+--      3. seed.sql      ->  bunyadi content (settings, services, waghaira)
+--      4. migration-02  ->  project photos/videos table, SEO fields,
+--                           image upload bucket (Storage) + policies
+--      5. migration-03  ->  documentation wala poora content: har page ke
+--                           sections, 20 FAQs, services ke cards
 --
 --  ISTEMAAL KA TAREEQA:
 --    Supabase Dashboard -> SQL Editor -> New query
@@ -155,9 +160,9 @@ begin
 
   raise notice '--------------------------------------------------';
   raise notice 'SIRAJ BUILDERS — install complete';
-  raise notice '  page_sections rows : %  (expected 91)', n_sections;
-  raise notice '  distinct routes    : %  (expected 23)', n_routes;
-  raise notice '  pages rows         : %  (expected 17)', n_pages;
+  raise notice '  page_sections rows : %', n_sections;
+  raise notice '  distinct routes    : %', n_routes;
+  raise notice '  pages rows         : %', n_pages;
   raise notice '--------------------------------------------------';
 
   if n_sections = 0 then
@@ -172,9 +177,11 @@ notify pgrst, 'reload schema';`;
 
 function buildInstall() {
   const steps = [
-    ["1 OF 3 — SCHEMA", "schema.sql"],
-    ["2 OF 3 — POLICIES", "policies.sql"],
-    ["3 OF 3 — SEED", "seed.sql"],
+    ["1 OF 5 — SCHEMA", "schema.sql"],
+    ["2 OF 5 — POLICIES", "policies.sql"],
+    ["3 OF 5 — SEED", "seed.sql"],
+    ["4 OF 5 — CMS STRUCTURE (media, SEO, storage)", "migration-02-cms.sql"],
+    ["5 OF 5 — DOCUMENTED CONTENT", "migration-03-content.sql"],
   ];
 
   let out = INSTALL_HEADER;

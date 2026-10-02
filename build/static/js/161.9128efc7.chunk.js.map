@@ -1,0 +1,1 @@
+{"version":3,"file":"static/js/161.b98f845f.chunk.js","mappings":"gJAEe,SAASA,IACtB,OAAOC,EAAAA,EAAAA,KAACC,EAAAA,EAAW,GACrB","sources":["pages/faq.jsx"],"sourcesContent":["import SectionPage from \"./SectionPage\";\n\nexport default function Page() {\n  return <SectionPage />;\n}\n"],"names":["Page","_jsx","SectionPage"],"sourceRoot":""}

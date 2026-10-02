@@ -69,40 +69,36 @@ describe("hero controls", () => {
   });
 
   test("the next arrow advances the carousel", async () => {
-    const user = userEvent.setup();
     const { container } = renderHero();
 
-    await user.click(screen.getByRole("button", { name: /next slide/i }));
+    await userEvent.click(screen.getByRole("button", { name: /next slide/i }));
 
     const live = container.querySelector('[aria-live="polite"]');
     expect(live.textContent).toMatch(/Slide 2 of 4/);
   });
 
   test("the previous arrow wraps around to the last slide", async () => {
-    const user = userEvent.setup();
     const { container } = renderHero();
 
-    await user.click(screen.getByRole("button", { name: /previous slide/i }));
+    await userEvent.click(screen.getByRole("button", { name: /previous slide/i }));
 
     const live = container.querySelector('[aria-live="polite"]');
     expect(live.textContent).toMatch(/Slide 4 of 4/);
   });
 
   test("a dot jumps straight to its slide", async () => {
-    const user = userEvent.setup();
     const { container } = renderHero();
 
-    await user.click(screen.getByRole("tab", { name: /go to slide 3/i }));
+    await userEvent.click(screen.getByRole("tab", { name: /go to slide 3/i }));
 
     const live = container.querySelector('[aria-live="polite"]');
     expect(live.textContent).toMatch(/Slide 3 of 4/);
   });
 
   test("the pause button toggles its own label", async () => {
-    const user = userEvent.setup();
     renderHero();
 
-    await user.click(screen.getByRole("button", { name: /pause slideshow/i }));
+    await userEvent.click(screen.getByRole("button", { name: /pause slideshow/i }));
     expect(screen.getByRole("button", { name: /resume slideshow/i })).toBeInTheDocument();
   });
 

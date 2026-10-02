@@ -1,0 +1,1 @@
+{"version":3,"file":"static/js/223.386ee2c4.chunk.js","mappings":"+IAEe,SAASA,IACtB,OAAOC,EAAAA,EAAAA,KAACC,EAAAA,EAAW,GACrB","sources":["pages/design-architecture.jsx"],"sourcesContent":["import SectionPage from \"./SectionPage\";\n\nexport default function Page() {\n  return <SectionPage />;\n}\n"],"names":["Page","_jsx","SectionPage"],"sourceRoot":""}

@@ -150,7 +150,7 @@ describe("navigation model", () => {
   test("findActive maps a pathname to its heading", () => {
     expect(findActive("/admin").title).toBe("Dashboard");
     expect(findActive("/admin/builder").title).toBe("Pages");
-    expect(findActive("/admin/pages").title).toBe("Page copy");
+    expect(findActive("/admin/pages").title).toBe("SEO & publishing");
     expect(findActive("/admin/users").title).toBe("Admin users");
   });
 });
@@ -166,22 +166,20 @@ describe("sidebar pages tree", () => {
   });
 
   test("clicking the caret reveals every page on the website", async () => {
-    const user = userEvent.setup();
     renderSidebar({ route: "/admin" });
 
-    await user.click(screen.getByRole("button", { name: /expand the list of pages/i }));
+    await userEvent.click(screen.getByRole("button", { name: /expand the list of pages/i }));
 
     expect(screen.getByRole("link", { name: /Home/ })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /About/ })).toBeInTheDocument();
   });
 
   test("expanding a page reveals the sections it is built from", async () => {
-    const user = userEvent.setup();
     renderSidebar({ route: "/admin", open: { pagesOpen: true, open: [] } });
 
     expect(screen.queryByText("Hero Section")).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /expand home sections/i }));
+    await userEvent.click(screen.getByRole("button", { name: /expand home sections/i }));
 
     expect(screen.getByText("Hero Section")).toBeInTheDocument();
     expect(screen.getByText("Introduction")).toBeInTheDocument();
@@ -226,11 +224,10 @@ describe("sidebar pages tree", () => {
   });
 
   test("what is expanded survives a remount", async () => {
-    const user = userEvent.setup();
     const { unmount } = renderSidebar({ route: "/admin" });
 
-    await user.click(screen.getByRole("button", { name: /expand the list of pages/i }));
-    await user.click(screen.getByRole("button", { name: /expand home sections/i }));
+    await userEvent.click(screen.getByRole("button", { name: /expand the list of pages/i }));
+    await userEvent.click(screen.getByRole("button", { name: /expand home sections/i }));
     unmount();
 
     renderSidebar({ route: "/admin" });
@@ -279,12 +276,17 @@ describe("page builder deep links", () => {
   });
 
   test("the editor only offers the fields the section type actually renders", () => {
+    // A hero has an image but no list and no "how many" limit.
     const { unmount } = renderBuilder("/admin/builder?page=%2F&section=s1");
-    expect(screen.getByText("Image URL")).toBeInTheDocument();
+    expect(screen.getByText("Image")).toBeInTheDocument();
     expect(screen.queryByText("List items")).not.toBeInTheDocument();
+    expect(screen.queryByText("How many to show")).not.toBeInTheDocument();
     unmount();
 
+    // A text + image block has a list and can optionally include a video.
     renderBuilder("/admin/builder?page=%2F&section=s2");
-    expect(screen.queryByText("Image URL")).not.toBeInTheDocument();
+    expect(screen.getByText("List items")).toBeInTheDocument();
+    expect(screen.queryByText("How many to show")).not.toBeInTheDocument();
+    expect(screen.getByText("Video URL")).toBeInTheDocument();
   });
 });

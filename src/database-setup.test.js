@@ -86,7 +86,7 @@ describe("the setup panel", () => {
     renderWith(brokenMap(MISSING_TABLE), <PageBuilderPage />);
 
     expect(screen.getByText(/repair-page-sections\.sql/)).toBeInTheDocument();
-    expect(screen.getByText(/SQL Editor/)).toBeInTheDocument();
+    expect(screen.getAllByText(/SQL Editor/).length).toBeGreaterThan(0);
     expect(screen.getByText(/Ctrl \+ Shift \+ R/)).toBeInTheDocument();
   });
 
@@ -97,21 +97,19 @@ describe("the setup panel", () => {
   });
 
   test("keeps the raw error out of the way until it is asked for", async () => {
-    const user = userEvent.setup();
     const { container } = renderWith(brokenMap(MISSING_TABLE), <PageBuilderPage />);
 
     expect(container.textContent).not.toMatch(/schema cache/);
 
-    await user.click(screen.getByRole("button", { name: /show technical detail/i }));
+    await userEvent.click(screen.getByRole("button", { name: /show technical detail/i }));
     expect(container.textContent).toMatch(/schema cache/);
   });
 
   test("offers a retry that asks the database again", async () => {
-    const user = userEvent.setup();
     const value = brokenMap(MISSING_TABLE);
     renderWith(value, <PageBuilderPage />);
 
-    await user.click(screen.getByRole("button", { name: /try again/i }));
+    await userEvent.click(screen.getByRole("button", { name: /try again/i }));
     expect(value.refresh).toHaveBeenCalled();
   });
 });

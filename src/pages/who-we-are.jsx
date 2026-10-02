@@ -1,5 +1,5 @@
-import ContentPage from "./ContentPage";
+import SectionPage from "./SectionPage";
 
-export default function WhoWeAre() {
-  return <ContentPage />;
+export default function Page() {
+  return <SectionPage />;
 }

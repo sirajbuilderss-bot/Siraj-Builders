@@ -1,5 +1,5 @@
-import ContentPage from "./ContentPage";
+import SectionPage from "./SectionPage";
 
-export default function ContactUs() {
-  return <ContentPage type="contact" />;
+export default function Page() {
+  return <SectionPage />;
 }

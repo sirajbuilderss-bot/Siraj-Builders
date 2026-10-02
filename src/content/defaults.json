@@ -1,0 +1,3304 @@
+{
+ "generated": "database/build-content.cjs — do not edit by hand",
+ "pages": {
+  "/": {
+   "label": "Home",
+   "group": "Main",
+   "published": true,
+   "seo": {
+    "title": "Siraj Builders | Professional Construction & Building Services",
+    "description": "Explore Siraj Builders' professional approach to construction, project management and building solutions. Discuss your project with our team."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero slider",
+     "type": "hero",
+     "eyebrow": "",
+     "title": "Construction, managed from the first plan to the final detail.",
+     "subtitle": "Clear planning. Responsible execution. Consistent communication.",
+     "body": "A well-built project begins long before construction starts. Siraj Builders brings together planning, coordination and on-site execution to create a more organised construction experience for homeowners, businesses and property investors.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "source": "hero_slides",
+      "cta2_label": "View Our Projects",
+      "cta2_href": "/projects"
+     },
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "trust",
+     "label": "Trust strip",
+     "type": "trust",
+     "eyebrow": "",
+     "title": "",
+     "subtitle": "",
+     "body": "",
+     "items": [
+      {
+       "title": "Clear scope",
+       "body": "Defined before work begins",
+       "image": ""
+      },
+      {
+       "title": "Responsible execution",
+       "body": "Supervised on site",
+       "image": ""
+      },
+      {
+       "title": "Consistent updates",
+       "body": "Progress shared as it happens",
+       "image": ""
+      },
+      {
+       "title": "Defined handover",
+       "body": "Clear transition at completion",
+       "image": ""
+      }
+     ],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "intro",
+     "label": "Introduction",
+     "type": "intro",
+     "eyebrow": "A different construction experience",
+     "title": "A construction partner, not simply a contractor.",
+     "subtitle": "",
+     "body": "Construction involves hundreds of decisions — from the first scope of work to materials, scheduling, site coordination and final finishing.\n\nSiraj Builders is built around a straightforward principle: clients should understand their project and feel confident about how it is being managed.\n\nWe focus on organised execution, practical decision-making and careful attention to the details that shape the finished result.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "Learn About Siraj Builders",
+     "cta_href": "/who-we-are",
+     "settings": {
+      "theme": "white"
+     },
+     "enabled": true,
+     "position": 2
+    },
+    {
+     "key": "services",
+     "label": "Services",
+     "type": "services",
+     "eyebrow": "What we do",
+     "title": "Solutions built around the project.",
+     "subtitle": "",
+     "body": "Whether the requirement is a new property, commercial space, renovation or a broader design-and-build assignment, the right solution starts by understanding the project itself.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Explore Our Services",
+     "cta_href": "/services",
+     "settings": {
+      "theme": "light",
+      "limit": 3
+     },
+     "enabled": true,
+     "position": 3
+    },
+    {
+     "key": "projects",
+     "label": "Projects",
+     "type": "projects",
+     "eyebrow": "Selected work",
+     "title": "See the work, not just the promise.",
+     "subtitle": "",
+     "body": "Every completed project tells a different story. Our portfolio showcases the spaces we have delivered, the requirements behind them and the work involved in bringing each project together.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "View All Projects",
+     "cta_href": "/projects",
+     "settings": {
+      "theme": "dark",
+      "limit": 3
+     },
+     "enabled": true,
+     "position": 4
+    },
+    {
+     "key": "why-us",
+     "label": "Why Siraj Builders",
+     "type": "features",
+     "eyebrow": "Why Siraj Builders",
+     "title": "What a better-managed project looks like.",
+     "subtitle": "",
+     "body": "The difference is rarely one big promise. It is how the project is run, day after day.",
+     "items": [
+      {
+       "title": "Clear expectations",
+       "body": "Good construction starts with understanding what is being built, why it is being built and what the project requires.",
+       "image": ""
+      },
+      {
+       "title": "Organised execution",
+       "body": "A structured approach helps coordinate decisions, materials, people and work across different stages.",
+       "image": ""
+      },
+      {
+       "title": "Attention to detail",
+       "body": "The final result is shaped by hundreds of smaller decisions. We treat those details as part of the project, not an afterthought.",
+       "image": ""
+      },
+      {
+       "title": "Client communication",
+       "body": "Construction becomes easier to manage when clients know what has happened, what is happening and what comes next.",
+       "image": ""
+      },
+      {
+       "title": "Practical decision-making",
+       "body": "We focus on solutions that make sense for the property's intended use, project requirements and available resources.",
+       "image": ""
+      },
+      {
+       "title": "Accountability",
+       "body": "A professional construction relationship should have clear responsibilities, clear communication and a clear path forward when decisions need to be made.",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "grid"
+     },
+     "enabled": true,
+     "position": 5
+    },
+    {
+     "key": "process",
+     "label": "Process preview",
+     "type": "process",
+     "eyebrow": "Our process",
+     "title": "A clear route from idea to completion.",
+     "subtitle": "Pexels stock footage · Coordinating work on site",
+     "body": "",
+     "items": [
+      {
+       "title": "Consultation",
+       "body": "Understand your requirements, property and project objectives.",
+       "image": ""
+      },
+      {
+       "title": "Site Assessment",
+       "body": "Review the site and identify the practical considerations that affect the project.",
+       "image": ""
+      },
+      {
+       "title": "Planning & Design",
+       "body": "Develop the project scope and coordinate the required planning and design work.",
+       "image": ""
+      },
+      {
+       "title": "Estimation",
+       "body": "Establish the scope, specifications and commercial requirements.",
+       "image": ""
+      },
+      {
+       "title": "Construction",
+       "body": "Move into organised execution with appropriate supervision and coordination.",
+       "image": ""
+      },
+      {
+       "title": "Quality Review",
+       "body": "Review completed work and address outstanding details.",
+       "image": ""
+      },
+      {
+       "title": "Handover",
+       "body": "Complete the project and transition the finished property to the client.",
+       "image": ""
+      }
+     ],
+     "media_url": "",
+     "video_url": "https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4",
+     "cta_label": "See Our Full Process",
+     "cta_href": "/our-process",
+     "settings": {
+      "theme": "light"
+     },
+     "enabled": true,
+     "position": 6
+    },
+    {
+     "key": "stats",
+     "label": "Verified numbers",
+     "type": "stats",
+     "eyebrow": "In numbers",
+     "title": "Verified figures",
+     "subtitle": "",
+     "body": "Shown only when real, verified figures are added on the Statistics screen.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white"
+     },
+     "enabled": true,
+     "position": 7
+    },
+    {
+     "key": "testimonials",
+     "label": "Testimonials",
+     "type": "testimonials",
+     "eyebrow": "Client feedback",
+     "title": "What our clients say about working with us.",
+     "subtitle": "",
+     "body": "",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light",
+      "limit": 3
+     },
+     "enabled": true,
+     "position": 8
+    },
+    {
+     "key": "faq",
+     "label": "FAQ preview",
+     "type": "faq",
+     "eyebrow": "Common questions",
+     "title": "Answers before you have to ask.",
+     "subtitle": "",
+     "body": "",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "See All FAQs",
+     "cta_href": "/faq",
+     "settings": {
+      "theme": "white",
+      "limit": 4
+     },
+     "enabled": true,
+     "position": 9
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Have a project in mind? Start with a conversation.",
+     "subtitle": "",
+     "body": "Tell us what you are planning, where the property is located and what you need from your construction partner. We will use that information to understand whether Siraj Builders is the right fit for your project and what the next step should be.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark",
+      "cta2_label": "Contact Siraj Builders",
+      "cta2_href": "/contact-us"
+     },
+     "enabled": true,
+     "position": 10
+    }
+   ]
+  },
+  "/who-we-are": {
+   "label": "About",
+   "group": "Main",
+   "published": true,
+   "seo": {
+    "title": "About Siraj Builders | Our Approach to Construction",
+    "description": "Learn about Siraj Builders, our construction philosophy, project approach and commitment to professional client service."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "About Siraj Builders",
+     "title": "Built around a better way to manage construction.",
+     "subtitle": "",
+     "body": "Siraj Builders is a construction company focused on delivering professionally managed building projects with attention to planning, execution and client communication.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "who",
+     "label": "Who we are",
+     "type": "intro",
+     "eyebrow": "Who we are",
+     "title": "Our role is to bring greater structure to that process.",
+     "subtitle": "",
+     "body": "We understand that construction is rarely straightforward from a client's perspective. There are budgets to consider, decisions to make, timelines to manage and countless details that can affect the final outcome.\n\nWe focus on organised execution, practical decision-making and careful attention to the details that shape the finished result.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "story",
+     "label": "Our Story",
+     "type": "content",
+     "eyebrow": "Our story",
+     "title": "Good construction starts with a clear conversation.",
+     "subtitle": "",
+     "body": "Most people don’t build every day. They’re trusting someone with a place that matters to them, while making a lot of decisions along the way.\n\nWe start by understanding how the property needs to work and what matters most to the client. Then we work through scope, planning and the choices that shape the build, keeping communication open as the work moves forward.\n\nA good result is more than a finished building. Clients should know what has been done, why it matters and what comes next.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light"
+     },
+     "enabled": true,
+     "position": 2
+    },
+    {
+     "key": "mission",
+     "label": "Mission & vision",
+     "type": "features",
+     "eyebrow": "Purpose",
+     "title": "Why we do this work.",
+     "subtitle": "",
+     "body": "",
+     "items": [
+      {
+       "title": "Mission",
+       "body": "To deliver well-planned construction projects through responsible execution, clear communication and attention to the details that matter to our clients.",
+       "image": ""
+      },
+      {
+       "title": "Vision",
+       "body": "To become a construction partner known for professional project management, dependable execution and lasting client relationships.",
+       "image": ""
+      }
+     ],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light",
+      "layout": "duo"
+     },
+     "enabled": true,
+     "position": 3
+    },
+    {
+     "key": "approach",
+     "label": "Our approach",
+     "type": "content",
+     "eyebrow": "Our approach",
+     "title": "A successful project depends on more than workmanship alone.",
+     "subtitle": "Pexels stock footage · Site coordination",
+     "body": "It requires:",
+     "items": [
+      {
+       "title": "Understanding before execution.",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Planning before construction.",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Communication throughout.",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Attention to detail until completion.",
+       "body": "",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "checklist"
+     },
+     "enabled": true,
+     "position": 4
+    },
+    {
+     "key": "quality",
+     "label": "Quality commitment",
+     "type": "content",
+     "eyebrow": "Quality commitment",
+     "title": "Quality should be visible in the way a project is planned, managed and finished.",
+     "subtitle": "",
+     "body": "Our commitment is to approach each project with care, use appropriate materials and specifications, and maintain attention to workmanship throughout the construction process.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light",
+      "layout": "centered"
+     },
+     "enabled": true,
+     "position": 5
+    },
+    {
+     "key": "pillars",
+     "label": "Brand pillars",
+     "type": "features",
+     "eyebrow": "What we hold to",
+     "title": "Seven principles behind every project.",
+     "subtitle": "",
+     "body": "",
+     "items": [
+      {
+       "title": "Clarity",
+       "body": "The client understands the project before committing.",
+       "image": ""
+      },
+      {
+       "title": "Structured execution",
+       "body": "Construction follows a defined process rather than an improvised sequence.",
+       "image": ""
+      },
+      {
+       "title": "Responsible management",
+       "body": "The project is actively coordinated rather than simply handed over to workers.",
+       "image": ""
+      },
+      {
+       "title": "Craftsmanship",
+       "body": "Attention is given to the details that determine the final result.",
+       "image": ""
+      },
+      {
+       "title": "Communication",
+       "body": "Clients remain informed throughout the project.",
+       "image": ""
+      },
+      {
+       "title": "Practical design",
+       "body": "The finished space should look good while serving its intended purpose.",
+       "image": ""
+      },
+      {
+       "title": "Long-term value",
+       "body": "The objective is not simply to finish construction, but to create something that remains useful and valuable.",
+       "image": ""
+      }
+     ],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "numbered"
+     },
+     "enabled": true,
+     "position": 6
+    },
+    {
+     "key": "team",
+     "label": "Leadership",
+     "type": "team",
+     "eyebrow": "Leadership",
+     "title": "The people responsible for your project.",
+     "subtitle": "",
+     "body": "Shown once verified team profiles are added on the Team screen.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light"
+     },
+     "enabled": true,
+     "position": 7
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "See how we would approach your project.",
+     "subtitle": "",
+     "body": "Share the basics — property, project type and what you need — and we will explain the next step.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark",
+      "cta2_label": "See How We Work",
+      "cta2_href": "/our-process"
+     },
+     "enabled": true,
+     "position": 8
+    }
+   ]
+  },
+  "/services": {
+   "label": "Services",
+   "group": "Main",
+   "published": true,
+   "seo": {
+    "title": "Construction Services | Siraj Builders",
+    "description": "Explore Siraj Builders' construction solutions, from residential and commercial projects to renovation and project management."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Services",
+     "title": "Construction solutions for projects that deserve a structured approach.",
+     "subtitle": "",
+     "body": "Different properties require different approaches. Our services are structured around those differences.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "intro",
+     "label": "Introduction",
+     "type": "content",
+     "eyebrow": "How we think about services",
+     "title": "Different properties require different approaches.",
+     "subtitle": "",
+     "body": "A new home, commercial building and renovation project may share the same basic construction principles, but their priorities, constraints and execution requirements are different.\n\nOur services are structured around those differences.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "centered"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "list",
+     "label": "Services list",
+     "type": "services",
+     "eyebrow": "Our services",
+     "title": "Choose the service closest to your project.",
+     "subtitle": "",
+     "body": "",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light",
+      "layout": "full"
+     },
+     "enabled": true,
+     "position": 2
+    },
+    {
+     "key": "proof",
+     "label": "Link to projects & process",
+     "type": "content",
+     "eyebrow": "Before you decide",
+     "title": "See examples of our work and what working with us involves.",
+     "subtitle": "Pexels stock footage · Construction activity",
+     "body": "Every service follows the same principle: understand the requirement, agree the scope, then manage the work with clear communication.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4",
+     "cta_label": "View Our Projects",
+     "cta_href": "/projects",
+     "settings": {
+      "theme": "white",
+      "layout": "centered",
+      "cta2_label": "See How We Work",
+      "cta2_href": "/our-process"
+     },
+     "enabled": true,
+     "position": 3
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Not sure which service fits?",
+     "subtitle": "",
+     "body": "Tell us about the property and what you want to achieve. We will help establish the right starting point.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark"
+     },
+     "enabled": true,
+     "position": 4
+    }
+   ]
+  },
+  "/residential-construction": {
+   "label": "Residential Construction",
+   "group": "Services",
+   "published": true,
+   "seo": {
+    "title": "Residential Construction | Siraj Builders",
+    "description": "Professional residential construction focused on planning, coordination, workmanship and a clear client experience."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Residential construction",
+     "title": "A home should be built around how you intend to live.",
+     "subtitle": "",
+     "body": "From the initial requirements to the finished property, residential construction involves hundreds of decisions. Our approach focuses on bringing those decisions into a structured process so the project remains aligned with the client's requirements.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "deliver",
+     "label": "What we deliver",
+     "type": "content",
+     "eyebrow": "What we deliver",
+     "title": "Structured support from planning to handover.",
+     "subtitle": "The exact scope is agreed for each project before work begins.",
+     "body": "Depending on the agreed scope, residential construction may involve:",
+     "items": [
+      {
+       "title": "Project planning",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Construction coordination",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Structural work",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Finishing",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Site supervision",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Quality review",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Client communication",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Final handover",
+       "body": "",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "checklist"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "needs",
+     "label": "What homeowners need",
+     "type": "features",
+     "eyebrow": "What homeowners usually need",
+     "title": "The concerns we plan around.",
+     "subtitle": "",
+     "body": "",
+     "items": [
+      {
+       "title": "Budget clarity",
+       "body": "Understanding the scope before committing.",
+       "image": ""
+      },
+      {
+       "title": "Communication",
+       "body": "Knowing what is happening during construction.",
+       "image": ""
+      },
+      {
+       "title": "Workmanship",
+       "body": "Confidence that important details are being handled properly.",
+       "image": ""
+      },
+      {
+       "title": "Coordination",
+       "body": "Reducing the burden of managing multiple construction activities independently.",
+       "image": ""
+      },
+      {
+       "title": "A clear finish line",
+       "body": "Knowing what completion and handover involve.",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light",
+      "layout": "grid"
+     },
+     "enabled": true,
+     "position": 2
+    },
+    {
+     "key": "projects",
+     "label": "Related projects",
+     "type": "projects",
+     "eyebrow": "Residential work",
+     "title": "See examples of our work.",
+     "subtitle": "",
+     "body": "",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "View All Projects",
+     "cta_href": "/projects",
+     "settings": {
+      "theme": "white",
+      "category": "Residential",
+      "limit": 3,
+      "hide_empty": true
+     },
+     "enabled": true,
+     "position": 3
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Discuss your home project.",
+     "subtitle": "",
+     "body": "Share the property location, plot size and what you want to build. We will explain the appropriate next step.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Home Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark",
+      "cta2_label": "See How We Work",
+      "cta2_href": "/our-process"
+     },
+     "enabled": true,
+     "position": 4
+    }
+   ]
+  },
+  "/commercial-construction": {
+   "label": "Commercial Construction",
+   "group": "Services",
+   "published": true,
+   "seo": {
+    "title": "Commercial Construction | Siraj Builders",
+    "description": "Commercial construction planned around how the finished property will actually be used, with coordinated delivery and supervision."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Commercial construction",
+     "title": "Commercial spaces built for how businesses operate.",
+     "subtitle": "",
+     "body": "A commercial property needs to do more than look complete. It needs to function.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "approach",
+     "label": "Our approach",
+     "type": "intro",
+     "eyebrow": "Our approach",
+     "title": "Planned around the business that will use it.",
+     "subtitle": "Pexels stock footage · Construction site activity",
+     "body": "That means planning for movement, usability, durability, maintenance and the practical requirements of the business occupying the space.\n\nWe begin by understanding the intended use of the property and then coordinate the construction process around the agreed project requirements.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "focus",
+     "label": "Focus areas",
+     "type": "features",
+     "eyebrow": "Focus areas",
+     "title": "What a commercial project turns on.",
+     "subtitle": "Specific capabilities are confirmed for each project.",
+     "body": "",
+     "items": [
+      {
+       "title": "Functional planning",
+       "body": "Layouts that support how the business actually operates.",
+       "image": ""
+      },
+      {
+       "title": "Construction coordination",
+       "body": "Trades, stages and decisions brought into one sequence.",
+       "image": ""
+      },
+      {
+       "title": "Site supervision",
+       "body": "Work overseen on site against the agreed scope.",
+       "image": ""
+      },
+      {
+       "title": "Material management",
+       "body": "Materials planned and coordinated around the programme.",
+       "image": ""
+      },
+      {
+       "title": "Quality review",
+       "body": "Completed work checked before it is signed off.",
+       "image": ""
+      },
+      {
+       "title": "Schedule coordination",
+       "body": "Timing managed with the business's operations in mind.",
+       "image": ""
+      },
+      {
+       "title": "Final completion",
+       "body": "A defined close-out and handover.",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light",
+      "layout": "grid"
+     },
+     "enabled": true,
+     "position": 2
+    },
+    {
+     "key": "projects",
+     "label": "Related projects",
+     "type": "projects",
+     "eyebrow": "Commercial work",
+     "title": "See examples of our work.",
+     "subtitle": "",
+     "body": "",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "View All Projects",
+     "cta_href": "/projects",
+     "settings": {
+      "theme": "white",
+      "category": "Commercial",
+      "limit": 3,
+      "hide_empty": true
+     },
+     "enabled": true,
+     "position": 3
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Discuss a commercial project.",
+     "subtitle": "",
+     "body": "Tell us how the space will be used, where it is and when you need it. We will help define the next step.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss a Commercial Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark",
+      "cta2_label": "See How We Work",
+      "cta2_href": "/our-process"
+     },
+     "enabled": true,
+     "position": 4
+    }
+   ]
+  },
+  "/renovation-remodelling": {
+   "label": "Renovation & Remodelling",
+   "group": "Services",
+   "published": true,
+   "seo": {
+    "title": "Renovation & Remodelling | Siraj Builders",
+    "description": "Renovation and remodelling that starts by understanding the existing property, then improves how it functions and feels."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Renovation & remodelling",
+     "title": "Improve the space you already have.",
+     "subtitle": "",
+     "body": "Renovation is different from building from scratch. Existing structures, services, finishes and layouts all have to be considered before changes are made.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "intro",
+     "label": "How we approach renovation",
+     "type": "intro",
+     "eyebrow": "How we approach it",
+     "title": "Understand the existing property first.",
+     "subtitle": "",
+     "body": "Siraj Builders approaches renovation projects by first understanding the existing property and then identifying the changes required to improve its functionality, appearance or use.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "structure",
+     "label": "How the project is structured",
+     "type": "content",
+     "eyebrow": "Project structure",
+     "title": "We can structure the project around:",
+     "subtitle": "",
+     "body": "",
+     "items": [
+      {
+       "title": "Existing property assessment",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Planning",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Construction work",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Finishing",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Material coordination",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Site management",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Final review",
+       "body": "",
+       "image": ""
+      }
+     ],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light",
+      "layout": "checklist"
+     },
+     "enabled": true,
+     "position": 2
+    },
+    {
+     "key": "objective",
+     "label": "The objective",
+     "type": "content",
+     "eyebrow": "The objective",
+     "title": "Not simply to make a space look different.",
+     "subtitle": "Pexels stock footage · Coordinated construction work",
+     "body": "To make it work better for the people using it.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "centered"
+     },
+     "enabled": true,
+     "position": 3
+    },
+    {
+     "key": "projects",
+     "label": "Related projects",
+     "type": "projects",
+     "eyebrow": "Renovation work",
+     "title": "See examples of our work.",
+     "subtitle": "",
+     "body": "",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "View All Projects",
+     "cta_href": "/projects",
+     "settings": {
+      "theme": "light",
+      "category": "Renovation",
+      "limit": 3,
+      "hide_empty": true
+     },
+     "enabled": true,
+     "position": 4
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Discuss your renovation.",
+     "subtitle": "",
+     "body": "Tell us about the property as it is today and what you want to change.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Renovation",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark"
+     },
+     "enabled": true,
+     "position": 5
+    }
+   ]
+  },
+  "/design-architecture": {
+   "label": "Design & Architecture",
+   "group": "Services",
+   "published": false,
+   "seo": {
+    "title": "Design & Architecture | Siraj Builders",
+    "description": "Design decisions made with construction in mind — planning and design coordination before construction begins."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Design & architecture",
+     "title": "Design decisions made with construction in mind.",
+     "subtitle": "",
+     "body": "Where Siraj Builders provides architectural or design services, the objective is to create a stronger connection between what is designed and what is ultimately built.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "scope",
+     "label": "Scope",
+     "type": "content",
+     "eyebrow": "Scope",
+     "title": "What design support can cover.",
+     "subtitle": "Pexels stock footage · Planning and coordination",
+     "body": "The exact services, and whether each is provided directly or through external professionals, are confirmed for each project.",
+     "items": [
+      {
+       "title": "Construction coordination",
+       "body": "",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "checklist",
+      "note": "TO CONFIRM — add architectural planning, concept development, space planning, technical drawings, 3D visualisation and interior coordination only if offered, and state which are provided directly vs through partners."
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Discuss design for your project.",
+     "subtitle": "",
+     "body": "Share your brief and any drawings you already have.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark"
+     },
+     "enabled": true,
+     "position": 2
+    }
+   ]
+  },
+  "/grey-structure": {
+   "label": "Grey Structure",
+   "group": "Services",
+   "published": false,
+   "seo": {
+    "title": "Grey Structure Construction | Siraj Builders",
+    "description": "Grey structure work coordinated with care — the structural stage that sets up everything that follows."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Grey structure",
+     "title": "A strong structural foundation for the work that follows.",
+     "subtitle": "",
+     "body": "The early stages set the quality, alignment and sequencing of the entire build. They deserve careful coordination.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "detail",
+     "label": "What it involves",
+     "type": "content",
+     "eyebrow": "The approach",
+     "title": "Structure first. Clarity at every stage.",
+     "subtitle": "Pexels stock footage · Structural work on site",
+     "body": "From site preparation through structural work, we keep drawings, materials, workmanship and progress aligned with the agreed project requirements.",
+     "items": [
+      {
+       "title": "Site preparation",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Foundation and structure",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Material coordination",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Stage-by-stage review",
+       "body": "",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "checklist",
+      "note": "TO CONFIRM — publish only once grey-structure work is a confirmed service."
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Discuss your grey structure project.",
+     "subtitle": "",
+     "body": "Share the plot details and drawings you already have.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark"
+     },
+     "enabled": true,
+     "position": 2
+    }
+   ]
+  },
+  "/turnkey-construction": {
+   "label": "Turnkey Construction",
+   "group": "Services",
+   "published": false,
+   "seo": {
+    "title": "Turnkey Construction | Siraj Builders",
+    "description": "One coordinated route from initial brief to completed property."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Turnkey construction",
+     "title": "One coordinated route from initial brief to completed property.",
+     "subtitle": "",
+     "body": "A turnkey project needs more than a long list of services. It needs one clear direction across design, construction, finishes and handover.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "detail",
+     "label": "What it involves",
+     "type": "content",
+     "eyebrow": "The approach",
+     "title": "A complete property, managed as one project.",
+     "subtitle": "Pexels stock footage · Construction coordination",
+     "body": "We coordinate the major decisions and handoffs so the client has a clear view of scope, progress, quality and completion.",
+     "items": [
+      {
+       "title": "Single project direction",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Design and build coordination",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Finishes and installation",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Final handover",
+       "body": "",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "checklist",
+      "note": "TO CONFIRM — publish only once turnkey delivery is a confirmed service."
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Discuss a turnkey project.",
+     "subtitle": "",
+     "body": "Tell us what you want completed and where.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark"
+     },
+     "enabled": true,
+     "position": 2
+    }
+   ]
+  },
+  "/project-management": {
+   "label": "Project Management",
+   "group": "Services",
+   "published": false,
+   "seo": {
+    "title": "Construction Project Management | Siraj Builders",
+    "description": "Project management that keeps decisions, people and progress moving together."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Project management",
+     "title": "Keep decisions, people and progress moving together.",
+     "subtitle": "",
+     "body": "Construction is a sequence of connected decisions. Project management makes ownership, timing and next steps visible.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "detail",
+     "label": "What it involves",
+     "type": "content",
+     "eyebrow": "The approach",
+     "title": "The work is easier to manage when it is visible.",
+     "subtitle": "Pexels stock footage · Managing site progress",
+     "body": "We structure communication, sequencing and reviews around the agreed scope so issues can be addressed before they become expensive delays.",
+     "items": [
+      {
+       "title": "Programme coordination",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Trade and site alignment",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Progress communication",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Quality and close-out",
+       "body": "",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "checklist",
+      "note": "TO CONFIRM — publish only once project management is a confirmed standalone service."
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Discuss project management.",
+     "subtitle": "",
+     "body": "Tell us about the project and where you need support.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark"
+     },
+     "enabled": true,
+     "position": 2
+    }
+   ]
+  },
+  "/projects": {
+   "label": "Projects",
+   "group": "Main",
+   "published": true,
+   "seo": {
+    "title": "Projects & Portfolio | Siraj Builders",
+    "description": "Explore completed and ongoing Siraj Builders projects across residential, commercial and renovation work."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Projects",
+     "title": "Projects that show how we work.",
+     "subtitle": "",
+     "body": "A portfolio should do more than display attractive photographs. It should show the thinking, scope and execution behind the finished project.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1541971875076-8f970d573be6?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "grid",
+     "label": "Portfolio",
+     "type": "projects",
+     "eyebrow": "Portfolio",
+     "title": "Completed and ongoing work.",
+     "subtitle": "Pexels stock footage · Active construction work",
+     "body": "Each case study follows the same structure: the client requirement, the challenge, our approach, the execution and the result.",
+     "items": [],
+     "media_url": "",
+     "video_url": "https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light",
+      "layout": "portfolio"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Have a similar project in mind?",
+     "subtitle": "",
+     "body": "Tell us what you are planning. We will explain how we would approach it.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark",
+      "cta2_label": "Explore Our Services",
+      "cta2_href": "/services"
+     },
+     "enabled": true,
+     "position": 2
+    }
+   ]
+  },
+  "/our-process": {
+   "label": "Our Process",
+   "group": "Main",
+   "published": true,
+   "seo": {
+    "title": "Our Construction Process | Siraj Builders",
+    "description": "See how Siraj Builders approaches construction projects from consultation and planning through execution, quality review and handover."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Our process",
+     "title": "A construction process you can understand.",
+     "subtitle": "",
+     "body": "The purpose of our process is simple: reduce uncertainty.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "steps",
+     "label": "Process steps",
+     "type": "process",
+     "eyebrow": "Eight stages",
+     "title": "From the first conversation to handover.",
+     "subtitle": "Pexels stock footage · Site coordination",
+     "body": "",
+     "items": [
+      {
+       "title": "Consultation",
+       "body": "We start by understanding what you want to build, why you are building it and what matters most to you.",
+       "image": ""
+      },
+      {
+       "title": "Site Assessment",
+       "body": "We review the property and identify practical considerations relevant to the project.",
+       "image": ""
+      },
+      {
+       "title": "Planning & Design",
+       "body": "The project requirements are translated into an organised scope and the necessary design and planning work.",
+       "image": ""
+      },
+      {
+       "title": "Estimation & Scope",
+       "body": "The project is reviewed in commercial and practical terms so the client understands what is included.",
+       "image": ""
+      },
+      {
+       "title": "Project Preparation",
+       "body": "Before execution begins, the required coordination, materials, people and site activities are organised.",
+       "image": ""
+      },
+      {
+       "title": "Construction & Supervision",
+       "body": "The agreed work moves into execution with appropriate site coordination and supervision.",
+       "image": ""
+      },
+      {
+       "title": "Quality Review",
+       "body": "Completed work is reviewed and outstanding issues are identified for resolution.",
+       "image": ""
+      },
+      {
+       "title": "Handover",
+       "body": "The completed project is reviewed with the client and the handover process is completed.",
+       "image": ""
+      }
+     ],
+     "media_url": "",
+     "video_url": "https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "timeline"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "details",
+     "label": "Workflow details (to confirm)",
+     "type": "content",
+     "eyebrow": "Working details",
+     "title": "Approvals, payment milestones and reporting.",
+     "subtitle": "",
+     "body": "",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light",
+      "layout": "centered",
+      "note": "TO CONFIRM — exact workflow, approvals, payment milestones and reporting process. Switch on once confirmed."
+     },
+     "enabled": false,
+     "position": 2
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Start at step one.",
+     "subtitle": "",
+     "body": "The consultation is where we understand your requirements, property and objectives.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Request a Consultation",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark",
+      "cta2_label": "Read the FAQs",
+      "cta2_href": "/faq"
+     },
+     "enabled": true,
+     "position": 3
+    }
+   ]
+  },
+  "/testimonials": {
+   "label": "Testimonials",
+   "group": "Main",
+   "published": true,
+   "seo": {
+    "title": "Client Testimonials | Siraj Builders",
+    "description": "What clients say about working with Siraj Builders — verified feedback only."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Testimonials",
+     "title": "What our clients say about working with us.",
+     "subtitle": "",
+     "body": "Only verified feedback from real clients appears on this page.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "list",
+     "label": "Testimonials",
+     "type": "testimonials",
+     "eyebrow": "Client feedback",
+     "title": "In their words.",
+     "subtitle": "",
+     "body": "",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light",
+      "layout": "full"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Talk to us about your project.",
+     "subtitle": "",
+     "body": "Tell us what you are planning and we will explain the next step.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark"
+     },
+     "enabled": true,
+     "position": 2
+    }
+   ]
+  },
+  "/faq": {
+   "label": "FAQ",
+   "group": "Main",
+   "published": true,
+   "seo": {
+    "title": "FAQs | Siraj Builders",
+    "description": "Answers to common questions about starting a construction project with Siraj Builders — estimates, timelines, process and contact."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "FAQs",
+     "title": "Questions clients ask before starting.",
+     "subtitle": "",
+     "body": "Straight answers about how a project begins, how estimates and timelines work, and what happens after you contact us.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "list",
+     "label": "All questions",
+     "type": "faq",
+     "eyebrow": "Frequently asked",
+     "title": "Browse by topic.",
+     "subtitle": "Pexels stock footage · Planning a construction project",
+     "body": "",
+     "items": [],
+     "media_url": "",
+     "video_url": "https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "full"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Still planning your project?",
+     "subtitle": "",
+     "body": "Discuss it with our team — the questions you have now are the right place to start.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark",
+      "cta2_label": "Contact Us",
+      "cta2_href": "/contact-us"
+     },
+     "enabled": true,
+     "position": 2
+    }
+   ]
+  },
+  "/contact-us": {
+   "label": "Contact",
+   "group": "Main",
+   "published": true,
+   "seo": {
+    "title": "Contact Siraj Builders | Discuss Your Construction Project",
+    "description": "Contact Siraj Builders to discuss residential, commercial or renovation construction requirements and arrange an initial project consultation."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Contact",
+     "title": "Let's talk about your project.",
+     "subtitle": "",
+     "body": "Whether you are still exploring your options or already have drawings and a defined scope, the best place to begin is a conversation.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "details",
+     "label": "Contact details",
+     "type": "contact",
+     "eyebrow": "Get in touch",
+     "title": "Tell us what you’re planning.",
+     "subtitle": "",
+     "body": "Use the project enquiry form to share a little about the property, what you have in mind and where you need help. We’ll use that information to guide the next step.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light",
+      "layout": "cards"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "form",
+     "label": "Contact form",
+     "type": "contact",
+     "eyebrow": "Contact form",
+     "title": "Tell us about your project.",
+     "subtitle": "",
+     "body": "The more we understand about your project, the better we can guide the initial conversation.",
+     "items": [
+      {
+       "title": "Property location",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Project type and intended use",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Plot or property size",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Drawings or documents",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Desired scope and timing",
+       "body": "",
+       "image": ""
+      }
+     ],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "form"
+     },
+     "enabled": true,
+     "position": 2
+    }
+   ]
+  },
+  "/consultation": {
+   "label": "Consultation",
+   "group": "Main",
+   "published": true,
+   "seo": {
+    "title": "Request a Consultation | Siraj Builders",
+    "description": "Start with clarity. Share your project requirements and request an initial consultation with Siraj Builders."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Consultation",
+     "title": "Start with clarity. Then build.",
+     "subtitle": "No obligation. Plain conversation. Clear next step.",
+     "body": "A consultation gives us an opportunity to understand your requirements before discussing the appropriate path forward.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "note": "The consultation form below this hero is built into the page."
+     },
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "next",
+     "label": "What happens next",
+     "type": "process",
+     "eyebrow": "What happens next",
+     "title": "A simple path from first message to first conversation.",
+     "subtitle": "Pexels stock footage · Preparing for a project conversation",
+     "body": "After receiving your information, the team reviews the requirements and determines the appropriate next step.",
+     "items": [
+      {
+       "title": "You share the basics",
+       "body": "Fill in the form with your project type, property details and what you are planning.",
+       "image": ""
+      },
+      {
+       "title": "We review the details",
+       "body": "Our team reads through your information and considers what the project requires.",
+       "image": ""
+      },
+      {
+       "title": "We reach out",
+       "body": "We contact you to clarify anything unclear and arrange an initial conversation.",
+       "image": ""
+      },
+      {
+       "title": "We agree on next steps",
+       "body": "Together we decide what the appropriate next step looks like — or that it isn't the right fit.",
+       "image": ""
+      }
+     ],
+     "media_url": "",
+     "video_url": "https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Not ready to fill in a form?",
+     "subtitle": "",
+     "body": "Look through our work or read how we manage a project first.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "View Our Projects",
+     "cta_href": "/projects",
+     "settings": {
+      "theme": "dark",
+      "cta2_label": "See How We Work",
+      "cta2_href": "/our-process"
+     },
+     "enabled": true,
+     "position": 2
+    }
+   ]
+  },
+  "/leadership": {
+   "label": "Leadership",
+   "group": "Company",
+   "published": true,
+   "seo": {
+    "title": "Leadership | Siraj Builders",
+    "description": "Clear roles and responsibility behind every Siraj Builders project."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Leadership",
+     "title": "Well-managed projects start with clear responsibility.",
+     "subtitle": "",
+     "body": "Leadership in construction means knowing who decides what, coordinating across teams and being accountable for delivery.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "team",
+     "label": "Team profiles",
+     "type": "team",
+     "eyebrow": "Our team",
+     "title": "The people behind the work.",
+     "subtitle": "",
+     "body": "",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "detail",
+     "label": "How responsibility works",
+     "type": "features",
+     "eyebrow": "How we lead",
+     "title": "Clear roles create better momentum.",
+     "subtitle": "Pexels stock footage · Team coordination",
+     "body": "Decisions have owners, sites have leads and clients have a clear path for questions and updates.",
+     "items": [
+      {
+       "title": "Accountability",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Communication",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Coordination",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Responsible decisions",
+       "body": "",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "numbered"
+     },
+     "enabled": true,
+     "position": 2
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Meet the team behind your project.",
+     "subtitle": "",
+     "body": "Start with a conversation about what you are planning.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark"
+     },
+     "enabled": true,
+     "position": 3
+    }
+   ]
+  },
+  "/project-showcase": {
+   "label": "Project Visibility",
+   "group": "Company",
+   "published": true,
+   "seo": {
+    "title": "Project Visibility | Siraj Builders",
+    "description": "How Siraj Builders keeps progress, decisions and responsibilities visible to clients throughout a project."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Project visibility",
+     "title": "Know what is happening, and what comes next.",
+     "subtitle": "",
+     "body": "Construction becomes easier to live with when progress, decisions and responsibilities stay visible to the people paying for the work.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "detail",
+     "label": "How visibility works",
+     "type": "features",
+     "eyebrow": "The approach",
+     "title": "The work is easier to manage when it is visible.",
+     "subtitle": "Pexels stock footage · Work in progress",
+     "body": "We structure communication around the agreed scope: what has been completed, what is under way, and where a client decision is needed next. Reporting format and frequency are agreed per project.",
+     "items": [
+      {
+       "title": "Structured progress updates",
+       "body": "What has been completed and what is under way.",
+       "image": ""
+      },
+      {
+       "title": "Documented decisions",
+       "body": "Choices recorded so they can be traced later.",
+       "image": ""
+      },
+      {
+       "title": "Defined responsibilities",
+       "body": "Everyone knows what they own.",
+       "image": ""
+      },
+      {
+       "title": "Clear next steps",
+       "body": "Where a client decision is needed, and when.",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "grid"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "See how this would work on your project.",
+     "subtitle": "",
+     "body": "We agree the reporting format with every client.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark"
+     },
+     "enabled": true,
+     "position": 2
+    }
+   ]
+  },
+  "/role-definition": {
+   "label": "Project Roles",
+   "group": "Company",
+   "published": true,
+   "seo": {
+    "title": "Project Roles | Siraj Builders",
+    "description": "How responsibilities are defined on a Siraj Builders project."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Project roles",
+     "title": "Every project role, clearly defined.",
+     "subtitle": "",
+     "body": "Projects move better when everyone knows what they own, what they do not own and where the handoffs happen.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "detail",
+     "label": "Roles",
+     "type": "features",
+     "eyebrow": "Clarity reduces overlap",
+     "title": "Who does what.",
+     "subtitle": "Pexels stock footage · Team coordination",
+     "body": "We define responsibilities around the project so decisions do not sit unanswered and important work does not fall between roles.",
+     "items": [
+      {
+       "title": "Client direction",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Project management",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Site supervision",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Specialist coordination",
+       "body": "",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "numbered"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Discuss how your project would be organised.",
+     "subtitle": "",
+     "body": "Start with the basics of what you are planning.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark"
+     },
+     "enabled": true,
+     "position": 2
+    }
+   ]
+  },
+  "/subcontractors": {
+   "label": "Subcontractors",
+   "group": "Company",
+   "published": true,
+   "seo": {
+    "title": "Subcontractors & Specialists | Siraj Builders",
+    "description": "How specialist work is coordinated around the agreed project."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Subcontractors",
+     "title": "Specialists coordinated around the agreed project.",
+     "subtitle": "",
+     "body": "External specialists add value when their scope, timing and communication remain clear.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1541971875076-8f970d573be6?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "detail",
+     "label": "Coordination",
+     "type": "content",
+     "eyebrow": "The approach",
+     "title": "The right specialist in the right sequence.",
+     "subtitle": "Pexels stock footage · Specialist work on site",
+     "body": "We coordinate specialist work against the drawings, programme and quality expectations of the wider project.",
+     "items": [
+      {
+       "title": "Defined scope",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Sequenced work",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Site coordination",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Quality review",
+       "body": "",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "checklist"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Discuss your project.",
+     "subtitle": "",
+     "body": "Tell us what you are planning.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark"
+     },
+     "enabled": true,
+     "position": 2
+    }
+   ]
+  },
+  "/international": {
+   "label": "Overseas Clients",
+   "group": "Company",
+   "published": false,
+   "seo": {
+    "title": "Overseas Clients | Siraj Builders",
+    "description": "Clear project coordination when clients are not on site."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Overseas clients",
+     "title": "Clear project coordination across distance.",
+     "subtitle": "",
+     "body": "When clients, consultants or properties are in different locations, communication and documentation matter even more.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "detail",
+     "label": "Remote coordination",
+     "type": "features",
+     "eyebrow": "Make the project visible from anywhere",
+     "title": "What remote clients need.",
+     "subtitle": "Pexels stock footage · Coordinating work across a project",
+     "body": "Structured updates, documented decisions and coordinated information help keep remote stakeholders connected to the work.",
+     "items": [
+      {
+       "title": "Remote communication",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Documented decisions",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Local coordination",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Visible progress",
+       "body": "",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "numbered",
+      "note": "TO CONFIRM — whether Siraj Builders actively targets overseas clients."
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Building from abroad?",
+     "subtitle": "",
+     "body": "Share the property details and how you prefer to receive updates.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark"
+     },
+     "enabled": true,
+     "position": 2
+    }
+   ]
+  },
+  "/affiliates": {
+   "label": "Partners & Affiliates",
+   "group": "Company",
+   "published": true,
+   "seo": {
+    "title": "Partners & Specialists | Siraj Builders",
+    "description": "How Siraj Builders coordinates specialists so the client has one point of contact."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Partners & affiliates",
+     "title": "A connected network, one point of contact.",
+     "subtitle": "",
+     "body": "Where external specialists or partners are part of a project, roles and responsibilities should remain clear. One coordinated team, one shared scope.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "intro",
+     "label": "Introduction",
+     "type": "intro",
+     "eyebrow": "Coordination",
+     "title": "Specialists without the split responsibility.",
+     "subtitle": "",
+     "body": "Most construction projects involve more than one discipline — structural work, mechanical and electrical services, design, finishing. Each area benefits from the right specialist.\n\nThe challenge is coordinating them so the client isn't left managing multiple conversations and unclear responsibilities. That is where Siraj Builders steps in as the single point of contact.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "layers",
+     "label": "How coordination works",
+     "type": "process",
+     "eyebrow": "How coordination works",
+     "title": "Three layers that keep a multi-specialist project organised.",
+     "subtitle": "",
+     "body": "",
+     "items": [
+      {
+       "title": "Scoping the project",
+       "body": "Understanding which specialists are needed, when they'll be needed, and what each one is responsible for.",
+       "image": ""
+      },
+      {
+       "title": "Coordinating the sequence",
+       "body": "Bringing specialists in at the right stage, in the right order, with the right information.",
+       "image": ""
+      },
+      {
+       "title": "Keeping the client informed",
+       "body": "One team, one set of updates, one clear picture of progress and next steps.",
+       "image": ""
+      }
+     ],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light"
+     },
+     "enabled": true,
+     "position": 2
+    },
+    {
+     "key": "partners",
+     "label": "Disciplines",
+     "type": "features",
+     "eyebrow": "What specialists typically cover",
+     "title": "The disciplines a project may involve.",
+     "subtitle": "Pexels stock footage · Specialist work on site",
+     "body": "Depending on the project, one or more of these areas may be part of the team. The exact mix is agreed per project.",
+     "items": [
+      {
+       "title": "Structural engineering",
+       "body": "Load paths, foundations, framing and structural drawings for the building.",
+       "image": ""
+      },
+      {
+       "title": "MEP services",
+       "body": "Mechanical, electrical and plumbing systems coordinated with the structure.",
+       "image": ""
+      },
+      {
+       "title": "Architectural design",
+       "body": "Planning, layouts, drawings and design coordination before construction.",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "grid"
+     },
+     "enabled": true,
+     "position": 3
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Discuss your project.",
+     "subtitle": "",
+     "body": "One conversation to start, one point of contact throughout.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark"
+     },
+     "enabled": true,
+     "position": 4
+    }
+   ]
+  },
+  "/locations": {
+   "label": "Service Areas",
+   "group": "Company",
+   "published": true,
+   "seo": {
+    "title": "Service Areas | Siraj Builders",
+    "description": "How Siraj Builders plans around the property and its location."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Service areas",
+     "title": "A project approach that starts with the property itself.",
+     "subtitle": "",
+     "body": "Site conditions, access, local requirements and the surrounding context all shape how construction should be planned.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "areas",
+     "label": "Areas served (to confirm)",
+     "type": "content",
+     "eyebrow": "Where we work",
+     "title": "Areas we serve.",
+     "subtitle": "",
+     "body": "",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "light",
+      "layout": "centered",
+      "note": "TO CONFIRM — primary city, service areas and specific housing societies. Critical for SEO. Switch on once confirmed."
+     },
+     "enabled": false,
+     "position": 1
+    },
+    {
+     "key": "detail",
+     "label": "Every location is different",
+     "type": "features",
+     "eyebrow": "Every location has its own realities",
+     "title": "What we look at first.",
+     "subtitle": "Pexels stock footage · Site activity",
+     "body": "We begin by understanding the property and its context before fixing the scope, sequence or delivery assumptions.",
+     "items": [
+      {
+       "title": "Property assessment",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Access and logistics",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Local coordination",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Project-specific planning",
+       "body": "",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "numbered"
+     },
+     "enabled": true,
+     "position": 2
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Tell us where your property is.",
+     "subtitle": "",
+     "body": "Location is one of the first things we need to understand.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Discuss Your Project",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark"
+     },
+     "enabled": true,
+     "position": 3
+    }
+   ]
+  },
+  "/cost-index": {
+   "label": "Cost Guidance",
+   "group": "Company",
+   "published": true,
+   "seo": {
+    "title": "Construction Cost Guidance | Siraj Builders",
+    "description": "What shapes construction cost, and why a project-specific estimate starts with a clear scope."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Cost guidance",
+     "title": "Construction cost becomes clearer when the scope is clear.",
+     "subtitle": "",
+     "body": "There is no useful universal price without understanding size, specifications, site conditions, materials and intended outcome.",
+     "items": [],
+     "media_url": "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "detail",
+     "label": "What shapes cost",
+     "type": "features",
+     "eyebrow": "Start with decisions, not a guess",
+     "title": "The variables that shape cost.",
+     "subtitle": "Pexels stock footage · Planning project scope",
+     "body": "Use the initial conversation to clarify the project variables that shape cost, then develop a project-specific basis for discussion.",
+     "items": [
+      {
+       "title": "Scope",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Size and site",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Materials",
+       "body": "",
+       "image": ""
+      },
+      {
+       "title": "Finishes and services",
+       "body": "",
+       "image": ""
+      }
+     ],
+     "media_url": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80",
+     "video_url": "https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "numbered"
+     },
+     "enabled": true,
+     "position": 1
+    },
+    {
+     "key": "cta",
+     "label": "Call to action",
+     "type": "cta",
+     "eyebrow": "Start with clarity",
+     "title": "Get a project-specific estimate.",
+     "subtitle": "",
+     "body": "An estimate is prepared from the scope, drawings and specifications — start by sharing yours.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "Request a Consultation",
+     "cta_href": "/consultation",
+     "settings": {
+      "theme": "dark"
+     },
+     "enabled": true,
+     "position": 2
+    }
+   ]
+  },
+  "/privacy-policy": {
+   "label": "Privacy Policy",
+   "group": "Legal",
+   "published": true,
+   "seo": {
+    "title": "Privacy Policy | Siraj Builders",
+    "description": "How Siraj Builders uses information shared through this website."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Privacy policy",
+     "title": "Your project information should be handled with care.",
+     "subtitle": "",
+     "body": "We use information shared through this website to understand project requirements and respond to enquiries.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "body",
+     "label": "Policy text",
+     "type": "content",
+     "eyebrow": "Summary",
+     "title": "Clear information, clear purpose.",
+     "subtitle": "",
+     "body": "Only share the details needed to help us understand your enquiry. Contact details and project information submitted through the contact or consultation forms are used to respond to the conversation you requested and to determine the appropriate next step.\n\nIf you have a question about the information you have shared, contact us through the details on the Contact page.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "prose",
+      "note": "Have the final privacy policy reviewed before launch."
+     },
+     "enabled": true,
+     "position": 1
+    }
+   ]
+  },
+  "/terms": {
+   "label": "Terms & Conditions",
+   "group": "Legal",
+   "published": true,
+   "seo": {
+    "title": "Terms & Conditions | Siraj Builders",
+    "description": "Terms for using the Siraj Builders website."
+   },
+   "sections": [
+    {
+     "key": "hero",
+     "label": "Hero",
+     "type": "hero",
+     "eyebrow": "Terms & conditions",
+     "title": "A clear starting point for using this website.",
+     "subtitle": "",
+     "body": "These terms describe the basic expectations when browsing the Siraj Builders website and submitting an enquiry.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {},
+     "enabled": true,
+     "position": 0
+    },
+    {
+     "key": "body",
+     "label": "Terms text",
+     "type": "content",
+     "eyebrow": "Summary",
+     "title": "Useful information, responsibly presented.",
+     "subtitle": "",
+     "body": "Website content is provided as general project information. Final scope, pricing, timing and responsibilities are always confirmed for the individual project.\n\nSubmitting an enquiry does not create an agreement. Any project proceeds only on terms agreed in writing.",
+     "items": [],
+     "media_url": "",
+     "video_url": "",
+     "cta_label": "",
+     "cta_href": "",
+     "settings": {
+      "theme": "white",
+      "layout": "prose",
+      "note": "Have the final terms reviewed before launch."
+     },
+     "enabled": true,
+     "position": 1
+    }
+   ]
+  }
+ },
+ "registry": [
+  {
+   "path": "/",
+   "label": "Home",
+   "group": "Main"
+  },
+  {
+   "path": "/who-we-are",
+   "label": "About",
+   "group": "Main"
+  },
+  {
+   "path": "/services",
+   "label": "Services",
+   "group": "Main"
+  },
+  {
+   "path": "/residential-construction",
+   "label": "Residential Construction",
+   "group": "Services"
+  },
+  {
+   "path": "/commercial-construction",
+   "label": "Commercial Construction",
+   "group": "Services"
+  },
+  {
+   "path": "/renovation-remodelling",
+   "label": "Renovation & Remodelling",
+   "group": "Services"
+  },
+  {
+   "path": "/design-architecture",
+   "label": "Design & Architecture",
+   "group": "Services"
+  },
+  {
+   "path": "/grey-structure",
+   "label": "Grey Structure",
+   "group": "Services"
+  },
+  {
+   "path": "/turnkey-construction",
+   "label": "Turnkey Construction",
+   "group": "Services"
+  },
+  {
+   "path": "/project-management",
+   "label": "Project Management",
+   "group": "Services"
+  },
+  {
+   "path": "/projects",
+   "label": "Projects",
+   "group": "Main"
+  },
+  {
+   "path": "/our-process",
+   "label": "Our Process",
+   "group": "Main"
+  },
+  {
+   "path": "/testimonials",
+   "label": "Testimonials",
+   "group": "Main"
+  },
+  {
+   "path": "/faq",
+   "label": "FAQ",
+   "group": "Main"
+  },
+  {
+   "path": "/contact-us",
+   "label": "Contact",
+   "group": "Main"
+  },
+  {
+   "path": "/consultation",
+   "label": "Consultation",
+   "group": "Main"
+  },
+  {
+   "path": "/leadership",
+   "label": "Leadership",
+   "group": "Company"
+  },
+  {
+   "path": "/project-showcase",
+   "label": "Project Visibility",
+   "group": "Company"
+  },
+  {
+   "path": "/role-definition",
+   "label": "Project Roles",
+   "group": "Company"
+  },
+  {
+   "path": "/subcontractors",
+   "label": "Subcontractors",
+   "group": "Company"
+  },
+  {
+   "path": "/international",
+   "label": "Overseas Clients",
+   "group": "Company"
+  },
+  {
+   "path": "/affiliates",
+   "label": "Partners & Affiliates",
+   "group": "Company"
+  },
+  {
+   "path": "/locations",
+   "label": "Service Areas",
+   "group": "Company"
+  },
+  {
+   "path": "/cost-index",
+   "label": "Cost Guidance",
+   "group": "Company"
+  },
+  {
+   "path": "/privacy-policy",
+   "label": "Privacy Policy",
+   "group": "Legal"
+  },
+  {
+   "path": "/terms",
+   "label": "Terms & Conditions",
+   "group": "Legal"
+  }
+ ],
+ "faqCategories": [
+  {
+   "key": "start",
+   "label": "Getting started",
+   "sort_order": 10
+  },
+  {
+   "key": "services",
+   "label": "Services",
+   "sort_order": 20
+  },
+  {
+   "key": "cost",
+   "label": "Cost & payments",
+   "sort_order": 30
+  },
+  {
+   "key": "process",
+   "label": "Process & updates",
+   "sort_order": 40
+  },
+  {
+   "key": "contact",
+   "label": "Areas & contact",
+   "sort_order": 50
+  }
+ ],
+ "faqs": [
+  {
+   "category": "start",
+   "question": "How do I start a project with Siraj Builders?",
+   "answer": "Start by sharing your project requirements, property location and the type of construction work you need. Our team can then determine the appropriate next step.",
+   "is_active": true,
+   "show_on_home": true,
+   "sort_order": 10
+  },
+  {
+   "category": "process",
+   "question": "Do you provide site visits?",
+   "answer": "",
+   "is_active": false,
+   "show_on_home": false,
+   "sort_order": 20
+  },
+  {
+   "category": "cost",
+   "question": "How is a construction estimate prepared?",
+   "answer": "An estimate should be based on the project's scope, drawings/specifications, property conditions, materials and other relevant requirements.",
+   "is_active": true,
+   "show_on_home": true,
+   "sort_order": 30
+  },
+  {
+   "category": "services",
+   "question": "Can you construct a complete house?",
+   "answer": "",
+   "is_active": false,
+   "show_on_home": false,
+   "sort_order": 40
+  },
+  {
+   "category": "services",
+   "question": "Do you provide grey structure construction?",
+   "answer": "",
+   "is_active": false,
+   "show_on_home": false,
+   "sort_order": 50
+  },
+  {
+   "category": "services",
+   "question": "Do you handle finishing work?",
+   "answer": "",
+   "is_active": false,
+   "show_on_home": false,
+   "sort_order": 60
+  },
+  {
+   "category": "services",
+   "question": "Do you provide architectural design?",
+   "answer": "",
+   "is_active": false,
+   "show_on_home": false,
+   "sort_order": 70
+  },
+  {
+   "category": "services",
+   "question": "Can you renovate an existing property?",
+   "answer": "",
+   "is_active": false,
+   "show_on_home": false,
+   "sort_order": 80
+  },
+  {
+   "category": "process",
+   "question": "How long does construction take?",
+   "answer": "Project duration depends on the property's size, scope, design, site conditions, materials and other factors. A project-specific timeline should be discussed after the scope is established.",
+   "is_active": true,
+   "show_on_home": true,
+   "sort_order": 90
+  },
+  {
+   "category": "cost",
+   "question": "Can I provide my own materials?",
+   "answer": "",
+   "is_active": false,
+   "show_on_home": false,
+   "sort_order": 100
+  },
+  {
+   "category": "cost",
+   "question": "How are payments structured?",
+   "answer": "",
+   "is_active": false,
+   "show_on_home": false,
+   "sort_order": 110
+  },
+  {
+   "category": "process",
+   "question": "How do clients receive project updates?",
+   "answer": "",
+   "is_active": false,
+   "show_on_home": false,
+   "sort_order": 120
+  },
+  {
+   "category": "process",
+   "question": "Who supervises the project?",
+   "answer": "",
+   "is_active": false,
+   "show_on_home": false,
+   "sort_order": 130
+  },
+  {
+   "category": "services",
+   "question": "Do you work on commercial projects?",
+   "answer": "",
+   "is_active": false,
+   "show_on_home": false,
+   "sort_order": 140
+  },
+  {
+   "category": "contact",
+   "question": "Which areas do you serve?",
+   "answer": "",
+   "is_active": false,
+   "show_on_home": false,
+   "sort_order": 150
+  },
+  {
+   "category": "services",
+   "question": "Can you work from existing architectural drawings?",
+   "answer": "",
+   "is_active": false,
+   "show_on_home": false,
+   "sort_order": 160
+  },
+  {
+   "category": "services",
+   "question": "Can you help with material selection?",
+   "answer": "",
+   "is_active": false,
+   "show_on_home": false,
+   "sort_order": 170
+  },
+  {
+   "category": "start",
+   "question": "What information should I provide for an initial discussion?",
+   "answer": "Ideally, provide the property location, plot/property size, project type, intended use, expected start period and any drawings or requirements already available.",
+   "is_active": true,
+   "show_on_home": true,
+   "sort_order": 180
+  },
+  {
+   "category": "services",
+   "question": "Do you offer project management?",
+   "answer": "",
+   "is_active": false,
+   "show_on_home": false,
+   "sort_order": 190
+  },
+  {
+   "category": "contact",
+   "question": "How do I request a quotation?",
+   "answer": "Use the consultation/contact form or contact Siraj Builders directly through the available communication channels.",
+   "is_active": true,
+   "show_on_home": true,
+   "sort_order": 200
+  }
+ ],
+ "services": [
+  {
+   "slug": "residential-construction",
+   "title": "Residential Construction",
+   "summary": "From planning through construction and finishing, we help homeowners move from an initial requirement to a completed property with a structured approach.",
+   "cta_label": "Explore Residential Construction",
+   "image_url": "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1800&q=80",
+   "confirmed": true
+  },
+  {
+   "slug": "commercial-construction",
+   "title": "Commercial Construction",
+   "summary": "Functional commercial spaces require coordination, planning and an understanding of how the finished property will actually be used.",
+   "cta_label": "Explore Commercial Construction",
+   "image_url": "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1800&q=80",
+   "confirmed": true
+  },
+  {
+   "slug": "renovation-remodelling",
+   "title": "Renovation & Remodelling",
+   "summary": "Improve an existing property without losing sight of its structure, functionality or intended use.",
+   "cta_label": "Explore Renovation",
+   "image_url": "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=80",
+   "confirmed": true
+  },
+  {
+   "slug": "design-architecture",
+   "title": "Design & Architecture",
+   "summary": "Where design services are offered, this can cover planning, design coordination and documentation before construction begins.",
+   "cta_label": "Explore Design Services",
+   "image_url": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1800&q=80",
+   "confirmed": false
+  },
+  {
+   "slug": "grey-structure",
+   "title": "Grey Structure",
+   "summary": "The structural stage that sets the quality, alignment and sequencing of the entire build.",
+   "cta_label": "Explore Grey Structure",
+   "image_url": "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1800&q=80",
+   "confirmed": false
+  },
+  {
+   "slug": "turnkey-construction",
+   "title": "Turnkey Construction",
+   "summary": "One coordinated route from initial brief to completed property.",
+   "cta_label": "Explore Turnkey Construction",
+   "image_url": "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80",
+   "confirmed": false
+  },
+  {
+   "slug": "project-management",
+   "title": "Project Management",
+   "summary": "Keep decisions, people and progress moving together across every construction stage.",
+   "cta_label": "Explore Project Management",
+   "image_url": "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80",
+   "confirmed": false
+  }
+ ]
+}

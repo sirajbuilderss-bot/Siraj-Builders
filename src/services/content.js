@@ -14,6 +14,7 @@
  */
 
 import { db } from "../lib/supabase";
+import { notifyPageContentUpdated } from "./pageContentEvents";
 
 /* ==========================================================================
  * GENERIC HELPERS
@@ -28,16 +29,36 @@ async function listRows(table, { activeOnly = true, activeColumn = "is_active" }
 
 async function insertRow(table, values) {
   const { data } = await db.from(table).insert(values).select("*").run();
+  notifyPageContentUpdated();
   return Array.isArray(data) ? data[0] : data;
 }
 
 async function updateRow(table, id, patch) {
   const { data } = await db.from(table).update(patch).eq("id", id).select("*").run();
+  notifyPageContentUpdated();
   return Array.isArray(data) ? data[0] : data;
 }
 
 async function deleteRow(table, id) {
   await db.from(table).delete().eq("id", id).run();
+  notifyPageContentUpdated();
+}
+
+/**
+ * Rewrites sort_order for a whole list in one call (reorder_rows() in
+ * migration-02-cms.sql). Falls back to one update per row if the function
+ * has not been installed yet, so the arrows never silently do nothing.
+ */
+export async function reorderRows(table, orderedIds) {
+  try {
+    await db.rpc("reorder_rows", { target_table: table, ordered_ids: orderedIds });
+  } catch (error) {
+    if (!/reorder_rows|function/i.test(error?.message || "")) throw error;
+    for (let i = 0; i < orderedIds.length; i += 1) {
+      await db.from(table).update({ sort_order: i }).eq("id", orderedIds[i]).run();
+    }
+  }
+  notifyPageContentUpdated();
 }
 
 /* ==========================================================================
@@ -45,7 +66,17 @@ async function deleteRow(table, id) {
  * ========================================================================== */
 
 export const projects = {
-  listPublic: () => listRows("projects"),
+  /** Live projects, featured first, then by the admin's order. */
+  async listPublic() {
+    const { data } = await db
+      .from("projects")
+      .select("*")
+      .eq("is_active", true)
+      .order("is_featured", { ascending: false })
+      .order("sort_order", { ascending: true })
+      .run();
+    return data || [];
+  },
   listAll: () => listRows("projects", { activeOnly: false }),
 
   async getBySlug(slug) {
@@ -57,6 +88,28 @@ export const projects = {
   update: (id, patch) => updateRow("projects", id, patch),
   remove: (id) => deleteRow("projects", id),
   setActive: (id, isActive) => updateRow("projects", id, { is_active: isActive }),
+  reorder: (ids) => reorderRows("projects", ids),
+};
+
+/* ==========================================================================
+ * PROJECT MEDIA  (images + videos, many per project)
+ * ========================================================================== */
+
+export const projectMedia = {
+  async listForProject(projectId) {
+    const { data } = await db
+      .from("project_media")
+      .select("*")
+      .eq("project_id", projectId)
+      .order("kind", { ascending: true })
+      .order("sort_order", { ascending: true })
+      .run();
+    return data || [];
+  },
+  create: (values) => insertRow("project_media", values),
+  update: (id, patch) => updateRow("project_media", id, patch),
+  remove: (id) => deleteRow("project_media", id),
+  reorder: (ids) => reorderRows("project_media", ids),
 };
 
 /* ==========================================================================
@@ -65,6 +118,7 @@ export const projects = {
 
 export const services = {
   listPublic: () => listRows("services"),
+  reorder: (ids) => reorderRows("services", ids),
   listAll: () => listRows("services", { activeOnly: false }),
   create: (values) => insertRow("services", values),
   update: (id, patch) => updateRow("services", id, patch),
@@ -121,15 +175,25 @@ export const faqs = {
       faqs.listCategories({ activeOnly }),
       faqs.listQuestions({ activeOnly }),
     ]);
-    return categories.map((category) => ({
-      key: category.key,
-      label: category.label,
-      id: category.id,
-      items: questions
-        .filter((question) => question.category_id === category.id)
-        .map((question) => ({ q: question.question, a: question.answer })),
-    }));
+    return categories
+      .map((category) => ({
+        key: category.key,
+        label: category.label,
+        id: category.id,
+        items: questions
+          .filter((question) => question.category_id === category.id)
+          .map((question) => ({
+            id: question.id,
+            q: question.question,
+            a: question.answer,
+            home: Boolean(question.show_on_home),
+          })),
+      }))
+      .filter((group) => group.items.length > 0);
   },
+
+  reorder: (ids) => reorderRows("faqs", ids),
+  reorderCategories: (ids) => reorderRows("faq_categories", ids),
 
   createCategory: (values) => insertRow("faq_categories", values),
   updateCategory: (id, patch) => updateRow("faq_categories", id, patch),
@@ -165,6 +229,7 @@ export const testimonials = {
   create: (values) => insertRow("testimonials", values),
   update: (id, patch) => updateRow("testimonials", id, patch),
   remove: (id) => deleteRow("testimonials", id),
+  reorder: (ids) => reorderRows("testimonials", ids),
 };
 
 /* ==========================================================================
@@ -177,6 +242,7 @@ export const team = {
   create: (values) => insertRow("team_members", values),
   update: (id, patch) => updateRow("team_members", id, patch),
   remove: (id) => deleteRow("team_members", id),
+  reorder: (ids) => reorderRows("team_members", ids),
 };
 
 /* ==========================================================================
@@ -189,6 +255,7 @@ export const stats = {
   create: (values) => insertRow("stats", values),
   update: (id, patch) => updateRow("stats", id, patch),
   remove: (id) => deleteRow("stats", id),
+  reorder: (ids) => reorderRows("stats", ids),
 };
 
 /* ==========================================================================
@@ -201,6 +268,7 @@ export const heroSlides = {
   create: (values) => insertRow("hero_slides", values),
   update: (id, patch) => updateRow("hero_slides", id, patch),
   remove: (id) => deleteRow("hero_slides", id),
+  reorder: (ids) => reorderRows("hero_slides", ids),
 };
 
 /* ==========================================================================
@@ -341,9 +409,11 @@ export function toPageShape(row) {
   };
 }
 
-/** projects row → the PROJECT_SHAPE in ContentPage.jsx */
+/** projects row → the shape the portfolio and case-study pages render */
 export function toProjectShape(row) {
+  const list = (value) => (Array.isArray(value) ? value.filter(Boolean) : []);
   return {
+    id: row.id,
     slug: row.slug,
     title: row.title,
     category: row.category,
@@ -351,12 +421,29 @@ export function toProjectShape(row) {
     status: row.status,
     year: row.year,
     area: row.area,
-    image: row.image_url,
-    summary: row.summary,
+    timeline: row.timeline || "",
+    scope: row.scope || "",
+    image: row.image_url || row.banner_url || "",
+    banner: row.banner_url || row.image_url || "",
+    summary: row.short_description || row.summary || "",
+    overview: row.full_description || "",
     requirement: row.requirement,
     challenge: row.challenge,
     solution: row.solution,
+    approach: row.approach || "",
+    quality: row.quality || "",
     result: row.result,
+    features: list(row.features),
+    tags: list(row.tags),
+    clientName: row.client_name || "",
+    feedback: row.feedback_verified ? row.client_feedback || "" : "",
+    serviceSlug: row.service_slug || "",
+    isFeatured: Boolean(row.is_featured),
+    completionDate: row.completion_date || "",
+    seoTitle: row.seo_title || "",
+    seoDescription: row.seo_description || "",
+    legacyGallery: list(row.gallery),
+    legacyVideo: row.video_url || "",
   };
 }
 
@@ -401,8 +488,24 @@ export function toServiceLinkShape(rows) {
     }));
 }
 
+/** services rows → the card shape used by the Services section */
+export function toServiceCardShape(row) {
+  return {
+    slug: row.slug,
+    to: row.path,
+    label: row.label,
+    title: row.title || row.label,
+    summary: row.summary,
+    image: row.image_url,
+    ctaLabel: row.cta_label || `Explore ${row.label}`,
+    confirmed: Boolean(row.is_confirmed),
+  };
+}
+
 const content = {
   projects,
+  projectMedia,
+  reorderRows,
   services,
   pages,
   faqs,

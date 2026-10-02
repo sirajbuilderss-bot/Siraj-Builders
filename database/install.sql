@@ -2,14 +2,19 @@
 --  SIRAJ BUILDERS — COMPLETE DATABASE INSTALLER
 --  ---------------------------------------------------------------------------
 --  GENERATED FILE — do not edit by hand.
---  Source: schema.sql + policies.sql + seed.sql
---  Rebuild with: node database/build-sql.js
+--  Source: schema.sql + policies.sql + seed.sql + migration-02-cms.sql
+--          + migration-03-content.sql
+--  Rebuild with: npm run build:sql
 --
 --  Yeh file teenon SQL files ko sahi tarteeb (order) mein jorr deti hai:
 --
 --      1. schema.sql    ->  tables, indexes, triggers, functions
 --      2. policies.sql  ->  Row Level Security (kaun kya parh/likh sakta hai)
---      3. seed.sql      ->  website ka maujooda content + 91 sections
+--      3. seed.sql      ->  bunyadi content (settings, services, waghaira)
+--      4. migration-02  ->  project photos/videos table, SEO fields,
+--                           image upload bucket (Storage) + policies
+--      5. migration-03  ->  documentation wala poora content: har page ke
+--                           sections, 20 FAQs, services ke cards
 --
 --  ISTEMAAL KA TAREEQA:
 --    Supabase Dashboard -> SQL Editor -> New query
@@ -37,7 +42,7 @@
 
 -- ##########################################################################
 -- ##
--- ##   STEP 1 OF 3 — SCHEMA
+-- ##   STEP 1 OF 5 — SCHEMA
 -- ##   (source file: database/schema.sql)
 -- ##
 -- ##########################################################################
@@ -782,7 +787,7 @@ notify pgrst, 'reload schema';
 
 -- ##########################################################################
 -- ##
--- ##   STEP 2 OF 3 — POLICIES
+-- ##   STEP 2 OF 5 — POLICIES
 -- ##   (source file: database/policies.sql)
 -- ##
 -- ##########################################################################
@@ -979,17 +984,21 @@ create policy social_links_admin_all on public.social_links
 
 -- ----------------------------------------------------------------------------
 --  ACTIVITY LOGS
---  Admins read and append. Nobody updates or deletes — an audit trail that
---  can be rewritten is not an audit trail.
+--  Admins read and append. Active admins may delete individual entries or
+--  prune old entries from the dashboard; edits remain prohibited.
 -- ----------------------------------------------------------------------------
 drop policy if exists activity_logs_admin_read   on public.activity_logs;
 drop policy if exists activity_logs_admin_insert on public.activity_logs;
+drop policy if exists activity_logs_admin_delete on public.activity_logs;
 
 create policy activity_logs_admin_read on public.activity_logs
   for select to authenticated using (public.is_admin());
 
 create policy activity_logs_admin_insert on public.activity_logs
   for insert to authenticated with check (public.is_admin());
+
+create policy activity_logs_admin_delete on public.activity_logs
+  for delete to authenticated using (public.is_admin());
 
 -- ----------------------------------------------------------------------------
 --  GRANTS
@@ -1014,7 +1023,7 @@ grant select, insert, update, delete on
   public.admin_users
 to authenticated;
 
-grant select, insert on public.activity_logs to authenticated;
+grant select, insert, delete on public.activity_logs to authenticated;
 
 -- ############################################################################
 -- ##  VISUAL SECTION CMS  (added by migration-01-sections.sql)
@@ -1047,7 +1056,7 @@ create policy page_sections_admin_all on public.page_sections
 
 -- ##########################################################################
 -- ##
--- ##   STEP 3 OF 3 — SEED
+-- ##   STEP 3 OF 5 — SEED
 -- ##   (source file: database/seed.sql)
 -- ##
 -- ##########################################################################
@@ -1559,6 +1568,776 @@ on conflict (page_path, section_key) do nothing;
 
 -- ##########################################################################
 -- ##
+-- ##   STEP 4 OF 5 — CMS STRUCTURE (media, SEO, storage)
+-- ##   (source file: database/migration-02-cms.sql)
+-- ##
+-- ##########################################################################
+
+-- ============================================================================
+--  SIRAJ BUILDERS — MIGRATION 02: DYNAMIC CMS STRUCTURE
+--  ----------------------------------------------------------------------------
+--  Run AFTER schema.sql + policies.sql (or after install.sql from an earlier
+--  release). Then run migration-03-content.sql.
+--
+--  Adds:
+--    * project_media           — many images + videos per project, ordered
+--    * projects                — full case-study fields + SEO fields
+--    * pages                   — per-page SEO title / description / share image
+--    * faqs                    — show_on_home flag, duplicate protection
+--    * page_sections           — two new section types: trust, features
+--    * reorder_rows()          — one-call drag/arrow reordering for any list
+--    * Storage bucket          — 'site-media' for admin image/video uploads
+--    * RLS + grants for all of the above
+--
+--  Safe to run more than once: every statement is guarded.
+--  Nothing here deletes content.
+-- ============================================================================
+
+-- ----------------------------------------------------------------------------
+--  1. PROJECTS — case-study fields
+-- ----------------------------------------------------------------------------
+alter table public.projects add column if not exists timeline          text not null default '';
+alter table public.projects add column if not exists scope             text not null default '';
+alter table public.projects add column if not exists approach          text not null default '';  -- construction approach
+alter table public.projects add column if not exists quality           text not null default '';  -- quality & management
+alter table public.projects add column if not exists client_feedback   text not null default '';
+alter table public.projects add column if not exists feedback_verified boolean not null default false;
+alter table public.projects add column if not exists service_slug      text not null default '';  -- links to services.slug
+alter table public.projects add column if not exists seo_title         text not null default '';
+alter table public.projects add column if not exists seo_description   text not null default '';
+
+-- Columns added by migration-01, repeated so this file also works on a
+-- database that skipped it.
+alter table public.projects add column if not exists short_description text not null default '';
+alter table public.projects add column if not exists full_description  text not null default '';
+alter table public.projects add column if not exists features          jsonb not null default '[]'::jsonb;
+alter table public.projects add column if not exists tags              jsonb not null default '[]'::jsonb;
+alter table public.projects add column if not exists banner_url        text not null default '';
+alter table public.projects add column if not exists video_url         text not null default '';
+alter table public.projects add column if not exists client_name       text not null default '';
+alter table public.projects add column if not exists completion_date   date;
+alter table public.projects add column if not exists is_featured       boolean not null default false;
+
+create index if not exists projects_service_idx on public.projects (service_slug);
+
+-- ----------------------------------------------------------------------------
+--  2. PROJECT MEDIA — one row per image or video
+--     projects.image_url stays the FEATURED image (used on cards and the
+--     case-study hero); the admin sets it from this list with one click.
+-- ----------------------------------------------------------------------------
+create table if not exists public.project_media (
+  id            uuid primary key default gen_random_uuid(),
+  project_id    uuid not null references public.projects (id) on delete cascade,
+  kind          text not null default 'image' check (kind in ('image', 'video')),
+  url           text not null,
+  storage_path  text not null default '',   -- set when uploaded to the site-media bucket
+  caption       text not null default '',
+  alt_text      text not null default '',
+  sort_order    integer not null default 0,
+  created_at    timestamptz not null default now(),
+  updated_at    timestamptz not null default now()
+);
+
+create index if not exists project_media_project_idx
+  on public.project_media (project_id, kind, sort_order);
+
+drop trigger if exists project_media_touch on public.project_media;
+create trigger project_media_touch before update on public.project_media
+  for each row execute function public.touch_updated_at();
+
+-- Carry the old textarea gallery + single video into the new table, once.
+insert into public.project_media (project_id, kind, url, sort_order)
+select p.id, 'image', g.url, (g.ord - 1)::int
+from public.projects p
+cross join lateral jsonb_array_elements_text(
+  case when jsonb_typeof(p.gallery) = 'array' then p.gallery else '[]'::jsonb end
+) with ordinality as g(url, ord)
+where trim(g.url) <> ''
+  and not exists (select 1 from public.project_media m where m.project_id = p.id and m.kind = 'image');
+
+insert into public.project_media (project_id, kind, url, sort_order)
+select p.id, 'video', p.video_url, 0
+from public.projects p
+where trim(p.video_url) <> ''
+  and not exists (select 1 from public.project_media m where m.project_id = p.id and m.kind = 'video');
+
+-- ----------------------------------------------------------------------------
+--  3. PAGES — per-page SEO. The `pages` table is now the page registry:
+--     one row per public route, with publish switch and SEO fields. Page
+--     copy itself lives in page_sections.
+-- ----------------------------------------------------------------------------
+alter table public.pages add column if not exists label           text not null default '';
+alter table public.pages add column if not exists seo_title       text not null default '';
+alter table public.pages add column if not exists seo_description text not null default '';
+alter table public.pages add column if not exists og_image        text not null default '';
+
+-- ----------------------------------------------------------------------------
+--  4. SERVICES — button text on the service card
+-- ----------------------------------------------------------------------------
+alter table public.services add column if not exists cta_label text not null default '';
+
+-- ----------------------------------------------------------------------------
+--  5. FAQS — homepage flag + no more duplicates on re-seeding
+-- ----------------------------------------------------------------------------
+alter table public.faqs add column if not exists show_on_home boolean not null default false;
+
+-- An earlier seed used `on conflict do nothing` without a unique key, so
+-- re-running it duplicated every question. Keep the oldest copy of each.
+delete from public.faqs f
+using public.faqs older
+where lower(trim(f.question)) = lower(trim(older.question))
+  and (older.created_at, older.id) < (f.created_at, f.id);
+
+create unique index if not exists faqs_question_unique
+  on public.faqs (lower(trim(question)));
+
+-- ----------------------------------------------------------------------------
+--  6. PAGE SECTIONS — two new types used by the documented layouts
+-- ----------------------------------------------------------------------------
+alter table public.page_sections drop constraint if exists page_sections_section_type_check;
+alter table public.page_sections add constraint page_sections_section_type_check
+  check (section_type in (
+    'hero', 'intro', 'content', 'features', 'trust', 'services', 'projects',
+    'testimonials', 'faq', 'stats', 'process', 'team', 'cta', 'gallery',
+    'contact', 'custom'
+  ));
+
+-- ----------------------------------------------------------------------------
+--  7. REORDER — rewrites sort_order for a whole list in one statement.
+--     security INVOKER on purpose: RLS still decides who may write. The
+--     table name is checked against a fixed list before it is used.
+-- ----------------------------------------------------------------------------
+create or replace function public.reorder_rows(target_table text, ordered_ids uuid[])
+returns void
+language plpgsql
+security invoker
+set search_path = public
+as $$
+begin
+  if target_table not in (
+    'projects', 'project_media', 'services', 'faqs', 'faq_categories',
+    'testimonials', 'team_members', 'stats', 'hero_slides', 'social_links'
+  ) then
+    raise exception 'reorder_rows: % cannot be reordered', target_table;
+  end if;
+
+  execute format(
+    'update public.%I t set sort_order = idx.ord - 1
+       from unnest($1::uuid[]) with ordinality as idx(id, ord)
+      where t.id = idx.id',
+    target_table
+  ) using ordered_ids;
+end;
+$$;
+
+revoke execute on function public.reorder_rows(text, uuid[]) from anon;
+grant  execute on function public.reorder_rows(text, uuid[]) to authenticated;
+
+-- ----------------------------------------------------------------------------
+--  8. ROW LEVEL SECURITY — project_media follows its project
+-- ----------------------------------------------------------------------------
+alter table public.project_media enable row level security;
+
+drop policy if exists project_media_public_read on public.project_media;
+drop policy if exists project_media_admin_all   on public.project_media;
+
+create policy project_media_public_read on public.project_media
+  for select to anon, authenticated
+  using (
+    public.is_admin()
+    or exists (
+      select 1 from public.projects p
+      where p.id = project_media.project_id and p.is_active
+    )
+  );
+
+create policy project_media_admin_all on public.project_media
+  for all to authenticated
+  using (public.is_editor())
+  with check (public.is_editor());
+
+grant select on public.project_media to anon, authenticated;
+grant select, insert, update, delete on public.project_media to authenticated;
+
+-- page_sections grants, repeated in case migration-01 ran without them
+grant select on public.page_sections to anon, authenticated;
+grant select, insert, update, delete on public.page_sections to authenticated;
+
+-- ----------------------------------------------------------------------------
+--  9. STORAGE — public bucket for website images and short videos
+--      Visitors can view files (the bucket is public). Only active editors
+--      and admins can upload, replace or delete — checked by is_editor().
+-- ----------------------------------------------------------------------------
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'site-media', 'site-media', true, 52428800,
+  array['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif',
+        'video/mp4', 'video/webm']
+)
+on conflict (id) do update
+  set public = true,
+      file_size_limit = excluded.file_size_limit,
+      allowed_mime_types = excluded.allowed_mime_types;
+
+drop policy if exists site_media_public_read  on storage.objects;
+drop policy if exists site_media_editor_insert on storage.objects;
+drop policy if exists site_media_editor_update on storage.objects;
+drop policy if exists site_media_editor_delete on storage.objects;
+
+create policy site_media_public_read on storage.objects
+  for select to anon, authenticated
+  using (bucket_id = 'site-media');
+
+create policy site_media_editor_insert on storage.objects
+  for insert to authenticated
+  with check (bucket_id = 'site-media' and public.is_editor());
+
+create policy site_media_editor_update on storage.objects
+  for update to authenticated
+  using (bucket_id = 'site-media' and public.is_editor())
+  with check (bucket_id = 'site-media' and public.is_editor());
+
+create policy site_media_editor_delete on storage.objects
+  for delete to authenticated
+  using (bucket_id = 'site-media' and public.is_editor());
+
+-- ----------------------------------------------------------------------------
+--  10. DASHBOARD COUNTS — include media
+-- ----------------------------------------------------------------------------
+create or replace function public.dashboard_counts()
+returns json
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select case when not public.is_admin() then null else json_build_object(
+    'submissions_total',  (select count(*) from public.submissions),
+    'submissions_unread', (select count(*) from public.submissions where is_read = false),
+    'submissions_new',    (select count(*) from public.submissions where status = 'new'),
+    'projects_total',     (select count(*) from public.projects),
+    'projects_active',    (select count(*) from public.projects where is_active),
+    'media_total',        (select count(*) from public.project_media),
+    'services_total',     (select count(*) from public.services where is_active),
+    'pages_total',        (select count(*) from public.pages where is_published),
+    'faqs_total',         (select count(*) from public.faqs where is_active),
+    'faqs_unanswered',    (select count(*) from public.faqs where not is_active),
+    'testimonials_total', (select count(*) from public.testimonials where is_active and is_verified),
+    'team_total',         (select count(*) from public.team_members where is_active)
+  ) end;
+$$;
+
+revoke execute on function public.dashboard_counts() from anon;
+grant  execute on function public.dashboard_counts() to authenticated;
+
+notify pgrst, 'reload schema';
+
+
+
+-- ##########################################################################
+-- ##
+-- ##   STEP 5 OF 5 — DOCUMENTED CONTENT
+-- ##   (source file: database/migration-03-content.sql)
+-- ##
+-- ##########################################################################
+
+-- ============================================================================
+--  SIRAJ BUILDERS — MIGRATION 03: DOCUMENTED CONTENT
+--  GENERATED by database/build-content.cjs from database/content-source.cjs.
+--  Do not edit by hand — edit content-source.cjs and run `npm run build:content`.
+--  ----------------------------------------------------------------------------
+--  Run AFTER migration-02-cms.sql. Safe to run more than once.
+--
+--  What it does — and what it will NOT touch:
+--    * Page sections: replaces ONLY the sections seeded by the previous
+--      release that nobody has edited since (updated_at = created_at).
+--      Anything an admin edited or created is kept exactly as it is.
+--    * FAQs: replaces only the old seeded questions nobody edited, then adds
+--      the 20 documented questions. [TO CONFIRM] ones arrive unpublished,
+--      with no answer, for the admin to complete.
+--    * Services, pages, settings: fills BLANK fields only.
+-- ============================================================================
+
+begin;
+
+-- 1. Remove unedited legacy sections -------------------------------------
+delete from public.page_sections s
+using (values
+  ('/', 'hero'),
+  ('/', 'intro'),
+  ('/', 'services'),
+  ('/', 'projects'),
+  ('/', 'why-us'),
+  ('/', 'process'),
+  ('/', 'stats'),
+  ('/', 'testimonials'),
+  ('/', 'faq'),
+  ('/', 'cta'),
+  ('/who-we-are', 'hero'),
+  ('/who-we-are', 'story'),
+  ('/who-we-are', 'approach'),
+  ('/who-we-are', 'team'),
+  ('/services', 'hero'),
+  ('/services', 'list'),
+  ('/services', 'cta'),
+  ('/projects', 'hero'),
+  ('/projects', 'grid'),
+  ('/projects', 'cta'),
+  ('/our-process', 'hero'),
+  ('/our-process', 'steps'),
+  ('/faq', 'hero'),
+  ('/faq', 'list'),
+  ('/contact-us', 'hero'),
+  ('/contact-us', 'details'),
+  ('/contact-us', 'form'),
+  ('/consultation', 'hero'),
+  ('/consultation', 'form'),
+  ('/residential-construction', 'hero'),
+  ('/residential-construction', 'body'),
+  ('/residential-construction', 'detail'),
+  ('/residential-construction', 'cta'),
+  ('/renovation-remodelling', 'hero'),
+  ('/renovation-remodelling', 'body'),
+  ('/renovation-remodelling', 'detail'),
+  ('/renovation-remodelling', 'cta'),
+  ('/design-architecture', 'hero'),
+  ('/design-architecture', 'body'),
+  ('/design-architecture', 'detail'),
+  ('/design-architecture', 'cta'),
+  ('/grey-structure', 'hero'),
+  ('/grey-structure', 'body'),
+  ('/grey-structure', 'detail'),
+  ('/grey-structure', 'cta'),
+  ('/turnkey-construction', 'hero'),
+  ('/turnkey-construction', 'body'),
+  ('/turnkey-construction', 'detail'),
+  ('/turnkey-construction', 'cta'),
+  ('/project-management', 'hero'),
+  ('/project-management', 'body'),
+  ('/project-management', 'detail'),
+  ('/project-management', 'cta'),
+  ('/leadership', 'hero'),
+  ('/leadership', 'body'),
+  ('/leadership', 'detail'),
+  ('/leadership', 'cta'),
+  ('/locations', 'hero'),
+  ('/locations', 'body'),
+  ('/locations', 'detail'),
+  ('/locations', 'cta'),
+  ('/international', 'hero'),
+  ('/international', 'body'),
+  ('/international', 'detail'),
+  ('/international', 'cta'),
+  ('/subcontractors', 'hero'),
+  ('/subcontractors', 'body'),
+  ('/subcontractors', 'detail'),
+  ('/subcontractors', 'cta'),
+  ('/role-definition', 'hero'),
+  ('/role-definition', 'body'),
+  ('/role-definition', 'detail'),
+  ('/role-definition', 'cta'),
+  ('/cost-index', 'hero'),
+  ('/cost-index', 'body'),
+  ('/cost-index', 'detail'),
+  ('/cost-index', 'cta'),
+  ('/project-showcase', 'hero'),
+  ('/project-showcase', 'body'),
+  ('/project-showcase', 'detail'),
+  ('/project-showcase', 'cta'),
+  ('/commercial-construction', 'hero'),
+  ('/commercial-construction', 'approach'),
+  ('/commercial-construction', 'focus'),
+  ('/commercial-construction', 'proof'),
+  ('/commercial-construction', 'cta'),
+  ('/affiliates', 'hero'),
+  ('/affiliates', 'intro'),
+  ('/affiliates', 'partners'),
+  ('/affiliates', 'standards'),
+  ('/affiliates', 'cta')
+) as legacy(page_path, section_key)
+where s.page_path = legacy.page_path
+  and s.section_key = legacy.section_key
+  and s.updated_at = s.created_at;
+
+-- 2. Insert documented sections (existing keys are left alone) ----------
+insert into public.page_sections
+  (page_path, page_label, section_key, label, section_type, eyebrow, title, subtitle, body, items, media_url, video_url, cta_label, cta_href, settings, position, is_enabled)
+values
+  ('/', 'Home', 'hero', 'Hero slider', 'hero', '', 'Construction, managed from the first plan to the final detail.', 'Clear planning. Responsible execution. Consistent communication.', 'A well-built project begins long before construction starts. Siraj Builders brings together planning, coordination and on-site execution to create a more organised construction experience for homeowners, businesses and property investors.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"source":"hero_slides","cta2_label":"View Our Projects","cta2_href":"/projects"}'::jsonb, 0, true),
+  ('/', 'Home', 'trust', 'Trust strip', 'trust', '', '', '', '', '[{"title":"Clear scope","body":"Defined before work begins","image":""},{"title":"Responsible execution","body":"Supervised on site","image":""},{"title":"Consistent updates","body":"Progress shared as it happens","image":""},{"title":"Defined handover","body":"Clear transition at completion","image":""}]'::jsonb, '', '', '', '', '{}'::jsonb, 1, true),
+  ('/', 'Home', 'intro', 'Introduction', 'intro', 'A different construction experience', 'A construction partner, not simply a contractor.', '', 'Construction involves hundreds of decisions — from the first scope of work to materials, scheduling, site coordination and final finishing.
+
+Siraj Builders is built around a straightforward principle: clients should understand their project and feel confident about how it is being managed.
+
+We focus on organised execution, practical decision-making and careful attention to the details that shape the finished result.', '[]'::jsonb, 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1800&q=80', '', 'Learn About Siraj Builders', '/who-we-are', '{"theme":"white"}'::jsonb, 2, true),
+  ('/', 'Home', 'services', 'Services', 'services', 'What we do', 'Solutions built around the project.', '', 'Whether the requirement is a new property, commercial space, renovation or a broader design-and-build assignment, the right solution starts by understanding the project itself.', '[]'::jsonb, '', '', 'Explore Our Services', '/services', '{"theme":"light","limit":3}'::jsonb, 3, true),
+  ('/', 'Home', 'projects', 'Projects', 'projects', 'Selected work', 'See the work, not just the promise.', '', 'Every completed project tells a different story. Our portfolio showcases the spaces we have delivered, the requirements behind them and the work involved in bringing each project together.', '[]'::jsonb, '', '', 'View All Projects', '/projects', '{"theme":"dark","limit":3}'::jsonb, 4, true),
+  ('/', 'Home', 'why-us', 'Why Siraj Builders', 'features', 'Why Siraj Builders', 'What a better-managed project looks like.', '', 'The difference is rarely one big promise. It is how the project is run, day after day.', '[{"title":"Clear expectations","body":"Good construction starts with understanding what is being built, why it is being built and what the project requires.","image":""},{"title":"Organised execution","body":"A structured approach helps coordinate decisions, materials, people and work across different stages.","image":""},{"title":"Attention to detail","body":"The final result is shaped by hundreds of smaller decisions. We treat those details as part of the project, not an afterthought.","image":""},{"title":"Client communication","body":"Construction becomes easier to manage when clients know what has happened, what is happening and what comes next.","image":""},{"title":"Practical decision-making","body":"We focus on solutions that make sense for the property''s intended use, project requirements and available resources.","image":""},{"title":"Accountability","body":"A professional construction relationship should have clear responsibilities, clear communication and a clear path forward when decisions need to be made.","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80', '', '', '', '{"theme":"white","layout":"grid"}'::jsonb, 5, true),
+  ('/', 'Home', 'process', 'Process preview', 'process', 'Our process', 'A clear route from idea to completion.', 'Pexels stock footage · Coordinating work on site', '', '[{"title":"Consultation","body":"Understand your requirements, property and project objectives.","image":""},{"title":"Site Assessment","body":"Review the site and identify the practical considerations that affect the project.","image":""},{"title":"Planning & Design","body":"Develop the project scope and coordinate the required planning and design work.","image":""},{"title":"Estimation","body":"Establish the scope, specifications and commercial requirements.","image":""},{"title":"Construction","body":"Move into organised execution with appropriate supervision and coordination.","image":""},{"title":"Quality Review","body":"Review completed work and address outstanding details.","image":""},{"title":"Handover","body":"Complete the project and transition the finished property to the client.","image":""}]'::jsonb, '', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', 'See Our Full Process', '/our-process', '{"theme":"light"}'::jsonb, 6, true),
+  ('/', 'Home', 'stats', 'Verified numbers', 'stats', 'In numbers', 'Verified figures', '', 'Shown only when real, verified figures are added on the Statistics screen.', '[]'::jsonb, '', '', '', '', '{"theme":"white"}'::jsonb, 7, true),
+  ('/', 'Home', 'testimonials', 'Testimonials', 'testimonials', 'Client feedback', 'What our clients say about working with us.', '', '', '[]'::jsonb, '', '', '', '', '{"theme":"light","limit":3}'::jsonb, 8, true),
+  ('/', 'Home', 'faq', 'FAQ preview', 'faq', 'Common questions', 'Answers before you have to ask.', '', '', '[]'::jsonb, '', '', 'See All FAQs', '/faq', '{"theme":"white","limit":4}'::jsonb, 9, true),
+  ('/', 'Home', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Have a project in mind? Start with a conversation.', '', 'Tell us what you are planning, where the property is located and what you need from your construction partner. We will use that information to understand whether Siraj Builders is the right fit for your project and what the next step should be.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark","cta2_label":"Contact Siraj Builders","cta2_href":"/contact-us"}'::jsonb, 10, true),
+  ('/who-we-are', 'About', 'hero', 'Hero', 'hero', 'About Siraj Builders', 'Built around a better way to manage construction.', '', 'Siraj Builders is a construction company focused on delivering professionally managed building projects with attention to planning, execution and client communication.', '[]'::jsonb, 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/who-we-are', 'About', 'who', 'Who we are', 'intro', 'Who we are', 'Our role is to bring greater structure to that process.', '', 'We understand that construction is rarely straightforward from a client''s perspective. There are budgets to consider, decisions to make, timelines to manage and countless details that can affect the final outcome.
+
+We focus on organised execution, practical decision-making and careful attention to the details that shape the finished result.', '[]'::jsonb, 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80', '', '', '', '{"theme":"white"}'::jsonb, 1, true),
+  ('/who-we-are', 'About', 'story', 'Our Story', 'content', 'Our story', 'Good construction starts with a clear conversation.', '', 'Most people don’t build every day. They’re trusting someone with a place that matters to them, while making a lot of decisions along the way.
+
+We start by understanding how the property needs to work and what matters most to the client. Then we work through scope, planning and the choices that shape the build, keeping communication open as the work moves forward.
+
+A good result is more than a finished building. Clients should know what has been done, why it matters and what comes next.', '[]'::jsonb, 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80', '', '', '', '{"theme":"light"}'::jsonb, 2, true),
+  ('/who-we-are', 'About', 'mission', 'Mission & vision', 'features', 'Purpose', 'Why we do this work.', '', '', '[{"title":"Mission","body":"To deliver well-planned construction projects through responsible execution, clear communication and attention to the details that matter to our clients.","image":""},{"title":"Vision","body":"To become a construction partner known for professional project management, dependable execution and lasting client relationships.","image":""}]'::jsonb, '', '', '', '', '{"theme":"light","layout":"duo"}'::jsonb, 3, true),
+  ('/who-we-are', 'About', 'approach', 'Our approach', 'content', 'Our approach', 'A successful project depends on more than workmanship alone.', 'Pexels stock footage · Site coordination', 'It requires:', '[{"title":"Understanding before execution.","body":"","image":""},{"title":"Planning before construction.","body":"","image":""},{"title":"Communication throughout.","body":"","image":""},{"title":"Attention to detail until completion.","body":"","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', '', '', '{"theme":"white","layout":"checklist"}'::jsonb, 4, true),
+  ('/who-we-are', 'About', 'quality', 'Quality commitment', 'content', 'Quality commitment', 'Quality should be visible in the way a project is planned, managed and finished.', '', 'Our commitment is to approach each project with care, use appropriate materials and specifications, and maintain attention to workmanship throughout the construction process.', '[]'::jsonb, '', '', '', '', '{"theme":"light","layout":"centered"}'::jsonb, 5, true),
+  ('/who-we-are', 'About', 'pillars', 'Brand pillars', 'features', 'What we hold to', 'Seven principles behind every project.', '', '', '[{"title":"Clarity","body":"The client understands the project before committing.","image":""},{"title":"Structured execution","body":"Construction follows a defined process rather than an improvised sequence.","image":""},{"title":"Responsible management","body":"The project is actively coordinated rather than simply handed over to workers.","image":""},{"title":"Craftsmanship","body":"Attention is given to the details that determine the final result.","image":""},{"title":"Communication","body":"Clients remain informed throughout the project.","image":""},{"title":"Practical design","body":"The finished space should look good while serving its intended purpose.","image":""},{"title":"Long-term value","body":"The objective is not simply to finish construction, but to create something that remains useful and valuable.","image":""}]'::jsonb, '', '', '', '', '{"theme":"white","layout":"numbered"}'::jsonb, 6, true),
+  ('/who-we-are', 'About', 'team', 'Leadership', 'team', 'Leadership', 'The people responsible for your project.', '', 'Shown once verified team profiles are added on the Team screen.', '[]'::jsonb, '', '', '', '', '{"theme":"light"}'::jsonb, 7, true),
+  ('/who-we-are', 'About', 'cta', 'Call to action', 'cta', 'Start with clarity', 'See how we would approach your project.', '', 'Share the basics — property, project type and what you need — and we will explain the next step.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark","cta2_label":"See How We Work","cta2_href":"/our-process"}'::jsonb, 8, true),
+  ('/services', 'Services', 'hero', 'Hero', 'hero', 'Services', 'Construction solutions for projects that deserve a structured approach.', '', 'Different properties require different approaches. Our services are structured around those differences.', '[]'::jsonb, 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/services', 'Services', 'intro', 'Introduction', 'content', 'How we think about services', 'Different properties require different approaches.', '', 'A new home, commercial building and renovation project may share the same basic construction principles, but their priorities, constraints and execution requirements are different.
+
+Our services are structured around those differences.', '[]'::jsonb, 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80', '', '', '', '{"theme":"white","layout":"centered"}'::jsonb, 1, true),
+  ('/services', 'Services', 'list', 'Services list', 'services', 'Our services', 'Choose the service closest to your project.', '', '', '[]'::jsonb, '', '', '', '', '{"theme":"light","layout":"full"}'::jsonb, 2, true),
+  ('/services', 'Services', 'proof', 'Link to projects & process', 'content', 'Before you decide', 'See examples of our work and what working with us involves.', 'Pexels stock footage · Construction activity', 'Every service follows the same principle: understand the requirement, agree the scope, then manage the work with clear communication.', '[]'::jsonb, 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4', 'View Our Projects', '/projects', '{"theme":"white","layout":"centered","cta2_label":"See How We Work","cta2_href":"/our-process"}'::jsonb, 3, true),
+  ('/services', 'Services', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Not sure which service fits?', '', 'Tell us about the property and what you want to achieve. We will help establish the right starting point.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark"}'::jsonb, 4, true),
+  ('/residential-construction', 'Residential Construction', 'hero', 'Hero', 'hero', 'Residential construction', 'A home should be built around how you intend to live.', '', 'From the initial requirements to the finished property, residential construction involves hundreds of decisions. Our approach focuses on bringing those decisions into a structured process so the project remains aligned with the client''s requirements.', '[]'::jsonb, 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/residential-construction', 'Residential Construction', 'deliver', 'What we deliver', 'content', 'What we deliver', 'Structured support from planning to handover.', 'The exact scope is agreed for each project before work begins.', 'Depending on the agreed scope, residential construction may involve:', '[{"title":"Project planning","body":"","image":""},{"title":"Construction coordination","body":"","image":""},{"title":"Structural work","body":"","image":""},{"title":"Finishing","body":"","image":""},{"title":"Site supervision","body":"","image":""},{"title":"Quality review","body":"","image":""},{"title":"Client communication","body":"","image":""},{"title":"Final handover","body":"","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', '', '', '{"theme":"white","layout":"checklist"}'::jsonb, 1, true),
+  ('/residential-construction', 'Residential Construction', 'needs', 'What homeowners need', 'features', 'What homeowners usually need', 'The concerns we plan around.', '', '', '[{"title":"Budget clarity","body":"Understanding the scope before committing.","image":""},{"title":"Communication","body":"Knowing what is happening during construction.","image":""},{"title":"Workmanship","body":"Confidence that important details are being handled properly.","image":""},{"title":"Coordination","body":"Reducing the burden of managing multiple construction activities independently.","image":""},{"title":"A clear finish line","body":"Knowing what completion and handover involve.","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1800&q=80', '', '', '', '{"theme":"light","layout":"grid"}'::jsonb, 2, true),
+  ('/residential-construction', 'Residential Construction', 'projects', 'Related projects', 'projects', 'Residential work', 'See examples of our work.', '', '', '[]'::jsonb, '', '', 'View All Projects', '/projects', '{"theme":"white","category":"Residential","limit":3,"hide_empty":true}'::jsonb, 3, true),
+  ('/residential-construction', 'Residential Construction', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Discuss your home project.', '', 'Share the property location, plot size and what you want to build. We will explain the appropriate next step.', '[]'::jsonb, '', '', 'Discuss Your Home Project', '/consultation', '{"theme":"dark","cta2_label":"See How We Work","cta2_href":"/our-process"}'::jsonb, 4, true),
+  ('/commercial-construction', 'Commercial Construction', 'hero', 'Hero', 'hero', 'Commercial construction', 'Commercial spaces built for how businesses operate.', '', 'A commercial property needs to do more than look complete. It needs to function.', '[]'::jsonb, 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/commercial-construction', 'Commercial Construction', 'approach', 'Our approach', 'intro', 'Our approach', 'Planned around the business that will use it.', 'Pexels stock footage · Construction site activity', 'That means planning for movement, usability, durability, maintenance and the practical requirements of the business occupying the space.
+
+We begin by understanding the intended use of the property and then coordinate the construction process around the agreed project requirements.', '[]'::jsonb, 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4', '', '', '{"theme":"white"}'::jsonb, 1, true),
+  ('/commercial-construction', 'Commercial Construction', 'focus', 'Focus areas', 'features', 'Focus areas', 'What a commercial project turns on.', 'Specific capabilities are confirmed for each project.', '', '[{"title":"Functional planning","body":"Layouts that support how the business actually operates.","image":""},{"title":"Construction coordination","body":"Trades, stages and decisions brought into one sequence.","image":""},{"title":"Site supervision","body":"Work overseen on site against the agreed scope.","image":""},{"title":"Material management","body":"Materials planned and coordinated around the programme.","image":""},{"title":"Quality review","body":"Completed work checked before it is signed off.","image":""},{"title":"Schedule coordination","body":"Timing managed with the business''s operations in mind.","image":""},{"title":"Final completion","body":"A defined close-out and handover.","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1800&q=80', '', '', '', '{"theme":"light","layout":"grid"}'::jsonb, 2, true),
+  ('/commercial-construction', 'Commercial Construction', 'projects', 'Related projects', 'projects', 'Commercial work', 'See examples of our work.', '', '', '[]'::jsonb, '', '', 'View All Projects', '/projects', '{"theme":"white","category":"Commercial","limit":3,"hide_empty":true}'::jsonb, 3, true),
+  ('/commercial-construction', 'Commercial Construction', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Discuss a commercial project.', '', 'Tell us how the space will be used, where it is and when you need it. We will help define the next step.', '[]'::jsonb, '', '', 'Discuss a Commercial Project', '/consultation', '{"theme":"dark","cta2_label":"See How We Work","cta2_href":"/our-process"}'::jsonb, 4, true),
+  ('/renovation-remodelling', 'Renovation & Remodelling', 'hero', 'Hero', 'hero', 'Renovation & remodelling', 'Improve the space you already have.', '', 'Renovation is different from building from scratch. Existing structures, services, finishes and layouts all have to be considered before changes are made.', '[]'::jsonb, 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/renovation-remodelling', 'Renovation & Remodelling', 'intro', 'How we approach renovation', 'intro', 'How we approach it', 'Understand the existing property first.', '', 'Siraj Builders approaches renovation projects by first understanding the existing property and then identifying the changes required to improve its functionality, appearance or use.', '[]'::jsonb, 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=80', '', '', '', '{"theme":"white"}'::jsonb, 1, true),
+  ('/renovation-remodelling', 'Renovation & Remodelling', 'structure', 'How the project is structured', 'content', 'Project structure', 'We can structure the project around:', '', '', '[{"title":"Existing property assessment","body":"","image":""},{"title":"Planning","body":"","image":""},{"title":"Construction work","body":"","image":""},{"title":"Finishing","body":"","image":""},{"title":"Material coordination","body":"","image":""},{"title":"Site management","body":"","image":""},{"title":"Final review","body":"","image":""}]'::jsonb, '', '', '', '', '{"theme":"light","layout":"checklist"}'::jsonb, 2, true),
+  ('/renovation-remodelling', 'Renovation & Remodelling', 'objective', 'The objective', 'content', 'The objective', 'Not simply to make a space look different.', 'Pexels stock footage · Coordinated construction work', 'To make it work better for the people using it.', '[]'::jsonb, 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', '', '', '{"theme":"white","layout":"centered"}'::jsonb, 3, true),
+  ('/renovation-remodelling', 'Renovation & Remodelling', 'projects', 'Related projects', 'projects', 'Renovation work', 'See examples of our work.', '', '', '[]'::jsonb, '', '', 'View All Projects', '/projects', '{"theme":"light","category":"Renovation","limit":3,"hide_empty":true}'::jsonb, 4, true),
+  ('/renovation-remodelling', 'Renovation & Remodelling', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Discuss your renovation.', '', 'Tell us about the property as it is today and what you want to change.', '[]'::jsonb, '', '', 'Discuss Your Renovation', '/consultation', '{"theme":"dark"}'::jsonb, 5, true),
+  ('/design-architecture', 'Design & Architecture', 'hero', 'Hero', 'hero', 'Design & architecture', 'Design decisions made with construction in mind.', '', 'Where Siraj Builders provides architectural or design services, the objective is to create a stronger connection between what is designed and what is ultimately built.', '[]'::jsonb, 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/design-architecture', 'Design & Architecture', 'scope', 'Scope', 'content', 'Scope', 'What design support can cover.', 'Pexels stock footage · Planning and coordination', 'The exact services, and whether each is provided directly or through external professionals, are confirmed for each project.', '[{"title":"Construction coordination","body":"","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', '', '', '{"theme":"white","layout":"checklist","note":"TO CONFIRM — add architectural planning, concept development, space planning, technical drawings, 3D visualisation and interior coordination only if offered, and state which are provided directly vs through partners."}'::jsonb, 1, true),
+  ('/design-architecture', 'Design & Architecture', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Discuss design for your project.', '', 'Share your brief and any drawings you already have.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark"}'::jsonb, 2, true),
+  ('/grey-structure', 'Grey Structure', 'hero', 'Hero', 'hero', 'Grey structure', 'A strong structural foundation for the work that follows.', '', 'The early stages set the quality, alignment and sequencing of the entire build. They deserve careful coordination.', '[]'::jsonb, 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/grey-structure', 'Grey Structure', 'detail', 'What it involves', 'content', 'The approach', 'Structure first. Clarity at every stage.', 'Pexels stock footage · Structural work on site', 'From site preparation through structural work, we keep drawings, materials, workmanship and progress aligned with the agreed project requirements.', '[{"title":"Site preparation","body":"","image":""},{"title":"Foundation and structure","body":"","image":""},{"title":"Material coordination","body":"","image":""},{"title":"Stage-by-stage review","body":"","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4', '', '', '{"theme":"white","layout":"checklist","note":"TO CONFIRM — publish only once grey-structure work is a confirmed service."}'::jsonb, 1, true),
+  ('/grey-structure', 'Grey Structure', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Discuss your grey structure project.', '', 'Share the plot details and drawings you already have.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark"}'::jsonb, 2, true),
+  ('/turnkey-construction', 'Turnkey Construction', 'hero', 'Hero', 'hero', 'Turnkey construction', 'One coordinated route from initial brief to completed property.', '', 'A turnkey project needs more than a long list of services. It needs one clear direction across design, construction, finishes and handover.', '[]'::jsonb, 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/turnkey-construction', 'Turnkey Construction', 'detail', 'What it involves', 'content', 'The approach', 'A complete property, managed as one project.', 'Pexels stock footage · Construction coordination', 'We coordinate the major decisions and handoffs so the client has a clear view of scope, progress, quality and completion.', '[{"title":"Single project direction","body":"","image":""},{"title":"Design and build coordination","body":"","image":""},{"title":"Finishes and installation","body":"","image":""},{"title":"Final handover","body":"","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', '', '', '{"theme":"white","layout":"checklist","note":"TO CONFIRM — publish only once turnkey delivery is a confirmed service."}'::jsonb, 1, true),
+  ('/turnkey-construction', 'Turnkey Construction', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Discuss a turnkey project.', '', 'Tell us what you want completed and where.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark"}'::jsonb, 2, true),
+  ('/project-management', 'Project Management', 'hero', 'Hero', 'hero', 'Project management', 'Keep decisions, people and progress moving together.', '', 'Construction is a sequence of connected decisions. Project management makes ownership, timing and next steps visible.', '[]'::jsonb, 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/project-management', 'Project Management', 'detail', 'What it involves', 'content', 'The approach', 'The work is easier to manage when it is visible.', 'Pexels stock footage · Managing site progress', 'We structure communication, sequencing and reviews around the agreed scope so issues can be addressed before they become expensive delays.', '[{"title":"Programme coordination","body":"","image":""},{"title":"Trade and site alignment","body":"","image":""},{"title":"Progress communication","body":"","image":""},{"title":"Quality and close-out","body":"","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', '', '', '{"theme":"white","layout":"checklist","note":"TO CONFIRM — publish only once project management is a confirmed standalone service."}'::jsonb, 1, true),
+  ('/project-management', 'Project Management', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Discuss project management.', '', 'Tell us about the project and where you need support.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark"}'::jsonb, 2, true),
+  ('/projects', 'Projects', 'hero', 'Hero', 'hero', 'Projects', 'Projects that show how we work.', '', 'A portfolio should do more than display attractive photographs. It should show the thinking, scope and execution behind the finished project.', '[]'::jsonb, 'https://images.unsplash.com/photo-1541971875076-8f970d573be6?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/projects', 'Projects', 'grid', 'Portfolio', 'projects', 'Portfolio', 'Completed and ongoing work.', 'Pexels stock footage · Active construction work', 'Each case study follows the same structure: the client requirement, the challenge, our approach, the execution and the result.', '[]'::jsonb, '', 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4', '', '', '{"theme":"light","layout":"portfolio"}'::jsonb, 1, true),
+  ('/projects', 'Projects', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Have a similar project in mind?', '', 'Tell us what you are planning. We will explain how we would approach it.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark","cta2_label":"Explore Our Services","cta2_href":"/services"}'::jsonb, 2, true),
+  ('/our-process', 'Our Process', 'hero', 'Hero', 'hero', 'Our process', 'A construction process you can understand.', '', 'The purpose of our process is simple: reduce uncertainty.', '[]'::jsonb, 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/our-process', 'Our Process', 'steps', 'Process steps', 'process', 'Eight stages', 'From the first conversation to handover.', 'Pexels stock footage · Site coordination', '', '[{"title":"Consultation","body":"We start by understanding what you want to build, why you are building it and what matters most to you.","image":""},{"title":"Site Assessment","body":"We review the property and identify practical considerations relevant to the project.","image":""},{"title":"Planning & Design","body":"The project requirements are translated into an organised scope and the necessary design and planning work.","image":""},{"title":"Estimation & Scope","body":"The project is reviewed in commercial and practical terms so the client understands what is included.","image":""},{"title":"Project Preparation","body":"Before execution begins, the required coordination, materials, people and site activities are organised.","image":""},{"title":"Construction & Supervision","body":"The agreed work moves into execution with appropriate site coordination and supervision.","image":""},{"title":"Quality Review","body":"Completed work is reviewed and outstanding issues are identified for resolution.","image":""},{"title":"Handover","body":"The completed project is reviewed with the client and the handover process is completed.","image":""}]'::jsonb, '', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', '', '', '{"theme":"white","layout":"timeline"}'::jsonb, 1, true),
+  ('/our-process', 'Our Process', 'details', 'Workflow details (to confirm)', 'content', 'Working details', 'Approvals, payment milestones and reporting.', '', '', '[]'::jsonb, '', '', '', '', '{"theme":"light","layout":"centered","note":"TO CONFIRM — exact workflow, approvals, payment milestones and reporting process. Switch on once confirmed."}'::jsonb, 2, false),
+  ('/our-process', 'Our Process', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Start at step one.', '', 'The consultation is where we understand your requirements, property and objectives.', '[]'::jsonb, '', '', 'Request a Consultation', '/consultation', '{"theme":"dark","cta2_label":"Read the FAQs","cta2_href":"/faq"}'::jsonb, 3, true),
+  ('/testimonials', 'Testimonials', 'hero', 'Hero', 'hero', 'Testimonials', 'What our clients say about working with us.', '', 'Only verified feedback from real clients appears on this page.', '[]'::jsonb, 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/testimonials', 'Testimonials', 'list', 'Testimonials', 'testimonials', 'Client feedback', 'In their words.', '', '', '[]'::jsonb, '', '', '', '', '{"theme":"light","layout":"full"}'::jsonb, 1, true),
+  ('/testimonials', 'Testimonials', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Talk to us about your project.', '', 'Tell us what you are planning and we will explain the next step.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark"}'::jsonb, 2, true),
+  ('/faq', 'FAQ', 'hero', 'Hero', 'hero', 'FAQs', 'Questions clients ask before starting.', '', 'Straight answers about how a project begins, how estimates and timelines work, and what happens after you contact us.', '[]'::jsonb, 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/faq', 'FAQ', 'list', 'All questions', 'faq', 'Frequently asked', 'Browse by topic.', 'Pexels stock footage · Planning a construction project', '', '[]'::jsonb, '', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', '', '', '{"theme":"white","layout":"full"}'::jsonb, 1, true),
+  ('/faq', 'FAQ', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Still planning your project?', '', 'Discuss it with our team — the questions you have now are the right place to start.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark","cta2_label":"Contact Us","cta2_href":"/contact-us"}'::jsonb, 2, true),
+  ('/contact-us', 'Contact', 'hero', 'Hero', 'hero', 'Contact', 'Let''s talk about your project.', '', 'Whether you are still exploring your options or already have drawings and a defined scope, the best place to begin is a conversation.', '[]'::jsonb, 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/contact-us', 'Contact', 'details', 'Contact details', 'contact', 'Get in touch', 'Tell us what you’re planning.', '', 'Use the project enquiry form to share a little about the property, what you have in mind and where you need help. We’ll use that information to guide the next step.', '[]'::jsonb, '', '', '', '', '{"theme":"light","layout":"cards"}'::jsonb, 1, true),
+  ('/contact-us', 'Contact', 'form', 'Contact form', 'contact', 'Contact form', 'Tell us about your project.', '', 'The more we understand about your project, the better we can guide the initial conversation.', '[{"title":"Property location","body":"","image":""},{"title":"Project type and intended use","body":"","image":""},{"title":"Plot or property size","body":"","image":""},{"title":"Drawings or documents","body":"","image":""},{"title":"Desired scope and timing","body":"","image":""}]'::jsonb, '', '', '', '', '{"theme":"white","layout":"form"}'::jsonb, 2, true),
+  ('/consultation', 'Consultation', 'hero', 'Hero', 'hero', 'Consultation', 'Start with clarity. Then build.', 'No obligation. Plain conversation. Clear next step.', 'A consultation gives us an opportunity to understand your requirements before discussing the appropriate path forward.', '[]'::jsonb, 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80', '', '', '', '{"note":"The consultation form below this hero is built into the page."}'::jsonb, 0, true),
+  ('/consultation', 'Consultation', 'next', 'What happens next', 'process', 'What happens next', 'A simple path from first message to first conversation.', 'Pexels stock footage · Preparing for a project conversation', 'After receiving your information, the team reviews the requirements and determines the appropriate next step.', '[{"title":"You share the basics","body":"Fill in the form with your project type, property details and what you are planning.","image":""},{"title":"We review the details","body":"Our team reads through your information and considers what the project requires.","image":""},{"title":"We reach out","body":"We contact you to clarify anything unclear and arrange an initial conversation.","image":""},{"title":"We agree on next steps","body":"Together we decide what the appropriate next step looks like — or that it isn''t the right fit.","image":""}]'::jsonb, '', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', '', '', '{"theme":"light"}'::jsonb, 1, true),
+  ('/consultation', 'Consultation', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Not ready to fill in a form?', '', 'Look through our work or read how we manage a project first.', '[]'::jsonb, '', '', 'View Our Projects', '/projects', '{"theme":"dark","cta2_label":"See How We Work","cta2_href":"/our-process"}'::jsonb, 2, true),
+  ('/leadership', 'Leadership', 'hero', 'Hero', 'hero', 'Leadership', 'Well-managed projects start with clear responsibility.', '', 'Leadership in construction means knowing who decides what, coordinating across teams and being accountable for delivery.', '[]'::jsonb, 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/leadership', 'Leadership', 'team', 'Team profiles', 'team', 'Our team', 'The people behind the work.', '', '', '[]'::jsonb, '', '', '', '', '{"theme":"light"}'::jsonb, 1, true),
+  ('/leadership', 'Leadership', 'detail', 'How responsibility works', 'features', 'How we lead', 'Clear roles create better momentum.', 'Pexels stock footage · Team coordination', 'Decisions have owners, sites have leads and clients have a clear path for questions and updates.', '[{"title":"Accountability","body":"","image":""},{"title":"Communication","body":"","image":""},{"title":"Coordination","body":"","image":""},{"title":"Responsible decisions","body":"","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', '', '', '{"theme":"white","layout":"numbered"}'::jsonb, 2, true),
+  ('/leadership', 'Leadership', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Meet the team behind your project.', '', 'Start with a conversation about what you are planning.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark"}'::jsonb, 3, true),
+  ('/project-showcase', 'Project Visibility', 'hero', 'Hero', 'hero', 'Project visibility', 'Know what is happening, and what comes next.', '', 'Construction becomes easier to live with when progress, decisions and responsibilities stay visible to the people paying for the work.', '[]'::jsonb, 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/project-showcase', 'Project Visibility', 'detail', 'How visibility works', 'features', 'The approach', 'The work is easier to manage when it is visible.', 'Pexels stock footage · Work in progress', 'We structure communication around the agreed scope: what has been completed, what is under way, and where a client decision is needed next. Reporting format and frequency are agreed per project.', '[{"title":"Structured progress updates","body":"What has been completed and what is under way.","image":""},{"title":"Documented decisions","body":"Choices recorded so they can be traced later.","image":""},{"title":"Defined responsibilities","body":"Everyone knows what they own.","image":""},{"title":"Clear next steps","body":"Where a client decision is needed, and when.","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4', '', '', '{"theme":"white","layout":"grid"}'::jsonb, 1, true),
+  ('/project-showcase', 'Project Visibility', 'cta', 'Call to action', 'cta', 'Start with clarity', 'See how this would work on your project.', '', 'We agree the reporting format with every client.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark"}'::jsonb, 2, true),
+  ('/role-definition', 'Project Roles', 'hero', 'Hero', 'hero', 'Project roles', 'Every project role, clearly defined.', '', 'Projects move better when everyone knows what they own, what they do not own and where the handoffs happen.', '[]'::jsonb, 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/role-definition', 'Project Roles', 'detail', 'Roles', 'features', 'Clarity reduces overlap', 'Who does what.', 'Pexels stock footage · Team coordination', 'We define responsibilities around the project so decisions do not sit unanswered and important work does not fall between roles.', '[{"title":"Client direction","body":"","image":""},{"title":"Project management","body":"","image":""},{"title":"Site supervision","body":"","image":""},{"title":"Specialist coordination","body":"","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', '', '', '{"theme":"white","layout":"numbered"}'::jsonb, 1, true),
+  ('/role-definition', 'Project Roles', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Discuss how your project would be organised.', '', 'Start with the basics of what you are planning.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark"}'::jsonb, 2, true),
+  ('/subcontractors', 'Subcontractors', 'hero', 'Hero', 'hero', 'Subcontractors', 'Specialists coordinated around the agreed project.', '', 'External specialists add value when their scope, timing and communication remain clear.', '[]'::jsonb, 'https://images.unsplash.com/photo-1541971875076-8f970d573be6?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/subcontractors', 'Subcontractors', 'detail', 'Coordination', 'content', 'The approach', 'The right specialist in the right sequence.', 'Pexels stock footage · Specialist work on site', 'We coordinate specialist work against the drawings, programme and quality expectations of the wider project.', '[{"title":"Defined scope","body":"","image":""},{"title":"Sequenced work","body":"","image":""},{"title":"Site coordination","body":"","image":""},{"title":"Quality review","body":"","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4', '', '', '{"theme":"white","layout":"checklist"}'::jsonb, 1, true),
+  ('/subcontractors', 'Subcontractors', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Discuss your project.', '', 'Tell us what you are planning.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark"}'::jsonb, 2, true),
+  ('/international', 'Overseas Clients', 'hero', 'Hero', 'hero', 'Overseas clients', 'Clear project coordination across distance.', '', 'When clients, consultants or properties are in different locations, communication and documentation matter even more.', '[]'::jsonb, 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/international', 'Overseas Clients', 'detail', 'Remote coordination', 'features', 'Make the project visible from anywhere', 'What remote clients need.', 'Pexels stock footage · Coordinating work across a project', 'Structured updates, documented decisions and coordinated information help keep remote stakeholders connected to the work.', '[{"title":"Remote communication","body":"","image":""},{"title":"Documented decisions","body":"","image":""},{"title":"Local coordination","body":"","image":""},{"title":"Visible progress","body":"","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', '', '', '{"theme":"white","layout":"numbered","note":"TO CONFIRM — whether Siraj Builders actively targets overseas clients."}'::jsonb, 1, true),
+  ('/international', 'Overseas Clients', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Building from abroad?', '', 'Share the property details and how you prefer to receive updates.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark"}'::jsonb, 2, true),
+  ('/affiliates', 'Partners & Affiliates', 'hero', 'Hero', 'hero', 'Partners & affiliates', 'A connected network, one point of contact.', '', 'Where external specialists or partners are part of a project, roles and responsibilities should remain clear. One coordinated team, one shared scope.', '[]'::jsonb, 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/affiliates', 'Partners & Affiliates', 'intro', 'Introduction', 'intro', 'Coordination', 'Specialists without the split responsibility.', '', 'Most construction projects involve more than one discipline — structural work, mechanical and electrical services, design, finishing. Each area benefits from the right specialist.
+
+The challenge is coordinating them so the client isn''t left managing multiple conversations and unclear responsibilities. That is where Siraj Builders steps in as the single point of contact.', '[]'::jsonb, 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1800&q=80', '', '', '', '{"theme":"white"}'::jsonb, 1, true),
+  ('/affiliates', 'Partners & Affiliates', 'layers', 'How coordination works', 'process', 'How coordination works', 'Three layers that keep a multi-specialist project organised.', '', '', '[{"title":"Scoping the project","body":"Understanding which specialists are needed, when they''ll be needed, and what each one is responsible for.","image":""},{"title":"Coordinating the sequence","body":"Bringing specialists in at the right stage, in the right order, with the right information.","image":""},{"title":"Keeping the client informed","body":"One team, one set of updates, one clear picture of progress and next steps.","image":""}]'::jsonb, '', '', '', '', '{"theme":"light"}'::jsonb, 2, true),
+  ('/affiliates', 'Partners & Affiliates', 'partners', 'Disciplines', 'features', 'What specialists typically cover', 'The disciplines a project may involve.', 'Pexels stock footage · Specialist work on site', 'Depending on the project, one or more of these areas may be part of the team. The exact mix is agreed per project.', '[{"title":"Structural engineering","body":"Load paths, foundations, framing and structural drawings for the building.","image":""},{"title":"MEP services","body":"Mechanical, electrical and plumbing systems coordinated with the structure.","image":""},{"title":"Architectural design","body":"Planning, layouts, drawings and design coordination before construction.","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4', '', '', '{"theme":"white","layout":"grid"}'::jsonb, 3, true),
+  ('/affiliates', 'Partners & Affiliates', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Discuss your project.', '', 'One conversation to start, one point of contact throughout.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark"}'::jsonb, 4, true),
+  ('/locations', 'Service Areas', 'hero', 'Hero', 'hero', 'Service areas', 'A project approach that starts with the property itself.', '', 'Site conditions, access, local requirements and the surrounding context all shape how construction should be planned.', '[]'::jsonb, 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/locations', 'Service Areas', 'areas', 'Areas served (to confirm)', 'content', 'Where we work', 'Areas we serve.', '', '', '[]'::jsonb, '', '', '', '', '{"theme":"light","layout":"centered","note":"TO CONFIRM — primary city, service areas and specific housing societies. Critical for SEO. Switch on once confirmed."}'::jsonb, 1, false),
+  ('/locations', 'Service Areas', 'detail', 'Every location is different', 'features', 'Every location has its own realities', 'What we look at first.', 'Pexels stock footage · Site activity', 'We begin by understanding the property and its context before fixing the scope, sequence or delivery assumptions.', '[{"title":"Property assessment","body":"","image":""},{"title":"Access and logistics","body":"","image":""},{"title":"Local coordination","body":"","image":""},{"title":"Project-specific planning","body":"","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/5594430/5594430-uhd_3840_2160_25fps.mp4', '', '', '{"theme":"white","layout":"numbered"}'::jsonb, 2, true),
+  ('/locations', 'Service Areas', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Tell us where your property is.', '', 'Location is one of the first things we need to understand.', '[]'::jsonb, '', '', 'Discuss Your Project', '/consultation', '{"theme":"dark"}'::jsonb, 3, true),
+  ('/cost-index', 'Cost Guidance', 'hero', 'Hero', 'hero', 'Cost guidance', 'Construction cost becomes clearer when the scope is clear.', '', 'There is no useful universal price without understanding size, specifications, site conditions, materials and intended outcome.', '[]'::jsonb, 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80', '', '', '', '{}'::jsonb, 0, true),
+  ('/cost-index', 'Cost Guidance', 'detail', 'What shapes cost', 'features', 'Start with decisions, not a guess', 'The variables that shape cost.', 'Pexels stock footage · Planning project scope', 'Use the initial conversation to clarify the project variables that shape cost, then develop a project-specific basis for discussion.', '[{"title":"Scope","body":"","image":""},{"title":"Size and site","body":"","image":""},{"title":"Materials","body":"","image":""},{"title":"Finishes and services","body":"","image":""}]'::jsonb, 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1800&q=80', 'https://videos.pexels.com/video-files/7825537/7825537-hd_1920_1080_30fps.mp4', '', '', '{"theme":"white","layout":"numbered"}'::jsonb, 1, true),
+  ('/cost-index', 'Cost Guidance', 'cta', 'Call to action', 'cta', 'Start with clarity', 'Get a project-specific estimate.', '', 'An estimate is prepared from the scope, drawings and specifications — start by sharing yours.', '[]'::jsonb, '', '', 'Request a Consultation', '/consultation', '{"theme":"dark"}'::jsonb, 2, true),
+  ('/privacy-policy', 'Privacy Policy', 'hero', 'Hero', 'hero', 'Privacy policy', 'Your project information should be handled with care.', '', 'We use information shared through this website to understand project requirements and respond to enquiries.', '[]'::jsonb, '', '', '', '', '{}'::jsonb, 0, true),
+  ('/privacy-policy', 'Privacy Policy', 'body', 'Policy text', 'content', 'Summary', 'Clear information, clear purpose.', '', 'Only share the details needed to help us understand your enquiry. Contact details and project information submitted through the contact or consultation forms are used to respond to the conversation you requested and to determine the appropriate next step.
+
+If you have a question about the information you have shared, contact us through the details on the Contact page.', '[]'::jsonb, '', '', '', '', '{"theme":"white","layout":"prose","note":"Have the final privacy policy reviewed before launch."}'::jsonb, 1, true),
+  ('/terms', 'Terms & Conditions', 'hero', 'Hero', 'hero', 'Terms & conditions', 'A clear starting point for using this website.', '', 'These terms describe the basic expectations when browsing the Siraj Builders website and submitting an enquiry.', '[]'::jsonb, '', '', '', '', '{}'::jsonb, 0, true),
+  ('/terms', 'Terms & Conditions', 'body', 'Terms text', 'content', 'Summary', 'Useful information, responsibly presented.', '', 'Website content is provided as general project information. Final scope, pricing, timing and responsibilities are always confirmed for the individual project.
+
+Submitting an enquiry does not create an agreement. Any project proceeds only on terms agreed in writing.', '[]'::jsonb, '', '', '', '', '{"theme":"white","layout":"prose","note":"Have the final terms reviewed before launch."}'::jsonb, 1, true)
+on conflict (page_path, section_key) do nothing;
+
+-- 3. Kept (edited) sections: fill empty list items / images from the docs
+update public.page_sections set items = '[{"title":"Clear scope","body":"Defined before work begins","image":""},{"title":"Responsible execution","body":"Supervised on site","image":""},{"title":"Consistent updates","body":"Progress shared as it happens","image":""},{"title":"Defined handover","body":"Clear transition at completion","image":""}]'::jsonb where page_path = '/' and section_key = 'trust' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Clear expectations","body":"Good construction starts with understanding what is being built, why it is being built and what the project requires.","image":""},{"title":"Organised execution","body":"A structured approach helps coordinate decisions, materials, people and work across different stages.","image":""},{"title":"Attention to detail","body":"The final result is shaped by hundreds of smaller decisions. We treat those details as part of the project, not an afterthought.","image":""},{"title":"Client communication","body":"Construction becomes easier to manage when clients know what has happened, what is happening and what comes next.","image":""},{"title":"Practical decision-making","body":"We focus on solutions that make sense for the property''s intended use, project requirements and available resources.","image":""},{"title":"Accountability","body":"A professional construction relationship should have clear responsibilities, clear communication and a clear path forward when decisions need to be made.","image":""}]'::jsonb where page_path = '/' and section_key = 'why-us' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Consultation","body":"Understand your requirements, property and project objectives.","image":""},{"title":"Site Assessment","body":"Review the site and identify the practical considerations that affect the project.","image":""},{"title":"Planning & Design","body":"Develop the project scope and coordinate the required planning and design work.","image":""},{"title":"Estimation","body":"Establish the scope, specifications and commercial requirements.","image":""},{"title":"Construction","body":"Move into organised execution with appropriate supervision and coordination.","image":""},{"title":"Quality Review","body":"Review completed work and address outstanding details.","image":""},{"title":"Handover","body":"Complete the project and transition the finished property to the client.","image":""}]'::jsonb where page_path = '/' and section_key = 'process' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Mission","body":"To deliver well-planned construction projects through responsible execution, clear communication and attention to the details that matter to our clients.","image":""},{"title":"Vision","body":"To become a construction partner known for professional project management, dependable execution and lasting client relationships.","image":""}]'::jsonb where page_path = '/who-we-are' and section_key = 'mission' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Understanding before execution.","body":"","image":""},{"title":"Planning before construction.","body":"","image":""},{"title":"Communication throughout.","body":"","image":""},{"title":"Attention to detail until completion.","body":"","image":""}]'::jsonb where page_path = '/who-we-are' and section_key = 'approach' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Clarity","body":"The client understands the project before committing.","image":""},{"title":"Structured execution","body":"Construction follows a defined process rather than an improvised sequence.","image":""},{"title":"Responsible management","body":"The project is actively coordinated rather than simply handed over to workers.","image":""},{"title":"Craftsmanship","body":"Attention is given to the details that determine the final result.","image":""},{"title":"Communication","body":"Clients remain informed throughout the project.","image":""},{"title":"Practical design","body":"The finished space should look good while serving its intended purpose.","image":""},{"title":"Long-term value","body":"The objective is not simply to finish construction, but to create something that remains useful and valuable.","image":""}]'::jsonb where page_path = '/who-we-are' and section_key = 'pillars' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Project planning","body":"","image":""},{"title":"Construction coordination","body":"","image":""},{"title":"Structural work","body":"","image":""},{"title":"Finishing","body":"","image":""},{"title":"Site supervision","body":"","image":""},{"title":"Quality review","body":"","image":""},{"title":"Client communication","body":"","image":""},{"title":"Final handover","body":"","image":""}]'::jsonb where page_path = '/residential-construction' and section_key = 'deliver' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Budget clarity","body":"Understanding the scope before committing.","image":""},{"title":"Communication","body":"Knowing what is happening during construction.","image":""},{"title":"Workmanship","body":"Confidence that important details are being handled properly.","image":""},{"title":"Coordination","body":"Reducing the burden of managing multiple construction activities independently.","image":""},{"title":"A clear finish line","body":"Knowing what completion and handover involve.","image":""}]'::jsonb where page_path = '/residential-construction' and section_key = 'needs' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Functional planning","body":"Layouts that support how the business actually operates.","image":""},{"title":"Construction coordination","body":"Trades, stages and decisions brought into one sequence.","image":""},{"title":"Site supervision","body":"Work overseen on site against the agreed scope.","image":""},{"title":"Material management","body":"Materials planned and coordinated around the programme.","image":""},{"title":"Quality review","body":"Completed work checked before it is signed off.","image":""},{"title":"Schedule coordination","body":"Timing managed with the business''s operations in mind.","image":""},{"title":"Final completion","body":"A defined close-out and handover.","image":""}]'::jsonb where page_path = '/commercial-construction' and section_key = 'focus' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Existing property assessment","body":"","image":""},{"title":"Planning","body":"","image":""},{"title":"Construction work","body":"","image":""},{"title":"Finishing","body":"","image":""},{"title":"Material coordination","body":"","image":""},{"title":"Site management","body":"","image":""},{"title":"Final review","body":"","image":""}]'::jsonb where page_path = '/renovation-remodelling' and section_key = 'structure' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Construction coordination","body":"","image":""}]'::jsonb where page_path = '/design-architecture' and section_key = 'scope' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Site preparation","body":"","image":""},{"title":"Foundation and structure","body":"","image":""},{"title":"Material coordination","body":"","image":""},{"title":"Stage-by-stage review","body":"","image":""}]'::jsonb where page_path = '/grey-structure' and section_key = 'detail' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Single project direction","body":"","image":""},{"title":"Design and build coordination","body":"","image":""},{"title":"Finishes and installation","body":"","image":""},{"title":"Final handover","body":"","image":""}]'::jsonb where page_path = '/turnkey-construction' and section_key = 'detail' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Programme coordination","body":"","image":""},{"title":"Trade and site alignment","body":"","image":""},{"title":"Progress communication","body":"","image":""},{"title":"Quality and close-out","body":"","image":""}]'::jsonb where page_path = '/project-management' and section_key = 'detail' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Consultation","body":"We start by understanding what you want to build, why you are building it and what matters most to you.","image":""},{"title":"Site Assessment","body":"We review the property and identify practical considerations relevant to the project.","image":""},{"title":"Planning & Design","body":"The project requirements are translated into an organised scope and the necessary design and planning work.","image":""},{"title":"Estimation & Scope","body":"The project is reviewed in commercial and practical terms so the client understands what is included.","image":""},{"title":"Project Preparation","body":"Before execution begins, the required coordination, materials, people and site activities are organised.","image":""},{"title":"Construction & Supervision","body":"The agreed work moves into execution with appropriate site coordination and supervision.","image":""},{"title":"Quality Review","body":"Completed work is reviewed and outstanding issues are identified for resolution.","image":""},{"title":"Handover","body":"The completed project is reviewed with the client and the handover process is completed.","image":""}]'::jsonb where page_path = '/our-process' and section_key = 'steps' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Property location","body":"","image":""},{"title":"Project type and intended use","body":"","image":""},{"title":"Plot or property size","body":"","image":""},{"title":"Drawings or documents","body":"","image":""},{"title":"Desired scope and timing","body":"","image":""}]'::jsonb where page_path = '/contact-us' and section_key = 'form' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"You share the basics","body":"Fill in the form with your project type, property details and what you are planning.","image":""},{"title":"We review the details","body":"Our team reads through your information and considers what the project requires.","image":""},{"title":"We reach out","body":"We contact you to clarify anything unclear and arrange an initial conversation.","image":""},{"title":"We agree on next steps","body":"Together we decide what the appropriate next step looks like — or that it isn''t the right fit.","image":""}]'::jsonb where page_path = '/consultation' and section_key = 'next' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Accountability","body":"","image":""},{"title":"Communication","body":"","image":""},{"title":"Coordination","body":"","image":""},{"title":"Responsible decisions","body":"","image":""}]'::jsonb where page_path = '/leadership' and section_key = 'detail' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Structured progress updates","body":"What has been completed and what is under way.","image":""},{"title":"Documented decisions","body":"Choices recorded so they can be traced later.","image":""},{"title":"Defined responsibilities","body":"Everyone knows what they own.","image":""},{"title":"Clear next steps","body":"Where a client decision is needed, and when.","image":""}]'::jsonb where page_path = '/project-showcase' and section_key = 'detail' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Client direction","body":"","image":""},{"title":"Project management","body":"","image":""},{"title":"Site supervision","body":"","image":""},{"title":"Specialist coordination","body":"","image":""}]'::jsonb where page_path = '/role-definition' and section_key = 'detail' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Defined scope","body":"","image":""},{"title":"Sequenced work","body":"","image":""},{"title":"Site coordination","body":"","image":""},{"title":"Quality review","body":"","image":""}]'::jsonb where page_path = '/subcontractors' and section_key = 'detail' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Remote communication","body":"","image":""},{"title":"Documented decisions","body":"","image":""},{"title":"Local coordination","body":"","image":""},{"title":"Visible progress","body":"","image":""}]'::jsonb where page_path = '/international' and section_key = 'detail' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Scoping the project","body":"Understanding which specialists are needed, when they''ll be needed, and what each one is responsible for.","image":""},{"title":"Coordinating the sequence","body":"Bringing specialists in at the right stage, in the right order, with the right information.","image":""},{"title":"Keeping the client informed","body":"One team, one set of updates, one clear picture of progress and next steps.","image":""}]'::jsonb where page_path = '/affiliates' and section_key = 'layers' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Structural engineering","body":"Load paths, foundations, framing and structural drawings for the building.","image":""},{"title":"MEP services","body":"Mechanical, electrical and plumbing systems coordinated with the structure.","image":""},{"title":"Architectural design","body":"Planning, layouts, drawings and design coordination before construction.","image":""}]'::jsonb where page_path = '/affiliates' and section_key = 'partners' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Property assessment","body":"","image":""},{"title":"Access and logistics","body":"","image":""},{"title":"Local coordination","body":"","image":""},{"title":"Project-specific planning","body":"","image":""}]'::jsonb where page_path = '/locations' and section_key = 'detail' and (items is null or items = '[]'::jsonb);
+update public.page_sections set items = '[{"title":"Scope","body":"","image":""},{"title":"Size and site","body":"","image":""},{"title":"Materials","body":"","image":""},{"title":"Finishes and services","body":"","image":""}]'::jsonb where page_path = '/cost-index' and section_key = 'detail' and (items is null or items = '[]'::jsonb);
+
+-- 4. Old 'Page copy' edits carried into the new hero sections ------------
+update public.page_sections s
+   set title = p.title,
+       body = coalesce(nullif(p.intro, ''), s.body),
+       media_url = coalesce(nullif(p.image_url, ''), s.media_url)
+  from public.pages p
+ where p.path = s.page_path
+   and s.section_key = 'hero'
+   and s.updated_at = s.created_at
+   and p.updated_at > p.created_at + interval '2 seconds'
+   and nullif(trim(p.title), '') is not null;
+
+-- 5. Pages registry: publish state for unconfirmed services --------------
+update public.pages set is_published = false where path in ('/design-architecture', '/grey-structure', '/turnkey-construction', '/project-management', '/international') and updated_at = created_at;
+
+-- 6. Pages registry: one row per route, SEO filled where blank -----------
+insert into public.pages (path, label, eyebrow, title, seo_title, seo_description, is_published, sort_order)
+values
+  ('/', 'Home', 'Home', 'Home', 'Siraj Builders | Professional Construction & Building Services', 'Explore Siraj Builders'' professional approach to construction, project management and building solutions. Discuss your project with our team.', true, 10),
+  ('/who-we-are', 'About', 'About', 'About', 'About Siraj Builders | Our Approach to Construction', 'Learn about Siraj Builders, our construction philosophy, project approach and commitment to professional client service.', true, 20),
+  ('/services', 'Services', 'Services', 'Services', 'Construction Services | Siraj Builders', 'Explore Siraj Builders'' construction solutions, from residential and commercial projects to renovation and project management.', true, 30),
+  ('/residential-construction', 'Residential Construction', 'Residential Construction', 'Residential Construction', 'Residential Construction | Siraj Builders', 'Professional residential construction focused on planning, coordination, workmanship and a clear client experience.', true, 40),
+  ('/commercial-construction', 'Commercial Construction', 'Commercial Construction', 'Commercial Construction', 'Commercial Construction | Siraj Builders', 'Commercial construction planned around how the finished property will actually be used, with coordinated delivery and supervision.', true, 50),
+  ('/renovation-remodelling', 'Renovation & Remodelling', 'Renovation & Remodelling', 'Renovation & Remodelling', 'Renovation & Remodelling | Siraj Builders', 'Renovation and remodelling that starts by understanding the existing property, then improves how it functions and feels.', true, 60),
+  ('/design-architecture', 'Design & Architecture', 'Design & Architecture', 'Design & Architecture', 'Design & Architecture | Siraj Builders', 'Design decisions made with construction in mind — planning and design coordination before construction begins.', false, 70),
+  ('/grey-structure', 'Grey Structure', 'Grey Structure', 'Grey Structure', 'Grey Structure Construction | Siraj Builders', 'Grey structure work coordinated with care — the structural stage that sets up everything that follows.', false, 80),
+  ('/turnkey-construction', 'Turnkey Construction', 'Turnkey Construction', 'Turnkey Construction', 'Turnkey Construction | Siraj Builders', 'One coordinated route from initial brief to completed property.', false, 90),
+  ('/project-management', 'Project Management', 'Project Management', 'Project Management', 'Construction Project Management | Siraj Builders', 'Project management that keeps decisions, people and progress moving together.', false, 100),
+  ('/projects', 'Projects', 'Projects', 'Projects', 'Projects & Portfolio | Siraj Builders', 'Explore completed and ongoing Siraj Builders projects across residential, commercial and renovation work.', true, 110),
+  ('/our-process', 'Our Process', 'Our Process', 'Our Process', 'Our Construction Process | Siraj Builders', 'See how Siraj Builders approaches construction projects from consultation and planning through execution, quality review and handover.', true, 120),
+  ('/testimonials', 'Testimonials', 'Testimonials', 'Testimonials', 'Client Testimonials | Siraj Builders', 'What clients say about working with Siraj Builders — verified feedback only.', true, 130),
+  ('/faq', 'FAQ', 'FAQ', 'FAQ', 'FAQs | Siraj Builders', 'Answers to common questions about starting a construction project with Siraj Builders — estimates, timelines, process and contact.', true, 140),
+  ('/contact-us', 'Contact', 'Contact', 'Contact', 'Contact Siraj Builders | Discuss Your Construction Project', 'Contact Siraj Builders to discuss residential, commercial or renovation construction requirements and arrange an initial project consultation.', true, 150),
+  ('/consultation', 'Consultation', 'Consultation', 'Consultation', 'Request a Consultation | Siraj Builders', 'Start with clarity. Share your project requirements and request an initial consultation with Siraj Builders.', true, 160),
+  ('/leadership', 'Leadership', 'Leadership', 'Leadership', 'Leadership | Siraj Builders', 'Clear roles and responsibility behind every Siraj Builders project.', true, 170),
+  ('/project-showcase', 'Project Visibility', 'Project Visibility', 'Project Visibility', 'Project Visibility | Siraj Builders', 'How Siraj Builders keeps progress, decisions and responsibilities visible to clients throughout a project.', true, 180),
+  ('/role-definition', 'Project Roles', 'Project Roles', 'Project Roles', 'Project Roles | Siraj Builders', 'How responsibilities are defined on a Siraj Builders project.', true, 190),
+  ('/subcontractors', 'Subcontractors', 'Subcontractors', 'Subcontractors', 'Subcontractors & Specialists | Siraj Builders', 'How specialist work is coordinated around the agreed project.', true, 200),
+  ('/international', 'Overseas Clients', 'Overseas Clients', 'Overseas Clients', 'Overseas Clients | Siraj Builders', 'Clear project coordination when clients are not on site.', false, 210),
+  ('/affiliates', 'Partners & Affiliates', 'Partners & Affiliates', 'Partners & Affiliates', 'Partners & Specialists | Siraj Builders', 'How Siraj Builders coordinates specialists so the client has one point of contact.', true, 220),
+  ('/locations', 'Service Areas', 'Service Areas', 'Service Areas', 'Service Areas | Siraj Builders', 'How Siraj Builders plans around the property and its location.', true, 230),
+  ('/cost-index', 'Cost Guidance', 'Cost Guidance', 'Cost Guidance', 'Construction Cost Guidance | Siraj Builders', 'What shapes construction cost, and why a project-specific estimate starts with a clear scope.', true, 240),
+  ('/privacy-policy', 'Privacy Policy', 'Privacy Policy', 'Privacy Policy', 'Privacy Policy | Siraj Builders', 'How Siraj Builders uses information shared through this website.', true, 250),
+  ('/terms', 'Terms & Conditions', 'Terms & Conditions', 'Terms & Conditions', 'Terms & Conditions | Siraj Builders', 'Terms for using the Siraj Builders website.', true, 260)
+on conflict (path) do update set
+  label           = case when public.pages.label = '' then excluded.label else public.pages.label end,
+  seo_title       = case when public.pages.seo_title = '' then excluded.seo_title else public.pages.seo_title end,
+  seo_description = case when public.pages.seo_description = '' then excluded.seo_description else public.pages.seo_description end;
+
+-- 7. FAQ categories --------------------------------------------------------
+insert into public.faq_categories (key, label, sort_order)
+values
+  ('start', 'Getting started', 10),
+  ('services', 'Services', 20),
+  ('cost', 'Cost & payments', 30),
+  ('process', 'Process & updates', 40),
+  ('contact', 'Areas & contact', 50)
+on conflict (key) do nothing;
+
+-- 8. FAQs: retire unedited legacy questions, add the documented 20 -------
+delete from public.faqs
+ where updated_at = created_at
+   and question in ('What services does Siraj Builders provide?',
+                    'What types of construction projects do you handle?',
+                    'Do you work on residential projects?',
+                    'Do you handle commercial construction?',
+                    'How do I start a construction project with Siraj Builders?',
+                    'What information is needed before starting a project?',
+                    'How is the project scope determined?',
+                    'How is a construction estimate prepared?',
+                    'What factors affect construction costs?',
+                    'Can I request a project quotation?',
+                    'How long does a construction project usually take?',
+                    'What factors can affect the project timeline?',
+                    'What is the typical construction process?',
+                    'How do you manage project progress?',
+                    'How is communication handled during a project?',
+                    'How do you maintain construction quality?',
+                    'How are materials selected?',
+                    'How can I request a consultation?',
+                    'How can I contact Siraj Builders?');
+
+insert into public.faqs (category_id, question, answer, is_active, show_on_home, sort_order)
+select c.id, v.question, v.answer, v.is_active, v.show_on_home, v.sort_order
+from (values
+  ('start', 'How do I start a project with Siraj Builders?', 'Start by sharing your project requirements, property location and the type of construction work you need. Our team can then determine the appropriate next step.', true, true, 10),
+  ('process', 'Do you provide site visits?', '', false, false, 20),
+  ('cost', 'How is a construction estimate prepared?', 'An estimate should be based on the project''s scope, drawings/specifications, property conditions, materials and other relevant requirements.', true, true, 30),
+  ('services', 'Can you construct a complete house?', '', false, false, 40),
+  ('services', 'Do you provide grey structure construction?', '', false, false, 50),
+  ('services', 'Do you handle finishing work?', '', false, false, 60),
+  ('services', 'Do you provide architectural design?', '', false, false, 70),
+  ('services', 'Can you renovate an existing property?', '', false, false, 80),
+  ('process', 'How long does construction take?', 'Project duration depends on the property''s size, scope, design, site conditions, materials and other factors. A project-specific timeline should be discussed after the scope is established.', true, true, 90),
+  ('cost', 'Can I provide my own materials?', '', false, false, 100),
+  ('cost', 'How are payments structured?', '', false, false, 110),
+  ('process', 'How do clients receive project updates?', '', false, false, 120),
+  ('process', 'Who supervises the project?', '', false, false, 130),
+  ('services', 'Do you work on commercial projects?', '', false, false, 140),
+  ('contact', 'Which areas do you serve?', '', false, false, 150),
+  ('services', 'Can you work from existing architectural drawings?', '', false, false, 160),
+  ('services', 'Can you help with material selection?', '', false, false, 170),
+  ('start', 'What information should I provide for an initial discussion?', 'Ideally, provide the property location, plot/property size, project type, intended use, expected start period and any drawings or requirements already available.', true, true, 180),
+  ('services', 'Do you offer project management?', '', false, false, 190),
+  ('contact', 'How do I request a quotation?', 'Use the consultation/contact form or contact Siraj Builders directly through the available communication channels.', true, true, 200)
+) as v(category, question, answer, is_active, show_on_home, sort_order)
+join public.faq_categories c on c.key = v.category
+where not exists (select 1 from public.faqs f where lower(trim(f.question)) = lower(trim(v.question)));
+
+-- Empty legacy categories (no questions left) are switched off, not deleted.
+update public.faq_categories c set is_active = false
+ where c.key not in ('start', 'services', 'cost', 'process', 'contact')
+   and c.updated_at = c.created_at
+   and not exists (select 1 from public.faqs f where f.category_id = c.id);
+
+-- 9. Services: documented card copy into blank fields --------------------
+update public.services set
+  title = case when title = '' then 'Residential Construction' else title end,
+  summary = case when summary = '' then 'From planning through construction and finishing, we help homeowners move from an initial requirement to a completed property with a structured approach.' else summary end,
+  cta_label = case when cta_label = '' then 'Explore Residential Construction' else cta_label end,
+  image_url = case when image_url = '' then 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1800&q=80' else image_url end
+where slug = 'residential-construction';
+update public.services set
+  title = case when title = '' then 'Commercial Construction' else title end,
+  summary = case when summary = '' then 'Functional commercial spaces require coordination, planning and an understanding of how the finished property will actually be used.' else summary end,
+  cta_label = case when cta_label = '' then 'Explore Commercial Construction' else cta_label end,
+  image_url = case when image_url = '' then 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1800&q=80' else image_url end
+where slug = 'commercial-construction';
+update public.services set
+  title = case when title = '' then 'Renovation & Remodelling' else title end,
+  summary = case when summary = '' then 'Improve an existing property without losing sight of its structure, functionality or intended use.' else summary end,
+  cta_label = case when cta_label = '' then 'Explore Renovation' else cta_label end,
+  image_url = case when image_url = '' then 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=80' else image_url end
+where slug = 'renovation-remodelling';
+update public.services set
+  title = case when title = '' then 'Design & Architecture' else title end,
+  summary = case when summary = '' then 'Where design services are offered, this can cover planning, design coordination and documentation before construction begins.' else summary end,
+  cta_label = case when cta_label = '' then 'Explore Design Services' else cta_label end,
+  image_url = case when image_url = '' then 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1800&q=80' else image_url end
+where slug = 'design-architecture';
+update public.services set
+  title = case when title = '' then 'Grey Structure' else title end,
+  summary = case when summary = '' then 'The structural stage that sets the quality, alignment and sequencing of the entire build.' else summary end,
+  cta_label = case when cta_label = '' then 'Explore Grey Structure' else cta_label end,
+  image_url = case when image_url = '' then 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1800&q=80' else image_url end
+where slug = 'grey-structure';
+update public.services set
+  title = case when title = '' then 'Turnkey Construction' else title end,
+  summary = case when summary = '' then 'One coordinated route from initial brief to completed property.' else summary end,
+  cta_label = case when cta_label = '' then 'Explore Turnkey Construction' else cta_label end,
+  image_url = case when image_url = '' then 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=80' else image_url end
+where slug = 'turnkey-construction';
+update public.services set
+  title = case when title = '' then 'Project Management' else title end,
+  summary = case when summary = '' then 'Keep decisions, people and progress moving together across every construction stage.' else summary end,
+  cta_label = case when cta_label = '' then 'Explore Project Management' else cta_label end,
+  image_url = case when image_url = '' then 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=80' else image_url end
+where slug = 'project-management';
+-- Unconfirmed services stay off the site until Siraj Builders confirms them
+-- (documentation: 'This page should remain unpublished until the service is confirmed').
+update public.services set is_active = false, show_in_nav = false
+ where slug in ('design-architecture', 'grey-structure', 'turnkey-construction', 'project-management')
+   and is_confirmed = false and updated_at = created_at;
+
+-- 10. Settings added by this release ---------------------------------------
+insert into public.site_settings (key, value, display, is_confirmed, group_name, label, sort_order)
+values
+  ('header_cta_label', 'Discuss Your Project', '', true, 'navigation', 'Header button text', 10),
+  ('header_cta_href', '/consultation', '', true, 'navigation', 'Header button link', 20),
+  ('footer_cta_title', 'Have a project in mind? Let''s talk.', '', true, 'footer', 'Footer call-to-action heading', 20),
+  ('footer_cta_label', 'Discuss Your Project', '', true, 'footer', 'Footer button text', 30),
+  ('footer_cta_href', '/consultation', '', true, 'footer', 'Footer button link', 40),
+  ('whatsapp_cta_label', 'Chat About Your Project', '', true, 'contact', 'WhatsApp button text', 60),
+  ('whatsapp_message', 'Hello Siraj Builders, I''d like to discuss a construction project.
+
+Project type: 
+Location: 
+Property/Plot size: 
+Expected start: 
+
+I''d like to understand the next steps and discuss my requirements.', '', true, 'contact', 'WhatsApp pre-filled message', 70),
+  ('form_success_message', 'Thank you. Your project details have been received. Our team will review the information and contact you regarding the next step.', '', true, 'forms', 'Form success message', 10),
+  ('form_microcopy', 'Your information is used to understand your project and determine the appropriate next step.', '', true, 'forms', 'Text under the forms', 20),
+  ('default_og_image', '', '', true, 'seo', 'Default social-share image URL', 30)
+on conflict (key) do nothing;
+
+-- 11. Homepage: first hero slide uses the documented H1 -------------------
+update public.hero_slides
+   set eyebrow = 'Siraj Builders',
+       title = 'Construction, managed from the first plan to the final detail.',
+       lead = 'A well-built project begins long before construction starts. Siraj Builders brings together planning, coordination and on-site execution to create a more organised construction experience for homeowners, businesses and property investors.',
+       primary_label = 'Discuss Your Project', primary_to = '/consultation',
+       secondary_label = 'View Our Projects', secondary_to = '/projects'
+ where title = 'Built with clarity. Managed with care.'
+   and updated_at = created_at;
+-- A slide must not link to a service page that is not published yet.
+update public.hero_slides set primary_label = 'See How We Work', primary_to = '/our-process'
+ where primary_to = '/project-management' and updated_at = created_at;
+
+commit;
+
+notify pgrst, 'reload schema';
+
+-- Final check: shows in the SQL editor's Messages tab
+do $$
+declare
+  n_sections int; n_pages int; n_faqs int; n_unanswered int;
+begin
+  select count(*) into n_sections from public.page_sections;
+  select count(distinct page_path) into n_pages from public.page_sections;
+  select count(*) into n_faqs from public.faqs;
+  select count(*) into n_unanswered from public.faqs where not is_active;
+  raise notice 'SIRAJ BUILDERS — content migration complete';
+  raise notice '  page sections : % across % pages (documented: 104 across 26)', n_sections, n_pages;
+  raise notice '  FAQs          : % (% waiting for an answer from Siraj Builders)', n_faqs, n_unanswered;
+end $$;
+
+
+
+-- ##########################################################################
+-- ##
 -- ##   FINAL CHECK
 -- ##   Reports what is actually in the database now. Read the NOTICE output
 -- ##   in the SQL editor's "Messages" tab.
@@ -1579,9 +2358,9 @@ begin
 
   raise notice '--------------------------------------------------';
   raise notice 'SIRAJ BUILDERS — install complete';
-  raise notice '  page_sections rows : %  (expected 91)', n_sections;
-  raise notice '  distinct routes    : %  (expected 23)', n_routes;
-  raise notice '  pages rows         : %  (expected 17)', n_pages;
+  raise notice '  page_sections rows : %', n_sections;
+  raise notice '  distinct routes    : %', n_routes;
+  raise notice '  pages rows         : %', n_pages;
   raise notice '--------------------------------------------------';
 
   if n_sections = 0 then

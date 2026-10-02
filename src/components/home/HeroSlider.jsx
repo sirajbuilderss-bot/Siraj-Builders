@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import useContent from "../../hooks/useContent";
 import { heroSlides, toSlideShape } from "../../services/content";
 import { ArrowLeft, ArrowRight, Play, Pause } from "../ui/Icons";
+import "../../styles/home.css";
+import HeroGraphic from "../sections/HeroGraphic";
 
 /**
  * The original four slides, kept as the fallback. If Supabase has no
@@ -13,9 +15,9 @@ import { ArrowLeft, ArrowRight, Play, Pause } from "../ui/Icons";
 const STATIC_SLIDES = [
   {
     id: 0,
-    eyebrow: "01 · Residential Construction",
-    title: "Built with clarity. Managed with care.",
-    lead: "A structured construction experience for homeowners who want clear planning, responsible execution and consistent communication — from the first conversation to the final handover.",
+    eyebrow: "Siraj Builders",
+    title: "Construction, managed from the first plan to the final detail.",
+    lead: "A well-built project begins long before construction starts. Siraj Builders brings together planning, coordination and on-site execution to create a more organised construction experience for homeowners, businesses and property investors.",
     image:
       "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=2400&q=88",
     primary: { to: "/consultation", label: "Discuss Your Project" },
@@ -40,7 +42,7 @@ const STATIC_SLIDES = [
     lead: "Professional project management brings decisions, people, materials and construction stages into a clearer route from plan to completion.",
     image:
       "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=2400&q=88",
-    primary: { to: "/project-management", label: "See Our Approach" },
+    primary: { to: "/our-process", label: "See How We Work" },
     secondary: { to: "/faq", label: "Read FAQs" },
     titleTag: "h2",
   },
@@ -202,6 +204,7 @@ export default function HeroSlider() {
                 className="hero-bg"
                 style={{ backgroundImage: "url('" + slide.image + "')" }}
               />
+              <HeroGraphic variant={i} />
               {/* .container keeps the copy on the same left gutter as the
                   header logo and every section below. The inner .hero-copy
                   is what limits the measure — capping .container itself

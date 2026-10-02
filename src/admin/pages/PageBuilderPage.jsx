@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useSiteMap } from "../SiteMapContext";
 import SetupNotice from "../components/SetupNotice";
@@ -15,6 +15,8 @@ import {
   Toast,
   useToast,
 } from "../components/ui";
+import { IconClose } from "../components/icons";
+import { ArrowDown, ArrowUp } from "../../components/ui/Icons";
 import sections, {
   PAGE_REGISTRY,
   SECTION_TYPES,
@@ -22,6 +24,7 @@ import sections, {
   sectionTypeOf,
   sourceOf,
 } from "../../services/sections";
+import DEFAULTS from "../../content/defaults.json";
 
 /**
  * PAGE BUILDER
@@ -57,37 +60,104 @@ const BLANK = {
   is_enabled: true,
 };
 
-/** `items` is jsonb in the database and one-per-line in the textarea. */
-function itemsToText(items) {
-  if (!Array.isArray(items)) return "";
-  return items
-    .map((item) =>
-      typeof item === "string" ? item : [item?.title, item?.body].filter(Boolean).join(" — ")
-    )
-    .join("\n");
+/** `items` is jsonb: [{ title, body, image }]. Strings from older rows are upgraded. */
+function normaliseItems(items) {
+  if (!Array.isArray(items)) return [];
+  return items.map((item) =>
+    typeof item === "string"
+      ? { title: item, body: "", image: "" }
+      : { title: item?.title || "", body: item?.body || "", image: item?.image || "" }
+  );
 }
 
-function textToItems(text) {
-  return String(text || "")
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const split = line.indexOf(" — ");
-      if (split === -1) return { title: line, body: "" };
-      return { title: line.slice(0, split).trim(), body: line.slice(split + 3).trim() };
-    });
+/**
+ * LIST ITEMS EDITOR — one row per card / bullet / step, each with a title,
+ * an optional description and (where the section can show it) an image.
+ */
+function ItemsEditor({ items, onChange, withImages }) {
+  const update = (index, key, value) =>
+    onChange(items.map((item, i) => (i === index ? { ...item, [key]: value } : item)));
+  const move = (index, step) => {
+    const to = index + step;
+    if (to < 0 || to >= items.length) return;
+    const next = items.slice();
+    [next[index], next[to]] = [next[to], next[index]];
+    onChange(next);
+  };
+  return (
+    <div className="ad-field ad-field-wide">
+      <span className="ad-label">List items</span>
+      <p className="ad-field-help">Cards, bullet points or steps — shown in this order.</p>
+      <ol className="ad-items">
+        {items.map((item, index) => (
+          <li key={index} className="ad-item">
+            <span className="ad-item-num">{index + 1}</span>
+            <div className="ad-item-fields">
+              <input
+                type="text"
+                value={item.title}
+                placeholder="Title"
+                aria-label={`Item ${index + 1} title`}
+                onChange={(event) => update(index, "title", event.target.value)}
+              />
+              <textarea
+                rows={2}
+                value={item.body}
+                placeholder="Description (optional)"
+                aria-label={`Item ${index + 1} description`}
+                onChange={(event) => update(index, "body", event.target.value)}
+              />
+              {withImages && (
+                <div className="ad-item-image">
+                  <MediaUrlField
+                    label="Image (optional)"
+                    name={`item-${index}-image`}
+                    value={item.image}
+                    folder="pages"
+                    onChange={(_name, value) => update(index, "image", value)}
+                  />
+                </div>
+              )}
+            </div>
+            <div className="ad-item-tools">
+              <button type="button" className="ad-icon-btn" onClick={() => move(index, -1)} disabled={index === 0} aria-label={`Move item ${index + 1} up`}><ArrowUp size={15} /></button>
+              <button type="button" className="ad-icon-btn" onClick={() => move(index, 1)} disabled={index === items.length - 1} aria-label={`Move item ${index + 1} down`}><ArrowDown size={15} /></button>
+              <button type="button" className="ad-icon-btn ad-icon-danger" onClick={() => onChange(items.filter((_, i) => i !== index))} aria-label={`Remove item ${index + 1}`}><IconClose size={15} /></button>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <button type="button" className="ad-btn ad-btn-ghost ad-btn-sm" onClick={() => onChange([...items, { title: "", body: "", image: "" }])}>
+        + Add item
+      </button>
+    </div>
+  );
 }
+
+const THEMES = [
+  { value: "white", label: "White" },
+  { value: "light", label: "Light grey" },
+  { value: "dark", label: "Dark" },
+];
+const CATEGORIES = ["", "Residential", "Commercial", "Renovation", "Design & Build"];
 
 function SectionEditor({ section, pagePath, index, total, onClose, onSaved, notify }) {
   const isNew = !section?.id;
+  const documented = DEFAULTS.pages[pagePath]?.sections?.find((item) => item.key === section?.section_key);
 
-  const [form, setForm] = useState(() => ({
-    ...BLANK,
-    ...(section || {}),
-    page_path: section?.page_path || pagePath,
-  }));
-  const [itemsText, setItemsText] = useState(() => itemsToText(section?.items));
+  const [form, setForm] = useState(() => {
+    const current = { ...BLANK, ...(section || {}), page_path: section?.page_path || pagePath };
+    return {
+      ...current,
+      media_url: current.media_url || documented?.media_url || "",
+      video_url: current.video_url || documented?.video_url || "",
+    };
+  });
+  const [items, setItems] = useState(() => normaliseItems(
+    section?.items?.length ? section.items : documented?.items || []
+  ));
+  const [settings, setSettings] = useState(() => ({ ...(documented?.settings || {}), ...(section?.settings || {}) }));
+  const setSetting = (key, value) => setSettings((current) => ({ ...current, [key]: value }));
   const [errors, setErrors] = useState({});
   const [busy, setBusy] = useState(false);
 
@@ -110,6 +180,9 @@ function SectionEditor({ section, pagePath, index, total, onClose, onSaved, noti
     if (form.cta_label.trim() && !form.cta_href.trim()) {
       next.cta_href = "A button needs somewhere to go.";
     }
+    if ((settings.cta2_label || "").trim() && !(settings.cta2_href || "").trim()) {
+      next.cta2_href = "A button needs somewhere to go.";
+    }
     setErrors(next);
     return Object.keys(next).length === 0;
   };
@@ -118,6 +191,16 @@ function SectionEditor({ section, pagePath, index, total, onClose, onSaved, noti
     if (!validate()) return;
     setBusy(true);
     try {
+      const savedSettings = Object.fromEntries(
+        Object.entries(settings).filter(([, value]) => value !== "" && value !== undefined && value !== null)
+      );
+      savedSettings.editor_overrides = {
+        ...(savedSettings.editor_overrides || {}),
+        ...(shows("items") ? { items: true } : {}),
+        ...(shows("media_url") ? { media_url: true } : {}),
+        ...(shows("video_url") ? { video_url: true } : {}),
+      };
+
       const payload = {
         page_path: form.page_path,
         section_key: form.section_key || form.label,
@@ -127,7 +210,12 @@ function SectionEditor({ section, pagePath, index, total, onClose, onSaved, noti
         title: form.title || "",
         subtitle: form.subtitle || "",
         body: form.body || "",
-        items: shows("items") ? textToItems(itemsText) : form.items || [],
+        items: shows("items")
+          ? items
+              .map((item) => ({ title: item.title.trim(), body: item.body.trim(), image: (item.image || "").trim() }))
+              .filter((item) => item.title || item.body || item.image)
+          : form.items || [],
+        settings: savedSettings,
         media_url: form.media_url || "",
         video_url: form.video_url || "",
         cta_label: form.cta_label || "",
@@ -193,9 +281,14 @@ function SectionEditor({ section, pagePath, index, total, onClose, onSaved, noti
         </div>
       </div>
 
-      {!source.editable && (
+      {source.kind === "hero_slides" && (
         <Alert tone="info" title={source.label}>
-          {source.detail}
+          {source.detail} <Link to={source.to}>{source.linkLabel} →</Link>
+        </Alert>
+      )}
+      {settings.note && (
+        <Alert tone="info" title="Note from the project documentation">
+          {settings.note}
         </Alert>
       )}
 
@@ -281,30 +374,14 @@ function SectionEditor({ section, pagePath, index, total, onClose, onSaved, noti
         )}
 
         {shows("items") && (
-          <div className="ad-field ad-field-wide">
-            <label className="ad-label" htmlFor="f-items">
-              List items
-            </label>
-            <textarea
-              id="f-items"
-              name="items"
-              rows={6}
-              value={itemsText}
-              onChange={(event) => setItemsText(event.target.value)}
-              placeholder={"Clear expectations — Understand the scope before work begins\nOrganised execution — A defined process, not an improvised one"}
-              aria-describedby="f-items-help"
-            />
-            <span className="ad-field-help" id="f-items-help">
-              One item per line. To add a description, separate it from the title with
-              a dash surrounded by spaces: <code>Title — description</code>.
-            </span>
-          </div>
+          <ItemsEditor items={items} onChange={setItems} withImages={["gallery", "custom"].includes(form.section_type)} />
         )}
 
         {shows("media_url") && (
           <MediaUrlField
-            label="Image URL"
+            label="Image"
             name="media_url"
+            folder="pages"
             value={form.media_url}
             onChange={set}
             wide
@@ -343,6 +420,81 @@ function SectionEditor({ section, pagePath, index, total, onClose, onSaved, noti
           </>
         )}
 
+        {shows("cta2") && (
+          <>
+            <Field
+              label="Second button text"
+              name="cta2_label"
+              value={settings.cta2_label || ""}
+              onChange={(_n, v) => setSetting("cta2_label", v)}
+              placeholder="Optional"
+            />
+            <Field
+              label="Second button link"
+              name="cta2_href"
+              value={settings.cta2_href || ""}
+              onChange={(_n, v) => setSetting("cta2_href", v)}
+              error={errors.cta2_href}
+              placeholder="/projects"
+            />
+          </>
+        )}
+
+        {type.layouts.length > 0 && (
+          <Field
+            label="Layout"
+            name="layout"
+            type="select"
+            value={settings.layout || ""}
+            onChange={(_n, v) => setSetting("layout", v)}
+            options={[{ value: "", label: "Default" }, ...type.layouts.filter((l) => !/default/i.test(l.label)).map((l) => ({ value: l.value, label: l.label }))]}
+          />
+        )}
+
+        {shows("theme") && (
+          <Field
+            label="Background"
+            name="theme"
+            type="select"
+            value={settings.theme || "white"}
+            onChange={(_n, v) => setSetting("theme", v)}
+            options={THEMES}
+            help="Neighbouring sections with the same background join into one band."
+          />
+        )}
+
+        {shows("limit") && (
+          <Field
+            label="How many to show"
+            name="limit"
+            type="number"
+            value={settings.limit ?? ""}
+            onChange={(_n, v) => setSetting("limit", v === "" ? "" : Number(v))}
+            help="Leave blank to show all."
+          />
+        )}
+
+        {shows("category") && (
+          <>
+            <Field
+              label="Only this project type"
+              name="category"
+              type="select"
+              value={settings.category || ""}
+              onChange={(_n, v) => setSetting("category", v)}
+              options={CATEGORIES.map((c) => ({ value: c, label: c || "All types" }))}
+            />
+            <div className="ad-field">
+              <Check
+                label="Hide this section when there are no matching projects"
+                name="hide_empty"
+                checked={Boolean(settings.hide_empty)}
+                onChange={(_n, checked) => setSetting("hide_empty", checked)}
+              />
+            </div>
+          </>
+        )}
+
         <div className="ad-field ad-field-wide">
           <Check
             label="Show this section on the website"
@@ -369,6 +521,13 @@ function SectionRow({
   isOpen,
   onEdit,
   onMove,
+  onMoveTo,
+  onDragStart,
+  onDragOver,
+  onDrop,
+  onDragEnd,
+  isDragging,
+  isDropTarget,
   onToggle,
   onDuplicate,
   onDelete,
@@ -382,12 +541,27 @@ function SectionRow({
        sidebar opens a modal over a long list, and without this the admin has
        no way to tell which row they landed on once they close it. */
     <li
+      data-section-id={String(row.id)}
       className={`ad-sec${row.is_enabled ? "" : " is-off"}${isBusy ? " is-busy" : ""}${
         isOpen ? " is-open" : ""
-      }`}
+      }${isDragging ? " is-dragging" : ""}${isDropTarget ? " is-drop-target" : ""}`}
+      draggable={!isBusy}
+      onDragStart={(event) => onDragStart(event, row.id)}
+      onDragOver={(event) => onDragOver(event, row.id)}
+      onDrop={(event) => onDrop(event, row.id)}
+      onDragEnd={onDragEnd}
     >
-      <div className="ad-sec-order" aria-hidden="true">
-        {index + 1}
+      <div className="ad-sec-order-wrap">
+        <button
+          className="ad-sec-drag"
+          type="button"
+          disabled={isBusy}
+          aria-label={`Drag ${row.label || row.section_key} to reorder`}
+          title="Drag to reorder"
+        >
+          <span aria-hidden="true">⠿</span>
+        </button>
+        <div className="ad-sec-order" aria-hidden="true">{index + 1}</div>
       </div>
 
       <div className="ad-sec-body">
@@ -417,6 +591,19 @@ function SectionRow({
       </div>
 
       <div className="ad-sec-actions">
+        <label className="ad-sec-position-control">
+          <span>Position</span>
+          <select
+            value={index + 1}
+            disabled={isBusy}
+            aria-label={`Move ${row.label || row.section_key} to position`}
+            onChange={(event) => onMoveTo(row.id, Number(event.target.value))}
+          >
+            {Array.from({ length: total }, (_value, position) => (
+              <option key={position + 1} value={position + 1}>{position + 1}</option>
+            ))}
+          </select>
+        </label>
         <div className="ad-sec-move">
           <button
             className="ad-icon-btn"
@@ -503,6 +690,11 @@ export default function PageBuilderPage() {
 
   const [deleting, setDeleting] = useState(null);
   const [busyId, setBusyId] = useState(null);
+  const [draggingId, setDraggingId] = useState(null);
+  const [dropTargetId, setDropTargetId] = useState(null);
+  const [optimisticOrder, setOptimisticOrder] = useState(null);
+  const sectionListRef = useRef(null);
+  const previousSectionRects = useRef(new Map());
   /* `adding` is the only editor state not carried in the URL: a section that
      does not exist yet has no id to link to. */
   const [adding, setAdding] = useState(false);
@@ -516,7 +708,35 @@ export default function PageBuilderPage() {
     [pages, activePath]
   );
 
-  const list = useMemo(() => active?.sections || [], [active]);
+  const list = useMemo(() => {
+    const base = active?.sections || [];
+    if (!optimisticOrder || optimisticOrder.pagePath !== active?.path) return base;
+    const byId = new Map(base.map((row) => [String(row.id), row]));
+    const ordered = optimisticOrder.ids.map((id) => byId.get(String(id))).filter(Boolean);
+    return ordered.length === base.length ? ordered : base;
+  }, [active, optimisticOrder]);
+
+  useLayoutEffect(() => {
+    const root = sectionListRef.current;
+    if (!root) return;
+    const nodes = [...root.querySelectorAll("[data-section-id]")];
+    const nextRects = new Map();
+    nodes.forEach((node) => {
+      const id = node.dataset.sectionId;
+      const rect = node.getBoundingClientRect();
+      const previous = previousSectionRects.current.get(id);
+      nextRects.set(id, { left: rect.left, top: rect.top });
+      if (!previous) return;
+      const dx = previous.left - rect.left;
+      const dy = previous.top - rect.top;
+      if ((!dx && !dy) || typeof node.animate !== "function") return;
+      node.animate(
+        [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "translate(0, 0)" }],
+        { duration: 260, easing: "cubic-bezier(0.2, 0.75, 0.25, 1)" }
+      );
+    });
+    previousSectionRects.current = nextRects;
+  }, [list]);
 
   const selectPage = useCallback(
     (path) => {
@@ -559,15 +779,97 @@ export default function PageBuilderPage() {
       await work();
       await refresh();
       if (okMessage) toast.show(okMessage);
+      return true;
     } catch (error) {
       toast.show(error.message || "That did not work.", "error");
+      return false;
     } finally {
       setBusyId(null);
     }
   };
 
-  const onMove = (id, direction) =>
-    withBusy(id, () => sections.move(activePath, id, direction));
+  const saveOrder = async (id, next, message = "Section order updated.") => {
+    setOptimisticOrder({ pagePath: activePath, ids: next.map((item) => item.id) });
+    const saved = await withBusy(id, () => sections.reorder(activePath, next.map((item) => item.id)), message);
+    setOptimisticOrder(null);
+    return saved;
+  };
+
+  const onMove = (id, direction) => {
+    const from = list.findIndex((row) => String(row.id) === String(id));
+    if (from < 0) return;
+    const to = from + (direction === "up" ? -1 : 1);
+    if (to < 0 || to >= list.length) return;
+    const next = list.slice();
+    [next[from], next[to]] = [next[to], next[from]];
+    saveOrder(id, next);
+  };
+
+  const onMoveTo = (id, position) => {
+    const from = list.findIndex((row) => String(row.id) === String(id));
+    const to = Math.max(0, Math.min(list.length - 1, position - 1));
+    if (from < 0 || from === to) return;
+    const next = list.slice();
+    const [row] = next.splice(from, 1);
+    next.splice(to, 0, row);
+    saveOrder(id, next, `Section moved to position ${position}.`);
+  };
+
+  const onDragStart = (event, id) => {
+    // The entire card is draggable, but controls inside it should remain
+    // usable. Starting from the grip is always allowed; other controls are
+    // excluded so a click or select never starts an accidental drag.
+    const grip = event.target.closest?.(".ad-sec-drag");
+    const control = event.target.closest?.("button, a, select, input, textarea");
+    if (control && !grip) {
+      event.preventDefault();
+      return;
+    }
+    if (busyId) {
+      event.preventDefault();
+      return;
+    }
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", String(id));
+    const card = event.currentTarget;
+    const bounds = card.getBoundingClientRect();
+    if (event.dataTransfer.setDragImage) {
+      event.dataTransfer.setDragImage(
+        card,
+        Math.max(12, Math.min(event.clientX - bounds.left, bounds.width - 12)),
+        Math.max(12, Math.min(event.clientY - bounds.top, bounds.height - 12))
+      );
+    }
+    setDraggingId(id);
+  };
+
+  const onDragOver = (event, id) => {
+    if (draggingId == null || String(draggingId) === String(id)) return;
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+    setDropTargetId(id);
+  };
+
+  const onDrop = (event, targetId) => {
+    event.preventDefault();
+    const sourceId = draggingId ?? event.dataTransfer.getData("text/plain");
+    setDropTargetId(null);
+    setDraggingId(null);
+    if (!sourceId || String(sourceId) === String(targetId)) return;
+
+    const next = list.slice();
+    const from = next.findIndex((row) => String(row.id) === String(sourceId));
+    const to = next.findIndex((row) => String(row.id) === String(targetId));
+    if (from < 0 || to < 0) return;
+    const [row] = next.splice(from, 1);
+    next.splice(to, 0, row);
+    saveOrder(sourceId, next);
+  };
+
+  const onDragEnd = () => {
+    setDraggingId(null);
+    setDropTargetId(null);
+  };
 
   const onToggle = (row) =>
     withBusy(
@@ -577,7 +879,7 @@ export default function PageBuilderPage() {
     );
 
   const onDuplicate = (row) =>
-    withBusy(row.id, () => sections.duplicate(row.id), "Copy added at the bottom, hidden.");
+    withBusy(row.id, () => sections.duplicate(row.id), "Copy added at the bottom and shown on the website.");
 
   const confirmDelete = () =>
     withBusy(deleting.id, async () => {
@@ -670,7 +972,7 @@ export default function PageBuilderPage() {
               its original built-in layout, so nothing is broken in the meantime.
             </Empty>
           ) : (
-            <ol className="ad-sec-list">
+            <ol className="ad-sec-list" ref={sectionListRef}>
               {list.map((row, index) => (
                 <SectionRow
                   key={row.id}
@@ -681,6 +983,13 @@ export default function PageBuilderPage() {
                   isOpen={String(row.id) === activeSectionId}
                   onEdit={openSection}
                   onMove={onMove}
+                  onMoveTo={onMoveTo}
+                  onDragStart={onDragStart}
+                  onDragOver={onDragOver}
+                  onDrop={onDrop}
+                  onDragEnd={onDragEnd}
+                  isDragging={String(draggingId) === String(row.id)}
+                  isDropTarget={String(dropTargetId) === String(row.id)}
                   onToggle={onToggle}
                   onDuplicate={onDuplicate}
                   onDelete={setDeleting}

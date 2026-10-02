@@ -190,17 +190,21 @@ create policy social_links_admin_all on public.social_links
 
 -- ----------------------------------------------------------------------------
 --  ACTIVITY LOGS
---  Admins read and append. Nobody updates or deletes — an audit trail that
---  can be rewritten is not an audit trail.
+--  Admins read and append. Active admins may delete individual entries or
+--  prune old entries from the dashboard; edits remain prohibited.
 -- ----------------------------------------------------------------------------
 drop policy if exists activity_logs_admin_read   on public.activity_logs;
 drop policy if exists activity_logs_admin_insert on public.activity_logs;
+drop policy if exists activity_logs_admin_delete on public.activity_logs;
 
 create policy activity_logs_admin_read on public.activity_logs
   for select to authenticated using (public.is_admin());
 
 create policy activity_logs_admin_insert on public.activity_logs
   for insert to authenticated with check (public.is_admin());
+
+create policy activity_logs_admin_delete on public.activity_logs
+  for delete to authenticated using (public.is_admin());
 
 -- ----------------------------------------------------------------------------
 --  GRANTS
@@ -225,7 +229,7 @@ grant select, insert, update, delete on
   public.admin_users
 to authenticated;
 
-grant select, insert on public.activity_logs to authenticated;
+grant select, insert, delete on public.activity_logs to authenticated;
 
 -- ############################################################################
 -- ##  VISUAL SECTION CMS  (added by migration-01-sections.sql)

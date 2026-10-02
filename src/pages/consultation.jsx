@@ -1,5 +1,5 @@
+import SectionPage from "./SectionPage";
 import { Link } from "react-router-dom";
-import useReveal from "../hooks/useReveal";
 import useProjectForm, { VALIDATORS } from "../hooks/useProjectForm";
 import { createSubmission } from "../services/submissions";
 import { CTA } from "../config/site";
@@ -76,8 +76,7 @@ const RULES = {
 /* Module scope keeps the identity stable across renders. */
 const submitConsultation = (values) => createSubmission(values, "consultation");
 
-export default function Consultation() {
-  useReveal();
+export function ConsultationForm() {
   const fx = useProjectForm({
     initialValues: initialForm,
     rules: RULES,
@@ -92,39 +91,6 @@ export default function Consultation() {
 
   return (
     <>
-      <section className="page-hero">
-        <div className="page-hero-bg" aria-hidden="true" />
-        <div className="blueprint-grid" aria-hidden="true" />
-        <svg
-          className="consult-hero-motif"
-          viewBox="0 0 420 360"
-          aria-hidden="true"
-        >
-          <path className="consult-motif-line" d="M72 106h276v170H72z" />
-          <path
-            className="consult-motif-detail"
-            d="m74 112 136 101 136-101M72 272l102-83M348 272l-102-83"
-          />
-          <circle className="consult-motif-dot" cx="210" cy="213" r="9" />
-        </svg>
-
-        <div className="container">
-          <div className="crumbs">Siraj Builders / Consultation</div>
-          <span className="eyebrow">Start with clarity</span>
-          <h1>Start with clarity. Then build.</h1>
-          <p className="lead">
-            Before construction begins, there are important questions to answer.
-            Share the basics of your project and we'll begin with a clear
-            conversation about your requirements, property and next steps.
-          </p>
-          <div className="hero-trust">
-            <span>No obligation</span>
-            <span>Plain conversation</span>
-            <span>Clear next step</span>
-          </div>
-        </div>
-      </section>
-
       <section className="section">
         <div className="container consult-layout">
           <div className="reveal">
@@ -430,11 +396,16 @@ export default function Consultation() {
             </div>
 
             <div className="side-card dark">
-              <span className="eyebrow">Prefer to talk?</span>
-              <h3>Reach us directly.</h3>
-              {/* Contact routes degrade honestly: a detail that has not been
-                  confirmed renders as text, never as a dead tel:/mailto: link
-                  that looks clickable and does nothing. */}
+              <span className="eyebrow">
+                {CONTACT.phone.confirmed || wa || CONTACT.email.confirmed ? "Prefer to talk?" : "Another way to reach us"}
+              </span>
+              <h3>
+                {CONTACT.phone.confirmed || wa || CONTACT.email.confirmed
+                  ? "Reach us directly."
+                  : "Use the project enquiry form."}
+              </h3>
+              {/* Only confirmed direct channels are shown. The enquiry form
+                  remains available below when none have been confirmed. */}
               <div className="contact-quick">
                 {CONTACT.phone.confirmed ? (
                   <a href={`tel:${CONTACT.phone.value}`}>
@@ -444,15 +415,7 @@ export default function Consultation() {
                       <small>{CONTACT.phone.value}</small>
                     </span>
                   </a>
-                ) : (
-                  <span className="contact-quick-pending">
-                    <PhoneGlyph />
-                    <span>
-                      Call us
-                      <small>{CONTACT.phone.display}</small>
-                    </span>
-                  </span>
-                )}
+                ) : null}
 
                 {wa ? (
                   <a href={wa} target="_blank" rel="noopener noreferrer">
@@ -462,15 +425,7 @@ export default function Consultation() {
                       <small>Opens WhatsApp with your details prefilled</small>
                     </span>
                   </a>
-                ) : (
-                  <span className="contact-quick-pending">
-                    <ChatGlyph />
-                    <span>
-                      {CTA.whatsapp.label}
-                      <small>{CONTACT.whatsapp.display}</small>
-                    </span>
-                  </span>
-                )}
+                ) : null}
 
                 {CONTACT.email.confirmed ? (
                   <a href={`mailto:${CONTACT.email.value}`}>
@@ -480,15 +435,7 @@ export default function Consultation() {
                       <small>{CONTACT.email.value}</small>
                     </span>
                   </a>
-                ) : (
-                  <span className="contact-quick-pending">
-                    <MailGlyph />
-                    <span>
-                      Email us
-                      <small>{CONTACT.email.display}</small>
-                    </span>
-                  </span>
-                )}
+                ) : null}
 
                 <Link to="/contact-us">
                   <MailGlyph />
@@ -515,76 +462,15 @@ export default function Consultation() {
         </div>
       </section>
 
-      <section className="section light">
-        <div className="container">
-          <div
-            style={{ maxWidth: 640, marginBottom: "clamp(2rem, 4vw, 3rem)" }}
-          >
-            <span className="eyebrow reveal">What happens next</span>
-            <h2 className="h2 reveal" style={{ "--d": "0.1s" }}>
-              A simple path from first message to first conversation.
-            </h2>
-            <p className="muted reveal" style={{ "--d": "0.18s" }}>
-              No sales pressure. No assumptions. Just a structured way to
-              understand your project and decide whether Siraj Builders is the
-              right fit.
-            </p>
-          </div>
-
-          <div className="steps-band" data-stagger>
-            <article className="step-card reveal">
-              <div className="num">01</div>
-              <h3>You share the basics</h3>
-              <p className="muted">
-                Fill in the form with your project type, property details and
-                what you're planning.
-              </p>
-            </article>
-            <article className="step-card reveal">
-              <div className="num">02</div>
-              <h3>We review the details</h3>
-              <p className="muted">
-                Our team reads through your information and considers what the
-                project requires.
-              </p>
-            </article>
-            <article className="step-card reveal">
-              <div className="num">03</div>
-              <h3>We reach out</h3>
-              <p className="muted">
-                We contact you to clarify anything unclear and arrange an
-                initial conversation.
-              </p>
-            </article>
-            <article className="step-card reveal">
-              <div className="num">04</div>
-              <h3>We agree on next steps</h3>
-              <p className="muted">
-                Together we decide what the appropriate next step looks like —
-                or that it isn't the right fit.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section className="banner">
-        <div className="container banner-inner">
-          <div className="reveal">
-            <span className="eyebrow">Still planning?</span>
-            <h2 className="h2">Have a project in mind?</h2>
-            <p>
-              Share the basics with our team and start with a clear conversation
-              about your requirements, property and next steps.
-            </p>
-          </div>
-          <div className="banner-cta reveal" style={{ "--d": "0.15s" }}>
-            <Link className="btn btn-light" to="/projects">
-              View Our Projects <span className="arrow">→</span>
-            </Link>
-          </div>
-        </div>
-      </section>
     </>
   );
+}
+
+/**
+ * The consultation page: hero, "what happens next" and the closing banner
+ * come from the page builder (Admin → Pages → Consultation); the form itself
+ * is built into the page and always renders straight after the hero.
+ */
+export default function Consultation() {
+  return <SectionPage slots={{ hero: <ConsultationForm /> }} />;
 }

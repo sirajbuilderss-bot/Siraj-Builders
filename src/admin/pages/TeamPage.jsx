@@ -12,6 +12,8 @@ export default function TeamPage() {
       emptyTitle="No team members yet"
       emptyBody="The leadership page carries approach-level copy until real, verified biographies are supplied."
       load={team.listAll}
+      reorder={team.reorder}
+      toggle={{ field: "is_active", on: "Show", off: "Hide" }}
       create={team.create}
       update={team.update}
       remove={team.remove}

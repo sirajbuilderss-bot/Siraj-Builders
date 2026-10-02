@@ -93,7 +93,7 @@ export function SiteDataProvider({ children }) {
     const serviceLinks =
       Array.isArray(serviceRows) && serviceRows.length
         ? toServiceLinkShape(serviceRows)
-        : STATIC_SERVICES;
+        : STATIC_SERVICES.filter((service) => service.confirmed);
 
     /* ---- WhatsApp deep link ----
        Same rule as the original `whatsappLink()` in config/site.js: no link
@@ -102,7 +102,7 @@ export function SiteDataProvider({ children }) {
     const whatsappHref =
       contact.whatsapp.confirmed && contact.whatsapp.value
         ? `https://wa.me/${contact.whatsapp.value.replace(/[^\d]/g, "")}` +
-          `?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`
+          `?text=${encodeURIComponent(settingsMap?.whatsapp_message?.value || WHATSAPP_MESSAGE)}`
         : null;
 
     const settingValue = (key, fallback = "") =>

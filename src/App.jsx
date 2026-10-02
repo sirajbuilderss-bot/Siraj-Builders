@@ -3,8 +3,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Layout } from "./components/layout";
 import ErrorBoundary from "./components/layout/ErrorBoundary";
 import RouteLoader from "./components/layout/RouteLoader";
-import Seo from "./components/seo/Seo";
+import Seo, { SeoProvider } from "./components/seo/Seo";
 import { SiteDataProvider } from "./context/SiteDataContext";
+import { PageContentProvider } from "./context/PageContentContext";
 import Home from "./pages/home";
 
 /**
@@ -18,6 +19,8 @@ import Home from "./pages/home";
 
 const WhoWeAre = lazy(() => import("./pages/who-we-are"));
 const Projects = lazy(() => import("./pages/projects"));
+const Services = lazy(() => import("./pages/services"));
+const Testimonials = lazy(() => import("./pages/testimonials"));
 const ProjectDetail = lazy(() => import("./pages/project-detail"));
 const ProjectShowcase = lazy(() => import("./pages/project-showcase"));
 const OurProcess = lazy(() => import("./pages/our-process"));
@@ -72,10 +75,14 @@ function Lazy({ el }) {
 function PublicShell() {
   return (
     <SiteDataProvider>
-      <Seo />
-      <ErrorBoundary>
-        <Layout />
-      </ErrorBoundary>
+      <PageContentProvider>
+        <SeoProvider>
+          <Seo />
+          <ErrorBoundary>
+            <Layout />
+          </ErrorBoundary>
+        </SeoProvider>
+      </PageContentProvider>
     </SiteDataProvider>
   );
 }
@@ -115,6 +122,7 @@ export default function App() {
           <Route path="/affiliates" element={<Lazy el={<Affiliates />} />} />
 
           {/* ---- Services ---- */}
+          <Route path="/services" element={<Lazy el={<Services />} />} />
           <Route
             path="/residential-construction"
             element={<Lazy el={<ResidentialConstruction />} />}
@@ -147,8 +155,18 @@ export default function App() {
           {/* ---- Projects ---- */}
           <Route path="/projects" element={<Lazy el={<Projects />} />} />
           <Route
+            path="/projects/:slug"
+            element={<Lazy el={<ProjectDetail />} />}
+          />
+          {/* Old case-study URLs (/project-detail?project=slug) redirect to
+              /projects/slug from inside the page. */}
+          <Route
             path="/project-detail"
             element={<Lazy el={<ProjectDetail />} />}
+          />
+          <Route
+            path="/testimonials"
+            element={<Lazy el={<Testimonials />} />}
           />
           <Route
             path="/project-showcase"
@@ -187,10 +205,6 @@ export default function App() {
           <Route
             path="/contact"
             element={<Navigate to="/contact-us" replace />}
-          />
-          <Route
-            path="/services"
-            element={<Navigate to="/projects" replace />}
           />
 
           {/* ---- 404 ----

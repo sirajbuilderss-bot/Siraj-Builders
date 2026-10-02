@@ -94,9 +94,11 @@ export const PRIMARY_NAV = [
 
 export const COMPANY_LINKS = [
   { to: "/who-we-are", label: "About" },
+  { to: "/services", label: "Services" },
   { to: "/leadership", label: "Leadership" },
   { to: "/projects", label: "Projects" },
   { to: "/our-process", label: "Our Process" },
+  { to: "/testimonials", label: "Testimonials" },
   { to: "/faq", label: "FAQs" },
   { to: "/contact-us", label: "Contact" },
 ];
@@ -108,7 +110,6 @@ export const RESOURCE_LINKS = [
   { to: "/project-showcase", label: "Project Visibility" },
   { to: "/role-definition", label: "Project Roles" },
   { to: "/subcontractors", label: "Subcontractors" },
-  { to: "/international", label: "Overseas Clients" },
   { to: "/affiliates", label: "Partners & Affiliates" },
   { to: "/locations", label: "Service Areas" },
   { to: "/cost-index", label: "Cost Guidance" },

@@ -27,6 +27,28 @@ Yeh normal hai. Neeche wale steps se sab theek ho jayega.
 
 ---
 
+## NAYA RELEASE — pehle yeh parhein
+
+**Agar aap ne pehle kabhi `install.sql` nahi chalaya** (bilkul naya Supabase
+project): neeche STEP 1 follow karein — `install.sql` mein ab sab kuch hai
+(tables, photos ka storage, aur documentation wala poora content).
+
+**Agar aap pehle `install.sql` chala chuke hain** (purana database maujood
+hai): `install.sql` dobara chalane ki zaroorat nahi. SQL Editor mein sirf yeh
+do files, isi tarteeb se, chalayein:
+
+1. `database/migration-02-cms.sql` — project ki tasveerein/videos ki table,
+   SEO fields, aur upload ke liye storage bucket
+2. `database/migration-03-content.sql` — har page ka documentation wala
+   content, 20 FAQs, services ke cards
+
+Dono files mehfooz hain: dobara chalane se kuch kharab nahi hota, aur jo
+cheez aap ne admin panel se badli hai wo **nahi** badle gi.
+
+Tables ki poori tafseel: `database/SCHEMA.md`.
+
+---
+
 ## STEP 1 — Supabase mein tables banayein
 
 ### 1.1 — Supabase kholein
