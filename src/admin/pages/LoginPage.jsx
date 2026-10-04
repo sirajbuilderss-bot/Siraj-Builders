@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAdminAuth } from "../AdminAuthContext";
 import { isConfigured } from "../../lib/supabase";
 import { Alert } from "../components/ui";
+import PasswordInput from "../components/PasswordInput";
 
 /**
  * ADMIN LOGIN
@@ -93,9 +94,8 @@ export default function LoginPage() {
               <label className="ad-label" htmlFor="admin-password">
                 Password
               </label>
-              <input
+              <PasswordInput
                 id="admin-password"
-                type="password"
                 autoComplete="current-password"
                 value={password}
                 required

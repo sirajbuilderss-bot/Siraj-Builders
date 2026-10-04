@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../../lib/supabase";
 import { adminUsers } from "../../services/content";
 import { useAdminAuth } from "../AdminAuthContext";
 import { log } from "../../services/activity";
@@ -42,13 +44,16 @@ const ROLES = [
 ];
 
 export default function AdminUsersPage() {
-  const { profile } = useAdminAuth();
+  const { profile, signOut } = useAdminAuth();
+  const navigate = useNavigate();
   const [rows, setRows] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [busyId, setBusyId] = useState(null);
   const [removing, setRemoving] = useState(null);
   const [isRemoving, setIsRemoving] = useState(false);
+  const [permanentlyDeleting, setPermanentlyDeleting] = useState(null);
+  const [isPermanentlyDeleting, setIsPermanentlyDeleting] = useState(false);
   const toast = useToast();
 
   const refresh = useCallback(async () => {
@@ -128,6 +133,31 @@ export default function AdminUsersPage() {
       toast.show(error?.message || "Could not remove that account.", "error");
     } finally {
       setIsRemoving(false);
+    }
+  }
+
+  async function confirmPermanentDelete() {
+    if (!permanentlyDeleting) return;
+    const deletingSelf = isSelf(permanentlyDeleting);
+    setIsPermanentlyDeleting(true);
+    try {
+      await auth.deleteAdminAccount(permanentlyDeleting.id);
+      log("delete", "admin_users", {
+        entityId: permanentlyDeleting.id,
+        summary: `Permanently deleted ${permanentlyDeleting.email}`,
+      });
+      setPermanentlyDeleting(null);
+      if (deletingSelf) {
+        await signOut();
+        navigate("/admin", { replace: true });
+        return;
+      }
+      toast.show(`${permanentlyDeleting.email} was permanently deleted.`);
+      await refresh();
+    } catch (error) {
+      toast.show(error?.message || "Could not permanently delete that account.", "error");
+    } finally {
+      setIsPermanentlyDeleting(false);
     }
   }
 
@@ -351,6 +381,15 @@ export default function AdminUsersPage() {
                           >
                             Remove
                           </button>
+                          <button
+                            className="ad-btn ad-btn-danger ad-btn-sm"
+                            type="button"
+                            disabled={busy || isPermanentlyDeleting}
+                            onClick={() => setPermanentlyDeleting(row)}
+                            title="Permanently delete this Supabase Auth account and its admin profile"
+                          >
+                            Delete permanently
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -364,8 +403,8 @@ export default function AdminUsersPage() {
 
       <p className="ad-section-note">
         Removing someone revokes their panel access but leaves their login in
-        Supabase Auth. Deleting that requires the service_role key and is done
-        from the Supabase dashboard, never from this browser app.
+        Supabase Auth. Permanent deletion removes their Supabase Auth account
+        and cascades the linked admin profile; a self-deletion signs you out.
       </p>
 
       {removing && (
@@ -376,6 +415,17 @@ export default function AdminUsersPage() {
           onConfirm={confirmRemove}
           onCancel={() => setRemoving(null)}
           busy={isRemoving}
+        />
+      )}
+
+      {permanentlyDeleting && (
+        <Confirm
+          title={isSelf(permanentlyDeleting) ? "Delete your Admin account permanently?" : "Permanently delete this Admin account?"}
+          message={`This permanently deletes ${permanentlyDeleting.email} from Supabase Auth and removes the linked admin profile. They will no longer be able to sign in. This cannot be undone.${isSelf(permanentlyDeleting) ? " You will be signed out immediately." : ""}`}
+          confirmLabel="Delete permanently"
+          onConfirm={confirmPermanentDelete}
+          onCancel={() => setPermanentlyDeleting(null)}
+          busy={isPermanentlyDeleting}
         />
       )}
 

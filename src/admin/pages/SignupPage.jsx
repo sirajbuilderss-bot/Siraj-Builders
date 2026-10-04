@@ -4,6 +4,7 @@ import { useAdminAuth } from "../AdminAuthContext";
 import { isConfigured } from "../../lib/supabase";
 import { adminUsers } from "../../services/content";
 import { Alert } from "../components/ui";
+import PasswordInput from "../components/PasswordInput";
 
 /**
  * ADMIN SIGN-UP
@@ -223,9 +224,8 @@ export default function SignupPage() {
           <label className="ad-label" htmlFor="signup-password">
             Password
           </label>
-          <input
+          <PasswordInput
             id="signup-password"
-            type="password"
             autoComplete="new-password"
             value={password}
             disabled={!configured || isBusy}
@@ -241,9 +241,8 @@ export default function SignupPage() {
           <label className="ad-label" htmlFor="signup-confirm">
             Confirm password
           </label>
-          <input
+          <PasswordInput
             id="signup-confirm"
-            type="password"
             autoComplete="new-password"
             value={confirm}
             disabled={!configured || isBusy}

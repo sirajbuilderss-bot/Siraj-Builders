@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAdminAuth } from "../AdminAuthContext";
 import { auth } from "../../lib/supabase";
 import { Alert } from "../components/ui";
+import PasswordInput from "../components/PasswordInput";
 
 /**
  * RESET PASSWORD
@@ -203,9 +204,8 @@ export default function ResetPasswordPage() {
                   <label className="ad-label" htmlFor="reset-password">
                     New password
                   </label>
-                  <input
+                  <PasswordInput
                     id="reset-password"
-                    type="password"
                     autoComplete="new-password"
                     value={password}
                     disabled={isBusy}
@@ -223,9 +223,8 @@ export default function ResetPasswordPage() {
                   <label className="ad-label" htmlFor="reset-confirm">
                     Confirm new password
                   </label>
-                  <input
+                  <PasswordInput
                     id="reset-confirm"
-                    type="password"
                     autoComplete="new-password"
                     value={confirm}
                     disabled={isBusy}

@@ -555,6 +555,48 @@
   color: var(--ad-ink);
 }
 
+.ad-password-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.ad-field .ad-password-wrap input {
+  width: 100%;
+  padding-right: 46px;
+}
+
+.ad-password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 9px;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  place-items: center;
+  color: var(--ad-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.ad-password-toggle:hover {
+  color: var(--ad-ink);
+  background: var(--ad-accent-soft);
+}
+
+.ad-password-toggle:focus-visible {
+  outline: 2px solid var(--ad-accent);
+  outline-offset: 1px;
+}
+
+.ad-password-toggle svg {
+  width: 19px;
+  height: 19px;
+}
+
 .ad-field textarea {
   resize: vertical;
   min-height: 84px;

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, isConfigured } from "../../lib/supabase";
 import { Alert } from "../components/ui";
+import PasswordInput from "../components/PasswordInput";
 
 const MIN_PASSWORD = 8;
 
@@ -110,9 +111,8 @@ export default function ForgotPasswordPage() {
                   <>
                     <div className="ad-field">
                       <label className="ad-label" htmlFor="new-password">New password</label>
-                      <input
+                      <PasswordInput
                         id="new-password"
-                        type="password"
                         autoComplete="new-password"
                         value={password}
                         required
@@ -126,9 +126,8 @@ export default function ForgotPasswordPage() {
                     </div>
                     <div className="ad-field">
                       <label className="ad-label" htmlFor="confirm-password">Confirm new password</label>
-                      <input
+                      <PasswordInput
                         id="confirm-password"
-                        type="password"
                         autoComplete="new-password"
                         value={confirm}
                         required

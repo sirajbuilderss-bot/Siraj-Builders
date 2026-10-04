@@ -271,6 +271,34 @@ export const auth = {
     return data;
   },
 
+  /** Permanently removes an admin account through the authenticated Edge Function. */
+  async deleteAdminAccount(targetUserId) {
+    if (!isConfigured()) throw configError();
+    const token = await accessToken();
+    if (!token) {
+      throw new SupabaseError("Sign in as an active Admin before deleting accounts.", {
+        code: "NO_SESSION",
+      });
+    }
+    const response = await fetch(`${URL_BASE}/functions/v1/admin-account-actions`, {
+      method: "POST",
+      headers: {
+        apikey: ANON_KEY,
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ action: "delete-user", userId: targetUserId }),
+    });
+    const data = await response.json().catch(() => null);
+    if (!response.ok) {
+      throw new SupabaseError(data?.error || "Could not permanently delete that account.", {
+        status: response.status,
+        code: data?.code,
+      });
+    }
+    return data;
+  },
+
   /** Verifies a recovery email token-hash and stores the returned session. */
   async verifyRecoveryToken(tokenHash) {
     if (!tokenHash) {
