@@ -167,11 +167,20 @@ export default function SignupPage() {
         </Alert>
       )}
 
-      {(localError || error) && (
+      {error?.includes("Supabase Auth login") ? (
+        <Alert tone="info" title="This email already has a login">
+          {error}
+          <p className="ad-login-foot">
+            <Link to="/admin">Sign in</Link>
+            {" · "}
+            <Link to="/admin/forgot-password">Reset password</Link>
+          </p>
+        </Alert>
+      ) : (localError || error) ? (
         <Alert tone="error" title="Could not create the account">
           {localError || error}
         </Alert>
-      )}
+      ) : null}
 
       <form onSubmit={onSubmit} noValidate>
         <div className="ad-field">

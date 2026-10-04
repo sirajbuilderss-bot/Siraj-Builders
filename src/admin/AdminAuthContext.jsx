@@ -123,7 +123,22 @@ export function AdminAuthProvider({ children }) {
 
     try {
       const session = await auth.signIn(email.trim(), password);
-      const row = await fetchProfile(session.user?.id);
+      let row = await fetchProfile(session.user?.id);
+
+      // Auth credentials and the panel roster are separate records. If this
+      // email already exists in Supabase Auth but has no admin_users row, let
+      // the database safely enrol it on first sign-in (first active account
+      // becomes Admin; later accounts remain pending for approval).
+      if (!row) {
+        try {
+          await adminUsers.claimAccess(
+            session.user?.user_metadata?.full_name || ""
+          );
+          row = await fetchProfile(session.user?.id);
+        } catch {
+          // A missing enrolment function/table still fails closed below.
+        }
+      }
 
       if (!row || !row.is_active) {
         // An existing-but-inactive row means "approved account, switched off
@@ -214,7 +229,7 @@ export function AdminAuthProvider({ children }) {
     } catch (err) {
       const message =
         err?.status === 422 || /already registered|already been/i.test(err?.message || "")
-          ? "An account already exists for that email. Try signing in, or reset the password."
+          ? "This email already has a Supabase Auth login. It may not have a row in the admin_users table yet. Sign in with this account (or reset its password); the first account will be enrolled as Admin if no active Admin exists."
           : err?.message || "Could not create the account. Please try again.";
       setError(message);
       throw new Error(message);
