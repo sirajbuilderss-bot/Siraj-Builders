@@ -29,7 +29,7 @@
 .pcard-link:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-md);
-  border-color: rgba(78, 124, 134, 0.4);
+  border-color: rgba(var(--accent-deep-rgb), 0.4);
 }
 .pcard-link:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
@@ -37,7 +37,7 @@
   position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background: linear-gradient(135deg, var(--light-2), #d9e3e5);
+  background: linear-gradient(135deg, var(--light-2), var(--off-white));
 }
 .pcard-media img {
   width: 100%;

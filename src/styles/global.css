@@ -23,6 +23,10 @@
   --deep: #000000;
   --deeper: #000000;
   --accent: #e0a531;
+  --accent-rgb: 224, 165, 49;
+  --accent-deep-rgb: 102, 102, 102;
+  --gradient-start-rgb: 224, 165, 49;
+  --gradient-end-rgb: 102, 102, 102;
   --accent-strong: #666666;
   --accent-deep: #666666;
   --amber: #c8a55a;
@@ -41,7 +45,7 @@
   /* Brand palette (source of truth) */
   --brand-ink: #212a31;
   --brand-slate: #2e3944;
-  --brand-teal: #124e66;
+  --brand-teal: var(--accent);
   --brand-sage: #748d92;
   --brand-mist: #d3d9d4;
   --brand-paper: #ffffff;
@@ -71,7 +75,7 @@ body {
   font-size: 16px;
   line-height: 1.65;
   color: var(--ink);
-  background: #fff;
+  background: var(--light);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -477,7 +481,7 @@ ul {
     padding-left 0.3s var(--ease);
 }
 .drop-panel a:hover {
-  background: rgba(157, 193, 200, 0.13);
+  background: rgba(var(--accent-rgb), 0.13);
   color: #fff;
   padding-left: 1.15rem;
 }
@@ -559,7 +563,7 @@ ul {
   overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, #141b20, #0e1317);
+  background: var(--grad-dark);
   border-left: 1px solid var(--line-dark);
   transform: translateX(102%);
   /* Hidden (not just off-screen) while closed: its shadow no longer bleeds
@@ -830,7 +834,7 @@ ul {
   font-weight: 800;
   letter-spacing: 0.06em;
   color: var(--accent-deep);
-  background: rgba(157, 193, 200, 0.2);
+  background: rgba(var(--accent-rgb), 0.2);
 }
 
 .card h3 {
@@ -912,8 +916,8 @@ ul {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--accent);
-  background: rgba(157, 193, 200, 0.14);
-  border: 1px solid rgba(157, 193, 200, 0.3);
+  background: rgba(var(--accent-rgb), 0.14);
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
 }
 
 .link {
@@ -952,7 +956,7 @@ ul {
   letter-spacing: -0.04em;
   line-height: 1;
   margin-bottom: 0.55rem;
-  background: linear-gradient(135deg, #ffffff 25%, #9dc1c8);
+  background: linear-gradient(135deg, #ffffff 25%, var(--accent));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1064,7 +1068,7 @@ ul {
   overflow: hidden;
   padding: clamp(3.2rem, 7vw, 5.8rem) 0;
   color: #fff;
-  background: linear-gradient(120deg, #2b3a42 0%, #151d22 62%);
+  background: var(--grad-dark);
 }
 .banner::before {
   content: "";
@@ -1076,7 +1080,7 @@ ul {
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(157, 193, 200, 0.28),
+    rgba(var(--accent-rgb), 0.28),
     transparent 68%
   );
   pointer-events: none;
@@ -1091,7 +1095,7 @@ ul {
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(157, 193, 200, 0.14),
+    rgba(var(--accent-rgb), 0.14),
     transparent 68%
   );
   pointer-events: none;
@@ -1454,8 +1458,8 @@ ul {
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(157, 193, 200, 0.16) 0%,
-    rgba(157, 193, 200, 0.05) 40%,
+    rgba(var(--accent-rgb), 0.16) 0%,
+    rgba(var(--accent-rgb), 0.05) 40%,
     transparent 70%
   );
   pointer-events: none;
@@ -1551,7 +1555,7 @@ ul {
 .field input:hover,
 .field select:hover,
 .field textarea:hover {
-  border-color: rgba(18, 78, 102, 0.35);
+  border-color: rgba(var(--accent-rgb), 0.35);
 }
 
 .field input:focus,
@@ -1559,7 +1563,7 @@ ul {
 .field textarea:focus {
   outline: none;
   border-color: var(--brand-teal);
-  box-shadow: 0 0 0 4px rgba(18, 78, 102, 0.12);
+  box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.12);
 }
 
 .field .error-msg {
@@ -1588,7 +1592,7 @@ ul {
 .field.is-valid input,
 .field.is-valid select,
 .field.is-valid textarea {
-  border-color: rgba(18, 78, 102, 0.45);
+  border-color: rgba(var(--accent-rgb), 0.45);
 }
 
 .btn[disabled],
@@ -1625,9 +1629,9 @@ ul {
   display: flex;
 }
 .form-notice.is-success {
-  background: rgba(18, 78, 102, 0.08);
-  border: 1px solid rgba(18, 78, 102, 0.25);
-  color: #10394a;
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.25);
+  color: var(--accent-deep);
 }
 .form-notice.is-error {
   background: #fff3f2;
@@ -1655,12 +1659,12 @@ ul {
     background 0.35s var(--ease);
 }
 .faq-item:hover {
-  border-color: rgba(18, 78, 102, 0.35);
+  border-color: rgba(var(--accent-rgb), 0.35);
 }
 
 .faq-item.is-open {
   border-color: var(--brand-teal);
-  box-shadow: 0 22px 48px -30px rgba(18, 78, 102, 0.75);
+  box-shadow: 0 22px 48px -30px rgba(var(--accent-rgb), 0.75);
 }
 
 .faq-q {
@@ -1977,8 +1981,8 @@ ul {
 }
 .grid .mini:hover {
   transform: translateY(-5px);
-  border-color: rgba(18, 78, 102, 0.3);
-  box-shadow: 0 26px 54px -34px rgba(18, 78, 102, 0.6);
+  border-color: rgba(var(--accent-rgb), 0.3);
+  box-shadow: 0 26px 54px -34px rgba(var(--accent-rgb), 0.6);
 }
 .grid .mini h3 {
   font-size: 1.05rem;

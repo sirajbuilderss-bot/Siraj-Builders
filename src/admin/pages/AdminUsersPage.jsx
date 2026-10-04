@@ -56,7 +56,14 @@ export default function AdminUsersPage() {
     try {
       const data = await adminUsers.listAll();
       setRows(data || []);
-      setLoadError("");
+      const currentAdminIsVisible = (data || []).some(
+        (row) => row.id === profile?.id
+      );
+      setLoadError(
+        currentAdminIsVisible
+          ? ""
+          : "The roster did not return your signed-in Admin account. Check that the deployed Supabase database has the latest admin_users RLS policies from database/policies.sql."
+      );
     } catch (error) {
       setLoadError(
         error?.message ||
@@ -65,10 +72,22 @@ export default function AdminUsersPage() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [profile?.id]);
 
   useEffect(() => {
     refresh();
+  }, [refresh]);
+
+  // A different admin may approve, change, or remove an account from another
+  // device while this page is open. Refresh the shared Supabase roster when
+  // this tab becomes visible again; the button remains available for an
+  // immediate manual refresh.
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") refresh();
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
   }, [refresh]);
 
   const activeAdmins = rows.filter(
@@ -112,14 +131,50 @@ export default function AdminUsersPage() {
     }
   }
 
+  async function copySignupLink() {
+    try {
+      await navigator.clipboard.writeText(`${window.location.origin}/admin/signup`);
+      toast.show("Sign-up link copied. Share it with the person you want to add.");
+    } catch {
+      toast.show("Copy failed. Share this link: /admin/signup", "error");
+    }
+  }
+
   const pending = rows.filter((row) => !row.is_active);
+
+  if (profile?.role !== "admin") {
+    return (
+      <Alert tone="error" title="Administrator access required">
+        Only an active Admin can view or manage the shared admin user roster.
+        Your current role is <b>{profile?.role || "unknown"}</b>.
+      </Alert>
+    );
+  }
 
   return (
     <>
       <p className="ad-section-note">
-        Who can sign in to this panel. New sign-ups appear here as pending and
-        can see nothing until an admin approves them.
+        This roster is stored in the shared Supabase project, so every active
+        Admin sees the same accounts from any device. New accounts join through
+        <code> /admin/signup</code> and appear here as pending; choose their
+        role, then approve them to grant access.
       </p>
+
+      <div className="ad-card" style={{ marginBottom: 16 }}>
+        <div className="ad-card-body">
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+            <strong>Role permissions</strong>
+            <button className="ad-btn ad-btn-ghost ad-btn-sm" type="button" onClick={copySignupLink}>
+              Copy sign-up link
+            </button>
+          </div>
+          <div className="ad-cell-muted" style={{ marginTop: 8 }}>
+            <b>Admin</b>: manage website, settings, and admin users. &nbsp;
+            <b>Editor</b>: manage website content. &nbsp;
+            <b>Viewer</b>: read-only panel access.
+          </div>
+        </div>
+      </div>
 
       {loadError && (
         <Alert tone="error" title="Could not load the roster">
@@ -153,11 +208,21 @@ export default function AdminUsersPage() {
       <div className="ad-card">
         {isLoading ? (
           <Loading label="Loading the roster…" />
+        ) : rows.length === 0 && loadError ? (
+          <Empty title="Roster unavailable">
+            <p>
+              Admin access is confirmed, but the shared roster query did not
+              return your own account. Apply
+              <code> database/migration-09-admin-users-roster.sql</code> in the
+              Supabase SQL Editor, then refresh this page.
+            </p>
+          </Empty>
         ) : rows.length === 0 ? (
           <Empty title="No admin accounts yet">
             <p>
-              The first person to sign up at <code>/admin/signup</code> becomes
-              the administrator of this panel.
+              Share <code>/admin/signup</code> with the person you want to add.
+              After they sign up, refresh this shared roster, set their role,
+              then approve their account.
             </p>
           </Empty>
         ) : (
@@ -167,6 +232,7 @@ export default function AdminUsersPage() {
                 <tr>
                   <th>Person</th>
                   <th>Role</th>
+                  <th>Permissions</th>
                   <th>Status</th>
                   <th>Last seen</th>
                   <th aria-label="Actions" />
@@ -194,6 +260,14 @@ export default function AdminUsersPage() {
                           Joined{" "}
                           {formatDate(row.created_at, { withTime: false })}
                         </div>
+                      </td>
+
+                      <td className="ad-cell-muted">
+                        {row.role === "admin"
+                          ? "Full access + manage users"
+                          : row.role === "editor"
+                            ? "Edit website content"
+                            : "Read-only"}
                       </td>
 
                       <td>

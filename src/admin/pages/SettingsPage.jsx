@@ -135,7 +135,7 @@ export default function SettingsPage() {
     } catch (err) {
       setError(
         err?.message ||
-          "Could not load settings. Check your Supabase connection and that database/seed.sql has been run."
+          "Could not load settings. Check your Supabase connection and run database/install.sql (or migrations 02 and 03) against this Supabase project."
       );
       setRows([]);
     }
@@ -372,7 +372,7 @@ export default function SettingsPage() {
 
             {socials.length === 0 ? (
               <Empty title="No social profiles configured">
-                <p>Run database/seed.sql to create the default four.</p>
+                <p>Run database/seed.sql to create the starter social profiles.</p>
               </Empty>
             ) : (
               socials.map((row) => {

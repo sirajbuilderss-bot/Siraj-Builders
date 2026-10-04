@@ -84,19 +84,19 @@ with checks as (
 
   -- 5-9. CONTENT — website ka text
   select 5, 'PAGES', count(*), 17,
-         case when count(*) >= 17 then 'OK' else 'MISSING — seed.sql chalayein' end
+         case when count(*) >= 17 then 'OK' else 'MISSING — migration-03-content.sql chalayein' end
   from public.pages
   union all
   select 6, 'SERVICES', count(*), 7,
-         case when count(*) >= 7 then 'OK' else 'MISSING — seed.sql chalayein' end
+         case when count(*) >= 7 then 'OK' else 'MISSING — migration-03-content.sql chalayein' end
   from public.services
   union all
   select 7, 'FAQS', count(*), 19,
-         case when count(*) >= 19 then 'OK' else 'MISSING — seed.sql chalayein' end
+         case when count(*) >= 19 then 'OK' else 'MISSING — migration-03-content.sql chalayein' end
   from public.faqs
   union all
   select 8, 'SETTINGS', count(*), 13,
-         case when count(*) >= 13 then 'OK' else 'MISSING — seed.sql chalayein' end
+         case when count(*) >= 13 then 'OK' else 'MISSING — migration-03-content.sql chalayein' end
   from public.site_settings
   union all
   select 9, 'HERO SLIDES', count(*), 4,
@@ -105,11 +105,17 @@ with checks as (
 
   union all
 
+  select 10, 'SOCIAL LINKS', count(*), 6,
+         case when count(*) >= 6 then 'OK' else 'MISSING — seed.sql chalayein' end
+  from public.social_links
+
+  union all
+
   -- 10. PAGE SECTIONS — admin panel ka "Pages" screen isi par chalta hai.
   --     Yeh check pehle mojood nahi tha, isi liye table delete ho jane par
   --     verify.sql "sab OK" keh deta tha aur masla sirf admin panel kholne
   --     par nazar aata tha.
-  select 10, 'PAGE SECTIONS',
+  select 11, 'PAGE SECTIONS',
          pg_temp.row_count('public.page_sections'), 91,
          case
            when pg_temp.row_count('public.page_sections') = -1
@@ -124,7 +130,7 @@ with checks as (
   union all
 
   -- 11. Har page ke sections mojood hain ya nahi. 23 routes honi chahiyen.
-  select 11, 'SECTION ROUTES',
+  select 12, 'SECTION ROUTES',
          pg_temp.distinct_count('public.page_sections', 'page_path'), 23,
          case
            when pg_temp.distinct_count('public.page_sections', 'page_path') = -1
@@ -138,7 +144,7 @@ with checks as (
 
   -- 12. ADMIN ACCOUNT — shuru mein 0 hona SAHI hai.
   --     /admin/signup par pehla account banayein; wahi admin ban jayega.
-  select 12, 'ADMIN USERS', count(*), 0,
+  select 13, 'ADMIN USERS', count(*), 0,
          case when count(*) = 0
               then 'KHALI — ab /admin/signup par pehla account banayein'
               else 'OK — ' || count(*)::text || ' account maujood hai' end

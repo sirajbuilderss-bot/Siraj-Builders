@@ -10,7 +10,8 @@ This is the complete database the website and admin panel use.
 
 1. `database/migration-02-cms.sql` — new table, new columns, storage bucket, policies
 2. `database/migration-03-content.sql` — the documented page content and FAQs
-3. `database/migration-04-activity-retention.sql` — lets active admins delete individual audit entries or prune entries older than a chosen retention period
+3. `database/seed.sql` — starter social profiles and homepage hero slides
+4. `database/migration-04-activity-retention.sql` — lets active admins delete individual audit entries or prune entries older than a chosen retention period
 
 These migrations are safe to run more than once. Migration 03 only replaces seeded rows that nobody has edited (`updated_at = created_at`), so your own edits are kept.
 

@@ -32,7 +32,7 @@ const LEGACY_DEFAULTS = {
 };
 
 const THEME_VARIABLES = {
-  theme_accent: ["--accent", "--accent-light"],
+  theme_accent: ["--accent"],
   theme_accent_deep: ["--accent-deep", "--accent-darker", "--accent-strong"],
   theme_dark: ["--deep", "--deep-2", "--deep-3"],
   theme_deeper: ["--deeper"],
@@ -63,6 +63,17 @@ function rgba(hex, alpha) {
   return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 }
 
+function rgbTriplet(hex) {
+  const value = hex.slice(1);
+  return [0, 2, 4].map((index) => Number.parseInt(value.slice(index, index + 2), 16)).join(", ");
+}
+
+function tint(hex, amount = 0.58) {
+  const value = hex.slice(1);
+  const channels = [0, 2, 4].map((index) => Number.parseInt(value.slice(index, index + 2), 16));
+  return `#${channels.map((channel) => Math.round(channel + (255 - channel) * amount).toString(16).padStart(2, "0")).join("")}`;
+}
+
 export default function ThemeSync() {
   const { data } = useContent(settings.map, null);
 
@@ -84,6 +95,16 @@ export default function ThemeSync() {
     const gradientEnd = isHex(gradientEndValue) ? gradientEndValue : DEFAULTS.theme_gradient_end;
     const headerValue = resolveThemeValue("theme_header", data?.theme_header?.value);
     const header = isHex(headerValue) ? headerValue : DEFAULTS.theme_header;
+    const darkValue = resolveThemeValue("theme_dark", data?.theme_dark?.value);
+    const dark = isHex(darkValue) ? darkValue : DEFAULTS.theme_dark;
+    const deeperValue = resolveThemeValue("theme_deeper", data?.theme_deeper?.value);
+    const deeper = isHex(deeperValue) ? deeperValue : DEFAULTS.theme_deeper;
+    root.style.setProperty("--accent-light", tint(accent));
+    root.style.setProperty("--accent-rgb", rgbTriplet(accent));
+    root.style.setProperty("--accent-deep-rgb", rgbTriplet(accentDeep));
+    root.style.setProperty("--gradient-start-rgb", rgbTriplet(gradientStart));
+    root.style.setProperty("--gradient-end-rgb", rgbTriplet(gradientEnd));
+    root.style.setProperty("--grad-dark", `linear-gradient(120deg, ${dark} 0%, ${deeper} 100%)`);
     root.style.setProperty("--accent-soft", rgba(accent, 0.12));
     root.style.setProperty("--accent-glow", rgba(accent, 0.28));
     const cursorValue = resolveThemeValue("theme_cursor", data?.theme_cursor?.value);

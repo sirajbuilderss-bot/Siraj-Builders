@@ -68,13 +68,31 @@ fs.mkdirSync(path.join(ROOT, "src/content"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "src/content/defaults.json"), JSON.stringify(json, null, 1) + "\n");
 
 /* ---------- legacy keys: the 91 sections seeded by migration-01 ---------- */
-const seedSql = fs.readFileSync(path.join(__dirname, "seed.sql"), "utf8");
+const legacySectionsSql = fs.readFileSync(path.join(__dirname, "seed-sections.sql"), "utf8");
 const legacyPairs = [...new Set(
-  [...seedSql.matchAll(/\('(\/[a-z-]*)', '[^']*', '([a-z0-9-]+)'/g)].map((m) => `${m[1]}|${m[2]}`)
+  [...legacySectionsSql.matchAll(/\('(\/[a-z-]*)', '[^']*', '([a-z0-9-]+)'/g)].map((m) => `${m[1]}|${m[2]}`)
 )].map((s) => s.split("|"));
-const legacyFaqs = [...new Set(
-  [...seedSql.matchAll(/insert into public\.faqs[^\n]*\nselect id, '((?:[^']|'')*)'/g)].map((m) => m[1].replace(/''/g, "'"))
-)];
+const legacyFaqs = [
+  "What services does Siraj Builders provide?",
+  "What types of construction projects do you handle?",
+  "Do you work on residential projects?",
+  "Do you handle commercial construction?",
+  "How do I start a construction project with Siraj Builders?",
+  "What information is needed before starting a project?",
+  "How is the project scope determined?",
+  "How is a construction estimate prepared?",
+  "What factors affect construction costs?",
+  "Can I request a project quotation?",
+  "How long does a construction project usually take?",
+  "What factors can affect the project timeline?",
+  "What is the typical construction process?",
+  "How do you manage project progress?",
+  "How is communication handled during a project?",
+  "How do you maintain construction quality?",
+  "How are materials selected?",
+  "How can I request a consultation?",
+  "How can I contact Siraj Builders?",
+];
 
 /* ---------- SQL ---------- */
 const out = [];

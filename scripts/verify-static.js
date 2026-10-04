@@ -355,9 +355,10 @@ notes.push(
 /* ---- SQL sanity ---- */
 
 const dbDir = path.join(ROOT, "database");
-for (const name of ["schema.sql", "policies.sql", "seed.sql", "install.sql"]) {
+const sectionSql = new Set(["schema.sql", "policies.sql", "install.sql", "seed-sections.sql", "seed-sections-2.sql"]);
+for (const name of ["schema.sql", "policies.sql", "seed.sql", "install.sql", "seed-sections.sql", "seed-sections-2.sql"]) {
   const sql = fs.readFileSync(path.join(dbDir, name), "utf8");
-  if (!/page_sections/.test(sql)) {
+  if (sectionSql.has(name) && !/page_sections/.test(sql)) {
     problems.push(`database/${name} — does not mention page_sections`);
   }
   const open = (sql.match(/\(/g) || []).length;
@@ -366,7 +367,13 @@ for (const name of ["schema.sql", "policies.sql", "seed.sql", "install.sql"]) {
     problems.push(`database/${name} — unbalanced parentheses (${open} open, ${close} close)`);
   }
 }
-notes.push("Checked 4 SQL files for the sections table and balanced parentheses");
+const baseSeed = fs.readFileSync(path.join(dbDir, "seed.sql"), "utf8");
+for (const table of ["social_links", "hero_slides"]) {
+  if (!new RegExp(`insert into public\\.${table}`, "i").test(baseSeed)) {
+    problems.push(`database/seed.sql — missing starter rows for ${table}`);
+  }
+}
+notes.push("Checked schema, policies, install, section seeds, and base seed SQL");
 
 /* ------------------------------------------------------------------ report */
 

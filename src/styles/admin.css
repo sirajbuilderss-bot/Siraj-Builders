@@ -29,8 +29,8 @@
   --ad-sidebar-hover: var(--accent-soft);
 
   --ad-bg:            var(--light);
-  --ad-surface:       var(--white);
-  --ad-surface-2:     var(--off-white);
+  --ad-surface:       color-mix(in srgb, var(--light) 22%, var(--white));
+  --ad-surface-2:     color-mix(in srgb, var(--light) 52%, var(--white));
 
   --ad-ink:           var(--ink);
   --ad-ink-2:         var(--ink-2);
@@ -1645,7 +1645,7 @@
   letter-spacing: -0.02em;
   display: grid;
   place-items: center;
-  box-shadow: 0 6px 18px -8px rgba(157, 193, 200, 0.9);
+  box-shadow: 0 6px 18px -8px rgba(var(--accent-rgb), 0.9);
 }
 
 .ad-brand-text b { font-size: 14.5px; letter-spacing: -0.01em; }
@@ -1788,11 +1788,11 @@
   background: var(--ad-accent);
   color: var(--ad-on-accent);
   border-color: transparent;
-  box-shadow: 0 6px 16px -10px rgba(78, 124, 134, 0.9);
+  box-shadow: 0 6px 16px -10px rgba(var(--accent-deep-rgb), 0.9);
 }
 .ad-btn-primary:hover:not(:disabled) {
   background: var(--ad-accent-hover);
-  box-shadow: 0 10px 22px -12px rgba(53, 90, 99, 0.95);
+  box-shadow: 0 10px 22px -12px rgba(var(--accent-deep-rgb), 0.95);
 }
 
 .ad-btn-ghost {
@@ -3062,7 +3062,7 @@
   padding: 22px 24px;
   border: 1px solid var(--ad-line);
   border-radius: var(--ad-radius-lg);
-  background: linear-gradient(120deg, var(--ad-surface) 0%, #f6f9f9 100%);
+  background: linear-gradient(120deg, var(--ad-surface) 0%, var(--ad-surface-2) 100%);
   box-shadow: var(--ad-shadow-xs);
 }
 .admin-root .ad-dashboard-kicker {

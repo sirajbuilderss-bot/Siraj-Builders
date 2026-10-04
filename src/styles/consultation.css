@@ -56,8 +56,8 @@
   pointer-events: none;
   opacity: 0.2;
   background-image:
-    linear-gradient(rgba(157, 193, 200, 0.35) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(157, 193, 200, 0.35) 1px, transparent 1px);
+    linear-gradient(rgba(var(--accent-rgb), 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--accent-rgb), 0.35) 1px, transparent 1px);
   background-size: 70px 70px;
   mask-image: radial-gradient(ellipse at 80% 50%, #000 0%, transparent 62%);
   -webkit-mask-image: radial-gradient(
@@ -403,7 +403,7 @@
 .field input:hover,
 .field select:hover,
 .field textarea:hover {
-  border-color: rgba(111, 154, 163, 0.45);
+  border-color: rgba(var(--accent-deep-rgb), 0.45);
 }
 
 .field input:focus,
@@ -484,7 +484,7 @@
   border-radius: 50%;
   background: var(--grad-accent);
   color: #0d1216;
-  box-shadow: 0 18px 40px -18px rgba(111, 154, 163, 0.9);
+  box-shadow: 0 18px 40px -18px rgba(var(--accent-deep-rgb), 0.9);
 }
 
 .form-success h3 {
@@ -560,7 +560,7 @@
   height: 15px;
   border-radius: 50%;
   background: var(--accent-soft);
-  border: 1px solid rgba(111, 154, 163, 0.4);
+  border: 1px solid rgba(var(--accent-deep-rgb), 0.4);
 }
 
 .side-list li::after {
@@ -579,8 +579,8 @@
   color: rgba(255, 255, 255, 0.82);
 }
 .side-card.dark .side-list li::before {
-  background: rgba(157, 193, 200, 0.14);
-  border-color: rgba(157, 193, 200, 0.4);
+  background: rgba(var(--accent-rgb), 0.14);
+  border-color: rgba(var(--accent-rgb), 0.4);
 }
 .side-card.dark .side-list li::after {
   border-color: var(--accent);
@@ -610,7 +610,7 @@
 }
 .contact-quick a:hover {
   background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(157, 193, 200, 0.4);
+  border-color: rgba(var(--accent-rgb), 0.4);
   transform: translateX(4px);
 }
 .contact-quick svg {

@@ -27,9 +27,10 @@
  * Each source file keeps its section-CMS statements last, under a banner
  * containing VISUAL SECTION CMS. Everything from that banner to the end of
  * the file is the section CMS for that concern — the table in schema.sql,
- * the policies in policies.sql, the rows in seed.sql. If that banner is ever
- * removed or the block stops being last, this script fails loudly rather
- * than quietly writing a repair file that repairs nothing.
+ * the policies in policies.sql. Legacy section rows are kept separately in
+ * seed-sections.sql and seed-sections-2.sql. If either schema/policy banner
+ * moves, this script fails loudly rather than quietly writing a repair file
+ * that repairs nothing.
  */
 
 const fs = require("fs");
@@ -205,7 +206,7 @@ const REPAIR_HEADER = `-- ======================================================
 --  SIRAJ BUILDERS — PAGE SECTIONS REPAIR
 --  ---------------------------------------------------------------------------
 --  GENERATED FILE — do not edit by hand.
---  Source: the section-CMS blocks of schema.sql, policies.sql and seed.sql
+--  Source: schema.sql, policies.sql, seed-sections.sql and seed-sections-2.sql
 --  Rebuild with: node database/build-sql.js
 --
 --  YEH FILE KAB CHALANI HAI
@@ -272,14 +273,17 @@ notify pgrst, 'reload schema';`;
 
 function buildRepair() {
   const parts = [
-    ["1 OF 3 — TABLE, INDEXES, TRIGGER, REORDER FUNCTION", "schema.sql"],
-    ["2 OF 3 — ROW LEVEL SECURITY", "policies.sql"],
-    ["3 OF 3 — THE 91 SECTIONS", "seed.sql"],
+    ["1 OF 4 — TABLE, INDEXES, TRIGGER, REORDER FUNCTION", "schema.sql"],
+    ["2 OF 4 — ROW LEVEL SECURITY", "policies.sql"],
+    ["3 OF 4 — LEGACY PAGE SECTIONS", "seed-sections.sql"],
+    ["4 OF 4 — ADDITIONAL PAGE SECTIONS", "seed-sections-2.sql"],
   ];
 
   let out = REPAIR_HEADER;
   for (const [label, file] of parts) {
-    let block = sectionBlockOf(file);
+    let block = file.startsWith("seed-sections")
+      ? read(file)
+      : sectionBlockOf(file);
     if (file === "schema.sql") {
       block = without(
         block,
