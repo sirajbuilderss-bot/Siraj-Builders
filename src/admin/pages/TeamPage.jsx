@@ -5,12 +5,12 @@ import { Pill } from "../components/ui";
 export default function TeamPage() {
   return (
     <ResourceManager
-      title="Team members"
+      title="About project roles"
       singular="Team member"
       entity="team_members"
-      description="Leadership and team profiles. Add only verified names and biographies."
-      emptyTitle="No team members yet"
-      emptyBody="The leadership page carries approach-level copy until real, verified biographies are supplied."
+      description="These cards appear in the Project roles section on the About page. Add, edit, reorder, publish or hide each role here."
+      emptyTitle="No About role cards yet"
+      emptyBody="Add the first verified role card to replace the site's sample project roles."
       load={team.listAll}
       reorder={team.reorder}
       toggle={{ field: "is_active", on: "Show", off: "Hide" }}

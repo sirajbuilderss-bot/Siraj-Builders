@@ -65,6 +65,7 @@ export const SOCIAL_PROFILES = [
   { key: "instagram", label: "Instagram", href: "", confirmed: false },
   { key: "linkedin", label: "LinkedIn", href: "", confirmed: false },
   { key: "youtube", label: "YouTube", href: "", confirmed: false },
+  { key: "tiktok", label: "TikTok", href: "", confirmed: false },
 ];
 
 /* ---------------- NAVIGATION ----------------

@@ -38,8 +38,8 @@
   background: var(--light-2);
   color: var(--muted);
 }
-.fq-chips button:hover { border-color: var(--accent-deep); }
-.fq-chips button.is-active { background: var(--deep); border-color: var(--deep); color: #fff; }
+.fq-chips button:hover { border-color: var(--accent); color: var(--accent-deep); }
+.fq-chips button.is-active { background: var(--accent); border-color: var(--accent); color: var(--deep); }
 .fq-chips button.is-active span { background: rgba(255, 255, 255, 0.16); color: #fff; }
 
 .fq-search input {

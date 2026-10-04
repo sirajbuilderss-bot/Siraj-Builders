@@ -7,6 +7,7 @@ import Seo, { SeoProvider } from "./components/seo/Seo";
 import { SiteDataProvider } from "./context/SiteDataContext";
 import { PageContentProvider } from "./context/PageContentContext";
 import Home from "./pages/home";
+import ThemeSync from "./components/ThemeSync";
 
 /**
  * Routing.
@@ -94,6 +95,7 @@ export default function App() {
     <BrowserRouter
       future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
+      <ThemeSync />
       <Routes>
         {/* ---- Admin panel ----
             Mounted outside the public shell so it gets no site header,

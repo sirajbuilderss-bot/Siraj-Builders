@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { settings, socialLinks } from "../../services/content";
+import { resolveThemeValue, THEME_DEFAULTS } from "../../components/ThemeSync";
 import { log } from "../../services/activity";
 import {
   Alert,
@@ -36,6 +37,7 @@ const GROUP_LABELS = {
   navigation: "Header & navigation",
   forms: "Forms",
   general: "General",
+  theme: "Theme colors",
 };
 
 const CONFIRMABLE = new Set([
@@ -58,6 +60,31 @@ const LONG_FIELDS = new Set([
   "contact_address",
 ]);
 
+const THEME_FIELDS = [
+  ["theme_accent", "Primary accent", "Main buttons, highlights and links"],
+  ["theme_accent_deep", "Accent dark", "Badges, active controls and emphasis"],
+  ["theme_dark", "Dark surface", "Dark sections and admin surfaces"],
+  ["theme_deeper", "Deep surface", "Hero and sidebar background"],
+  ["theme_light", "Light surface", "Light sections and soft backgrounds"],
+  ["theme_ink", "Text color", "Main website and admin text"],
+  ["theme_gradient_start", "Gradient start", "First color used by gradient buttons"],
+  ["theme_gradient_end", "Gradient end", "Second color used by gradient buttons"],
+  ["theme_header", "Header color", "Website header and top navigation"],
+  ["theme_footer", "Footer color", "Website footer background"],
+  ["theme_backtop", "Back-to-top arrow", "Bottom-to-top button color"],
+].map(([key, label, help], index) => ({
+  key,
+  label,
+  help,
+  value: THEME_DEFAULTS[key],
+  display: "",
+  is_confirmed: true,
+  group_name: "theme",
+  sort_order: index * 10 + 10,
+}));
+const THEME_KEYS = new Set(THEME_FIELDS.map((field) => field.key));
+const HEX_COLOR = /^#[0-9a-f]{6}$/i;
+
 export default function SettingsPage() {
   const [rows, setRows] = useState(null);
   const [draft, setDraft] = useState({});
@@ -75,12 +102,19 @@ export default function SettingsPage() {
         socialLinks.listAll(),
       ]);
 
-      setRows(settingRows);
+      const existingKeys = new Set(settingRows.map((row) => row.key));
+      setRows([
+        ...settingRows,
+        ...THEME_FIELDS.filter((row) => !existingKeys.has(row.key)),
+      ]);
       setDraft(
-        settingRows.reduce(
+        [...settingRows, ...THEME_FIELDS.filter((row) => !existingKeys.has(row.key))].reduce(
           (acc, row) => ({
             ...acc,
-            [row.key]: { value: row.value, is_confirmed: row.is_confirmed },
+            [row.key]: {
+              value: THEME_KEYS.has(row.key) ? resolveThemeValue(row.key, row.value) : row.value,
+              is_confirmed: row.is_confirmed,
+            },
           }),
           {}
         )
@@ -118,9 +152,30 @@ export default function SettingsPage() {
     setSocialDraft((prev) => ({ ...prev, [id]: { ...prev[id], ...patch } }));
   }
 
+  function resetTheme() {
+    setDraft((prev) => ({
+      ...prev,
+      ...Object.fromEntries(
+        THEME_FIELDS.map((field) => [
+          field.key,
+          { ...(prev[field.key] || {}), value: THEME_DEFAULTS[field.key], is_confirmed: true },
+        ])
+      ),
+    }));
+    toast.show("Default theme colors loaded. Click Save changes to apply them.");
+  }
+
   async function saveAll() {
     setIsSaving(true);
     try {
+      const invalidTheme = THEME_FIELDS.find(
+        (field) => !HEX_COLOR.test(String(draft[field.key]?.value || ""))
+      );
+      if (invalidTheme) {
+        toast.show(`${invalidTheme.label} must use a hex code like #9dc1c8.`, "error");
+        return;
+      }
+
       const changedSettings = rows.filter(
         (row) =>
           draft[row.key] &&
@@ -136,6 +191,14 @@ export default function SettingsPage() {
           is_confirmed: Boolean(
             draft[row.key].is_confirmed && String(draft[row.key].value).trim()
           ),
+          ...(THEME_KEYS.has(row.key)
+            ? {
+                display: row.display || "",
+                group_name: row.group_name || "theme",
+                label: row.label || row.key,
+                sort_order: row.sort_order || 0,
+              }
+            : {}),
         });
       }
 
@@ -213,11 +276,19 @@ export default function SettingsPage() {
         <div className="ad-card-body">
           {Object.entries(grouped).map(([group, items]) => (
             <div className="ad-settings-group" key={group}>
-              <h3>{GROUP_LABELS[group] || group}</h3>
+              <div className="ad-settings-group-head">
+                <h3>{GROUP_LABELS[group] || group}</h3>
+                {group === "theme" && (
+                  <button className="ad-btn ad-btn-ghost ad-btn-sm" type="button" onClick={resetTheme}>
+                    Reset to defaults
+                  </button>
+                )}
+              </div>
 
               {items.map((row) => {
                 const current = draft[row.key] || { value: "", is_confirmed: false };
                 const isLong = LONG_FIELDS.has(row.key);
+                const isThemeColor = THEME_KEYS.has(row.key);
 
                 return (
                   <div key={row.key}>
@@ -226,7 +297,30 @@ export default function SettingsPage() {
                         {row.label || row.key}
                       </label>
 
-                      {isLong ? (
+                      {isThemeColor ? (
+                        <div className="ad-color-control">
+                          <input
+                            id={`set-${row.key}`}
+                            type="color"
+                            value={current.value || THEME_DEFAULTS[row.key]}
+                            onChange={(event) =>
+                              setSetting(row.key, { value: event.target.value })
+                            }
+                          />
+                          <input
+                            className="ad-color-hex"
+                            type="text"
+                            value={current.value || THEME_DEFAULTS[row.key]}
+                            maxLength={7}
+                            pattern="#[0-9a-fA-F]{6}"
+                            aria-label={`${row.label} hex code`}
+                            onChange={(event) =>
+                              setSetting(row.key, { value: event.target.value })
+                            }
+                          />
+                          <span className="ad-field-help">{row.help}</span>
+                        </div>
+                      ) : isLong ? (
                         <textarea
                           id={`set-${row.key}`}
                           rows={row.key === "whatsapp_message" ? 7 : 3}

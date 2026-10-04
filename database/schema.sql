@@ -331,6 +331,7 @@ create table if not exists public.team_members (
   bio         text not null default '',
   image_url   text not null default '',
   linkedin_url text not null default '',
+  is_sample   boolean not null default false,
   is_active   boolean not null default true,
   sort_order  integer not null default 0,
   created_at  timestamptz not null default now(),

@@ -29,7 +29,7 @@ export function toEmbed(url) {
     if (!id) return null;
     return {
       kind: "iframe",
-      src: `https://www.youtube-nocookie.com/embed/${id}?rel=0`,
+      src: `https://www.youtube-nocookie.com/embed/${id}?rel=0&autoplay=1&mute=1`,
       thumb: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
     };
   }
@@ -37,13 +37,13 @@ export function toEmbed(url) {
   if (host.endsWith("vimeo.com")) {
     const m = u.pathname.match(/(\d{6,})/);
     if (!m) return null;
-    return { kind: "iframe", src: `https://player.vimeo.com/video/${m[1]}`, thumb: "" };
+    return { kind: "iframe", src: `https://player.vimeo.com/video/${m[1]}?autoplay=1&muted=1`, thumb: "" };
   }
 
   if (host === "drive.google.com") {
     const m = u.pathname.match(/\/file\/d\/([^/]+)/) || [null, u.searchParams.get("id")];
     if (!m[1]) return null;
-    return { kind: "iframe", src: `https://drive.google.com/file/d/${m[1]}/preview`, thumb: "" };
+    return { kind: "iframe", src: `https://drive.google.com/file/d/${m[1]}/preview?autoplay=1`, thumb: "" };
   }
 
   if (/\.(mp4|webm|ogg|mov)(\?|$)/i.test(u.pathname) || u.pathname.includes("/storage/v1/object/public/")) {

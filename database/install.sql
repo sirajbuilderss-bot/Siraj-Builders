@@ -380,6 +380,7 @@ create table if not exists public.team_members (
   bio         text not null default '',
   image_url   text not null default '',
   linkedin_url text not null default '',
+  is_sample   boolean not null default false,
   is_active   boolean not null default true,
   sort_order  integer not null default 0,
   created_at  timestamptz not null default now(),
@@ -1118,6 +1119,20 @@ on conflict (key) do nothing;
 insert into public.site_settings (key, value, display, is_confirmed, group_name, label, sort_order)
 values ('footer_tagline', 'Construction, managed from the first plan to the final detail.', '', true, 'footer', 'Footer tagline', 10)
 on conflict (key) do nothing;
+insert into public.site_settings (key, value, display, is_confirmed, group_name, label, sort_order)
+values
+  ('theme_accent', '#e0a531', '', true, 'theme', 'Primary accent', 10),
+  ('theme_accent_deep', '#666666', '', true, 'theme', 'Accent dark', 20),
+  ('theme_dark', '#000000', '', true, 'theme', 'Dark surface', 30),
+  ('theme_deeper', '#000000', '', true, 'theme', 'Deep surface', 40),
+  ('theme_light', '#f4f6f5', '', true, 'theme', 'Light surface', 50),
+  ('theme_ink', '#000000', '', true, 'theme', 'Text color', 60),
+  ('theme_gradient_start', '#e0a531', '', true, 'theme', 'Gradient start', 70),
+  ('theme_gradient_end', '#666666', '', true, 'theme', 'Gradient end', 80),
+  ('theme_header', '#000000', '', true, 'theme', 'Header color', 90),
+  ('theme_footer', '#000000', '', true, 'theme', 'Footer color', 100),
+  ('theme_backtop', '#e0a531', '', true, 'theme', 'Back-to-top arrow', 110)
+on conflict (key) do nothing;
 
 -- ---------- Social links (all unconfirmed — footer row stays hidden) ----------
 insert into public.social_links (key, label, href, is_confirmed, sort_order)
@@ -1131,6 +1146,9 @@ values ('linkedin', 'LinkedIn', '', false, 30)
 on conflict (key) do nothing;
 insert into public.social_links (key, label, href, is_confirmed, sort_order)
 values ('youtube', 'YouTube', '', false, 40)
+on conflict (key) do nothing;
+insert into public.social_links (key, label, href, is_confirmed, sort_order)
+values ('tiktok', 'TikTok', '', false, 50)
 on conflict (key) do nothing;
 
 -- ---------- Services ----------

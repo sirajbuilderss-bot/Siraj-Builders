@@ -112,11 +112,11 @@ export function SectionVideo({ section }) {
             src={video.src}
             title={section.title || section.label || "Related video"}
             loading="lazy"
-            allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+            allow="autoplay; accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen"
             referrerPolicy="strict-origin-when-cross-origin"
           />
         ) : video?.kind === "file" ? (
-          <video src={video.src} controls preload="none" playsInline aria-label={section.title || "Related video"} />
+          <video src={video.src} controls autoPlay muted loop preload="none" playsInline aria-label={section.title || "Related video"} />
         ) : (
           <a className="sx-video-external" href={section.video_url} target="_blank" rel="noopener noreferrer">
             <span className="sx-video-play" aria-hidden="true">▶</span>

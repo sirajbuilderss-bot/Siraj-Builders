@@ -18,17 +18,17 @@
      different product bolted onto the site. Everything below now derives
      from --accent, so changing the brand in theme.css moves the admin panel
      with it — which is the behaviour theme.css already promises. */
-  --ad-accent:        var(--accent-deep);
-  --ad-accent-hover:  var(--accent-darker);
+  --ad-accent:        var(--accent);
+  --ad-accent-hover:  var(--accent-deep);
   --ad-accent-soft:   var(--accent-soft);
   --ad-accent-line:   var(--accent);
-  --ad-on-accent:     #ffffff;
+  --ad-on-accent:     var(--deep);
 
   --ad-sidebar:       var(--deeper);
   --ad-sidebar-2:     var(--deep-2);
-  --ad-sidebar-hover: rgba(157, 193, 200, 0.12);
+  --ad-sidebar-hover: var(--accent-soft);
 
-  --ad-bg:            #f3f6f6;
+  --ad-bg:            var(--light);
   --ad-surface:       var(--white);
   --ad-surface-2:     var(--off-white);
 
@@ -287,6 +287,7 @@
   text-decoration: none;
   transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
   white-space: nowrap;
+  background-image: none;
 }
 
 .ad-btn:disabled {
@@ -299,7 +300,7 @@
   color: #fff;
 }
 .ad-btn-primary:hover:not(:disabled) {
-  background: #2c2e33;
+  background: var(--ad-accent-hover);
 }
 
 .ad-btn-accent {
@@ -307,7 +308,7 @@
   color: #16171a;
 }
 .ad-btn-accent:hover:not(:disabled) {
-  background: #a5762f;
+  background: var(--ad-accent-hover);
 }
 
 .ad-btn-ghost {
@@ -316,7 +317,7 @@
   color: var(--ad-ink);
 }
 .ad-btn-ghost:hover:not(:disabled) {
-  border-color: #b9b9b4;
+  border-color: var(--ad-accent-line);
 }
 
 .ad-btn-danger {
@@ -589,6 +590,28 @@
   color: var(--ad-muted);
   margin-top: 4px;
 }
+
+.ad-color-control {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+.ad-color-control input[type="color"] {
+  width: 3rem;
+  height: 2.5rem;
+  padding: 0.2rem;
+  border: 1px solid var(--ad-line);
+  border-radius: 8px;
+  background: var(--ad-surface);
+  cursor: pointer;
+}
+.ad-color-hex {
+  width: 9rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.02em;
+}
+.ad-color-control .ad-field-help { flex-basis: 100%; }
 
 .ad-check {
   display: flex;
@@ -1010,7 +1033,15 @@
   margin-bottom: 26px;
 }
 
-.ad-settings-group > h3 {
+.ad-settings-group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ad-settings-group > h3,
+.ad-settings-group-head > h3 {
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.11em;
@@ -1018,6 +1049,9 @@
   margin-bottom: 13px;
   padding-bottom: 7px;
   border-bottom: 1px solid var(--ad-line);
+}
+.ad-settings-group-head > h3 {
+  flex: 1;
 }
 
 /* --------------------------------------------------------- responsive --- */
@@ -2821,11 +2855,12 @@
   border-radius: var(--ad-radius-sm);
   border: 1px solid var(--ad-line-strong);
   background: var(--ad-surface);
-  color: var(--ad-ink-2);
+  color: var(--ad-accent);
   font: inherit;
   font-size: 0.95rem;
   line-height: 1;
   cursor: pointer;
+  background-image: none;
   transition: background 0.15s, border-color 0.15s;
 }
 .admin-root .ad-icon-btn:hover:not(:disabled) { border-color: var(--ad-accent); background: var(--ad-accent-soft); }

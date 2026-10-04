@@ -6,19 +6,19 @@
 
 :root {
   /* ---------- PRIMARY BRAND COLORS ---------- */
-  --accent:              #9dc1c8;
-  --accent-light:        #b6d6dc;
-  --accent-deep:         #4e7c86;
-  --accent-darker:       #355a63;
-  --accent-strong:       #6f9aa3;
-  --accent-glow:         rgba(157, 193, 200, 0.28);
-  --accent-soft:         rgba(157, 193, 200, 0.12);
+  --accent:              #e0a531;
+  --accent-light:        #efc66b;
+  --accent-deep:         #666666;
+  --accent-darker:       #000000;
+  --accent-strong:       #666666;
+  --accent-glow:         rgba(224, 165, 49, 0.28);
+  --accent-soft:         rgba(224, 165, 49, 0.12);
 
-  /* ---------- DARK BACKGROUNDS ---------- */
-  --deeper:              #0f1418;
-  --deep:                #151c21;
-  --deep-2:              #1b242a;
-  --deep-3:              #232f36;
+  --grad-accent:         linear-gradient(135deg, #e0a531 0%, #666666 100%);
+  --grad-accent-soft:    linear-gradient(135deg, rgba(224,165,49,.9) 0%, rgba(102,102,102,.9) 100%);
+  --deep:                #000000;
+  --deep-2:              #222222;
+  --deep-3:              #333333;
 
   /* ---------- LIGHT BACKGROUNDS ---------- */
   --light:               #f4f6f5;
@@ -27,9 +27,9 @@
   --off-white:           #fafbfb;
 
   /* ---------- TEXT COLORS ---------- */
-  --ink:                 #212a31;
-  --ink-2:               #2f3a42;
-  --ink-soft:            #2f3a42;   /* alias used by some pages */
+  --ink:                 #000000;
+  --ink-2:               #333333;
+  --ink-soft:            #333333;   /* alias used by some pages */
   --muted:               #6b7a80;
   --muted-dark:          #93a2a7;
   --text-on-dark:        #ffffff;
@@ -49,8 +49,8 @@
   --shadow-accent:       0 20px 45px -20px rgba(111, 154, 163, 0.55);
 
   /* ---------- GRADIENTS ---------- */
-  --grad-accent:         linear-gradient(135deg, #b6d6dc 0%, #6f9aa3 100%);
-  --grad-accent-soft:    linear-gradient(135deg, rgba(182,214,220,.9) 0%, rgba(111,154,163,.9) 100%);
+  --grad-accent:         #9dc1c8;
+  --grad-accent-soft:    #9dc1c8;
   --grad-dark:           linear-gradient(120deg, #2b3a42 0%, #151d22 62%);
   --grad-hero-overlay:   linear-gradient(
                             100deg,
@@ -203,17 +203,21 @@ a { color: inherit; text-decoration: none; }
 }
 
 .btn-primary {
-  background: var(--grad-accent);
-  color: #0d1216;
+  background: var(--accent);
+  color: var(--deep);
   box-shadow: var(--shadow-accent);
 }
-.btn-primary:hover { box-shadow: 0 26px 50px -20px rgba(111,154,163,.7); }
+.btn-primary:hover { box-shadow: var(--shadow-accent), 0 0 0 3px var(--accent-soft); }
 
 .btn-light {
   background: #fff;
   color: var(--ink);
 }
-.btn-light:hover { box-shadow: 0 20px 40px -22px rgba(0,0,0,.6); }
+.btn-light:hover {
+  background: var(--accent);
+  color: var(--deep);
+  box-shadow: var(--shadow-accent);
+}
 
 .btn-ghost {
   background: transparent;
@@ -221,9 +225,9 @@ a { color: inherit; text-decoration: none; }
   border-color: var(--line-strong);
 }
 .btn-ghost:hover {
-  background: var(--ink);
-  color: #fff;
-  border-color: var(--ink);
+  background: var(--accent);
+  color: var(--deep);
+  border-color: var(--accent);
 }
 
 .btn-block { width: 100%; }
@@ -247,7 +251,7 @@ a { color: inherit; text-decoration: none; }
   border-bottom: 1px solid currentColor;
   transition: color 0.3s var(--ease-out);
 }
-.link:hover { color: var(--accent-darker); }
+.link:hover { color: var(--accent); }
 
 /* ---------- SKIP LINK ---------- */
 .skip {

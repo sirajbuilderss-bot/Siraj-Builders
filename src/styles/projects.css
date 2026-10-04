@@ -167,8 +167,8 @@
   gap: 0.5rem;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
-.pfilters button:hover { border-color: var(--accent-deep); }
-.pfilters button.is-active { background: var(--deep); color: #fff; border-color: var(--deep); }
+.pfilters button:hover { border-color: var(--accent); color: var(--accent-deep); }
+.pfilters button.is-active { background: var(--accent); color: var(--deep); border-color: var(--accent); }
 .pfilters-count {
   font-size: 0.75rem;
   padding: 0.05rem 0.45rem;
@@ -336,7 +336,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid var(--accent);
   background: rgba(255, 255, 255, 0.06);
   color: #fff;
   display: grid;
@@ -345,19 +345,19 @@
   transition: background 0.2s;
 }
 .lightbox-close:hover,
-.lightbox-nav:hover { background: rgba(255, 255, 255, 0.16); }
+.lightbox-nav:hover { background: var(--accent); color: var(--deep); }
 .lightbox-close { top: 1rem; right: 1rem; }
 .lightbox-nav { top: 50%; transform: translateY(-50%); }
 .lightbox-nav.is-prev { left: 1rem; }
 .lightbox-nav.is-next { right: 1rem; }
 
 /* videos */
-.cs-videos { display: grid; gap: 1.25rem; max-width: 980px; }
+.cs-videos { display: grid; gap: 1.25rem; max-width: 1180px; }
 .cs-videos.is-multi { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: none; }
 .cs-video { margin: 0; }
 .cs-video-frame {
   position: relative;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 21 / 9;
   border-radius: 16px;
   overflow: hidden;
   background: #000;
@@ -401,6 +401,7 @@
   .cs-hero { min-height: 0; padding-top: calc(var(--header-h) + 48px); }
   .cs-facts dl > div { grid-template-columns: 6rem 1fr; }
   .cs-gallery--2 { grid-template-columns: 1fr; }
+  .cs-video-frame { aspect-ratio: 16 / 9; }
 }
 @media (prefers-reduced-motion: reduce) {
   .pcard-link:hover { transform: none; }

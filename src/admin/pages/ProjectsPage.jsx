@@ -55,7 +55,7 @@ export default function ProjectsPage() {
       title="Projects"
       singular="Project"
       entity="projects"
-      description="Case studies shown on /projects and /projects/<slug>. Featured projects appear first. Keep a project hidden until its case study is complete and verified."
+      description="Case studies shown on /projects and /projects/<slug>. The website follows the order set here. Keep a project hidden until its case study is complete and verified."
       emptyTitle="No projects yet"
       emptyBody="The portfolio shows its honest empty state until the first project is published. Add only real, verified work."
       load={projects.listAll}
@@ -238,7 +238,7 @@ export default function ProjectsPage() {
         { name: "tags", label: "Internal tags", help: "Comma separated. Not shown on the website." },
 
         { type: "heading", label: "Publishing" },
-        { name: "is_featured", label: "Feature this project", type: "checkbox", help: "Featured projects show first and carry a badge." },
+        { name: "is_featured", label: "Feature this project", type: "checkbox", help: "Adds a Featured badge to the project card." },
         { name: "is_active", label: "Show on the live site", type: "checkbox", help: "Keep off until the case study is complete." },
       ]}
       beforeSave={(values) => ({

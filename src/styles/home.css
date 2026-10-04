@@ -222,9 +222,9 @@
 
 .hero-arrow:hover,
 .hero-arrow:focus-visible {
-  background: #fff;
-  color: #101619;
-  border-color: #fff;
+  background: var(--accent);
+  color: var(--deep);
+  border-color: var(--accent);
   transform: scale(1.07);
   box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.85);
 }
@@ -252,9 +252,9 @@
 }
 .hero-pause:hover,
 .hero-pause:focus-visible {
-  background: rgba(255, 255, 255, 0.92);
-  color: #101619;
-  border-color: #fff;
+  background: var(--accent);
+  color: var(--deep);
+  border-color: var(--accent);
 }
 
 /* ---- Slide counter ---- */

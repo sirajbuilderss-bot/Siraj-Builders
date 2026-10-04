@@ -27,10 +27,13 @@ const ICONS = {
   youtube: (
     <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33zM9.75 15.02V8.48l5.75 3.27z" />
   ),
+  tiktok: (
+    <path d="M15 4v10.5a4.5 4.5 0 1 1-4-4.47v3.05a1.5 1.5 0 1 0 1 1.42V4h3c.27 1.52 1.24 2.7 3 3.25V10c-1.16-.2-2.17-.67-3-1.38V4z" />
+  ),
 };
 
 function SocialIcon({ name }) {
-  const filled = name === "facebook" || name === "linkedin" || name === "youtube";
+  const filled = name === "facebook" || name === "linkedin" || name === "youtube" || name === "tiktok";
   return (
     <svg
       width="16"
@@ -96,10 +99,9 @@ export default function Footer() {
     to: settingValue("footer_cta_href", CTA.primary.to),
   };
 
-  /* Unchanged rule: a profile appears only when it is confirmed AND has a
-     URL, so the social row stays hidden rather than linking to a platform
-     homepage. */
-  const activeSocials = SOCIAL_PROFILES.filter((s) => s.confirmed && s.href);
+    /* A saved URL is enough to show a social icon. Empty rows stay hidden, so
+      an unconfigured platform can never link to its generic homepage. */
+    const activeSocials = SOCIAL_PROFILES.filter((s) => s.href);
 
   return (
     <footer className="footer">

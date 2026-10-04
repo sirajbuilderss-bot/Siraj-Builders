@@ -156,10 +156,10 @@ export const NAV = [
       },
       {
         to: "/admin/team",
-        label: "Team",
+        label: "About roles",
         icon: IconUsers,
-        title: "Team members",
-        sub: "Leadership and team profiles",
+        title: "About project roles",
+        sub: "Add and update the cards shown on the About page",
       },
     ],
   },

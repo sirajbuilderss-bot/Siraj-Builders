@@ -66,13 +66,12 @@ export async function reorderRows(table, orderedIds) {
  * ========================================================================== */
 
 export const projects = {
-  /** Live projects, featured first, then by the admin's order. */
+  /** Live projects in the order set by the admin. */
   async listPublic() {
     const { data } = await db
       .from("projects")
       .select("*")
       .eq("is_active", true)
-      .order("is_featured", { ascending: false })
       .order("sort_order", { ascending: true })
       .run();
     return data || [];
@@ -311,7 +310,17 @@ export const settings = {
       .eq("key", key)
       .select("*")
       .run();
-    return Array.isArray(data) ? data[0] : data;
+    if (Array.isArray(data) && data.length) {
+      notifyPageContentUpdated();
+      return data[0];
+    }
+    const inserted = await db
+      .from("site_settings")
+      .insert({ key, ...patch })
+      .select("*")
+      .run();
+    notifyPageContentUpdated();
+    return Array.isArray(inserted.data) ? inserted.data[0] : inserted.data;
   },
 
   /** Saves several settings in one pass. */

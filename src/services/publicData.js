@@ -197,7 +197,9 @@ export const getTeam = () =>
   cached("team", async () => {
     let rows = [];
     try { rows = await teamService.listPublic(); } catch { rows = []; }
-    return rows.length ? rows : SAMPLE_TEAM_ROLES;
+    return rows.length
+      ? rows.map((row) => ({ ...row, isSample: Boolean(row.is_sample) }))
+      : SAMPLE_TEAM_ROLES;
   });
 
 /* ---------------- FAQs ---------------- */

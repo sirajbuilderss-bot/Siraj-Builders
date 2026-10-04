@@ -96,13 +96,13 @@
 /* A light outline button for dark backgrounds */
 .btn-outline-light {
   background: transparent;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.32);
+  color: var(--accent-light);
+  border: 1px solid var(--accent);
 }
 .btn-outline-light:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.6);
-  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--deep);
 }
 
 /* ---------- images ---------- */
@@ -491,7 +491,7 @@
    CTA BANNER
    ========================================================================== */
 
-.sx-cta { padding: clamp(40px, 5vw, 72px) 0; background: #fff; }
+.sx-cta { padding: clamp(40px, 5vw, 72px) 0; background: var(--light); }
 .sx-cta--light { background: var(--light); }
 .sx-cta-inner {
   display: grid;
@@ -500,13 +500,31 @@
   align-items: center;
   padding: clamp(2rem, 4.5vw, 3.75rem);
   border-radius: 26px;
-  color: #fff;
-  background:
-    radial-gradient(90% 140% at 100% 0%, rgba(157, 193, 200, 0.22), transparent 55%),
-    var(--grad-dark);
+  color: var(--ink);
+  background: linear-gradient(120deg, var(--accent-soft) 0%, var(--light) 58%, var(--off-white) 100%);
+  border: 1px solid var(--accent);
+  box-shadow: var(--shadow-md);
   overflow: hidden;
 }
-.sx-cta--light .sx-cta-inner { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+.sx-cta-inner .eyebrow { color: var(--accent-deep); }
+.sx-cta-inner .sx-body p { color: var(--ink-2); opacity: 0.82; }
+.sx-cta .sx-cta-copy .h2,
+.sx-cta .sx-cta-copy .sx-body p { color: var(--deep); opacity: 1; }
+.sx-cta-inner .btn-light {
+  background: var(--accent);
+  color: var(--deep);
+}
+.sx-cta-inner .btn-outline-light {
+  color: var(--deep);
+  border-color: var(--accent-deep);
+  background: rgba(255, 255, 255, 0.32);
+}
+.sx-cta-inner .btn-outline-light:hover {
+  background: var(--accent);
+  color: var(--deep);
+  border-color: var(--accent);
+}
+.sx-cta--light .sx-cta-inner { background: linear-gradient(135deg, var(--accent-soft), var(--light)); color: var(--ink); border-color: var(--accent); }
 .sx-cta-copy .eyebrow { color: var(--accent); }
 .sx-cta-copy .h2 { color: inherit; margin-bottom: 0.75rem; max-width: 22ch; }
 .sx-cta-copy .sx-body p { color: var(--text-on-dark-soft); }
@@ -904,10 +922,10 @@
 }
 .sx-video-frame {
   position: relative;
-  width: min(100%, 1040px);
+  width: min(100%, 1180px);
   margin-inline: auto;
   overflow: hidden;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 21 / 9;
   border-radius: clamp(14px, 2vw, 24px);
   background: #0d1418;
   box-shadow: 0 24px 72px rgba(13, 20, 24, 0.18);
@@ -916,7 +934,7 @@
 .sx-video-frame video {
   position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: cover;
 }
-.sx-video-caption { width: min(100%, 1040px); margin: 0.8rem auto 0; color: var(--muted); font-size: 0.86rem; }
+.sx-video-caption { width: min(100%, 1180px); margin: 0.8rem auto 0; color: var(--muted); font-size: 0.86rem; }
 .sx-video-external {
   position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 0.9rem;
   color: white; background: radial-gradient(circle at center, rgba(157,193,200,.18), transparent 26%), linear-gradient(135deg,#273942,#10171b);
@@ -928,7 +946,7 @@
 
 .team-sample-label { display: inline-flex; margin-bottom: .55rem; color: var(--accent-deep); font-size: .68rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 @media (max-width: 640px) {
-  .sx-video-frame { border-radius: 14px; }
+  .sx-video-frame { aspect-ratio: 16 / 9; border-radius: 14px; }
 }
 
 /* Keep this after the graph animation declarations so OS reduced-motion

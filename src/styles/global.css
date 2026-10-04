@@ -18,13 +18,13 @@
    0. TOKENS & RESET
    ============================================================ */
 :root {
-  --ink: #212a31;
-  --ink-soft: #38454d;
-  --deep: #151c21;
-  --deeper: #0f1418;
-  --accent: #9dc1c8;
-  --accent-strong: #6f9aa3;
-  --accent-deep: #4e7c86;
+  --ink: #000000;
+  --ink-soft: #333333;
+  --deep: #000000;
+  --deeper: #000000;
+  --accent: #e0a531;
+  --accent-strong: #666666;
+  --accent-deep: #666666;
   --amber: #c8a55a;
   --amber-deep: #8a6a2f;
   --paper: #ffffff;
@@ -45,7 +45,7 @@
   --brand-sage: #748d92;
   --brand-mist: #d3d9d4;
   --brand-paper: #ffffff;
-  --accent-glow: rgba(157, 193, 200, 0.24);
+  --accent-glow: rgba(224, 165, 49, 0.24);
 }
 
 *,
@@ -181,13 +181,13 @@ ul {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #a9cdd4, #6f9aa3);
-  color: #0d1216;
-  box-shadow: 0 12px 32px -14px rgba(157, 193, 200, 0.9);
+  background: var(--accent);
+  color: var(--deep);
+  box-shadow: var(--shadow-accent);
 }
 .btn-primary:hover {
   transform: translateY(-3px);
-  box-shadow: 0 22px 46px -18px rgba(157, 193, 200, 1);
+  box-shadow: var(--shadow-accent), 0 0 0 3px var(--accent-soft);
 }
 
 .btn-outline {
@@ -197,9 +197,9 @@ ul {
   backdrop-filter: blur(8px);
 }
 .btn-outline:hover {
-  background: #fff;
-  color: var(--ink);
-  border-color: #fff;
+  background: var(--accent);
+  color: var(--deep);
+  border-color: var(--accent);
   transform: translateY(-3px);
 }
 
@@ -209,9 +209,9 @@ ul {
   background: transparent;
 }
 .btn-ghost:hover {
-  background: var(--ink);
-  color: #fff;
-  border-color: var(--ink);
+  background: var(--accent);
+  color: var(--deep);
+  border-color: var(--accent);
   transform: translateY(-3px);
 }
 
@@ -221,7 +221,9 @@ ul {
 }
 .btn-light:hover {
   transform: translateY(-3px);
-  box-shadow: 0 20px 40px -18px rgba(0, 0, 0, 0.6);
+  background: var(--accent);
+  color: var(--deep);
+  box-shadow: var(--shadow-accent);
 }
 
 /* ============================================================
@@ -234,7 +236,7 @@ ul {
 }
 
 .topbar {
-  background: var(--deep);
+  background: var(--header-bg, var(--deep));
   color: #a9b6ba;
   font-size: 0.82rem;
   overflow: hidden;
@@ -311,11 +313,11 @@ ul {
   opacity: 0;
 }
 .site-header.is-scrolled .nav-wrap {
-  background: rgba(15, 20, 24, 0.88);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  backdrop-filter: blur(18px) saturate(150%);
-  border-bottom-color: var(--line-dark);
-  box-shadow: 0 20px 50px -30px rgba(0, 0, 0, 0.95);
+  background: var(--header-bg-transparent, rgba(0, 0, 0, 0.84));
+  -webkit-backdrop-filter: blur(12px) saturate(125%);
+  backdrop-filter: blur(12px) saturate(125%);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 14px 36px -28px rgba(0, 0, 0, 0.8);
 }
 .site-header.menu-open .nav-wrap {
   background: transparent;
@@ -343,9 +345,9 @@ ul {
   font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.02em;
-  color: #0d1216;
-  background: linear-gradient(135deg, #b6d6dc, #6f9aa3);
-  box-shadow: 0 10px 26px -12px rgba(157, 193, 200, 0.95);
+  color: var(--deep);
+  background: var(--accent);
+  box-shadow: var(--shadow-accent);
   transition: transform 0.45s var(--ease);
 }
 .brand:hover .brand-mark {
@@ -406,6 +408,11 @@ ul {
   margin-left: 0.7rem;
   padding: 0.72rem 1.25rem;
   font-size: 0.85rem;
+  background: var(--accent);
+}
+.nav-cta:hover,
+.nav-cta:focus-visible {
+  background: var(--accent);
 }
 
 .chevron {
@@ -1116,7 +1123,7 @@ ul {
    5. SHARED FOOTER  (layout/footer.html)
    ============================================================ */
 .footer {
-  background: var(--deeper);
+  background: var(--footer-bg, var(--deeper));
   color: #fff;
   padding: clamp(3rem, 6vw, 5rem) 0 2rem;
   position: relative;
@@ -1135,7 +1142,7 @@ ul {
   max-width: 340px;
   font-size: 0.9rem;
   line-height: 1.65;
-  margin-bottom: 1.4rem;
+  margin: 1.15rem 0 1.4rem;
 }
 
 /* social icons row */
@@ -1149,9 +1156,9 @@ ul {
   display: grid;
   place-items: center;
   border-radius: 11px;
-  color: #aeb9bc;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--line-dark);
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
   transition:
     background 0.35s var(--ease),
     color 0.35s var(--ease),
@@ -1159,9 +1166,9 @@ ul {
     transform 0.35s var(--ease);
 }
 .footer-social a:hover {
-  background: linear-gradient(135deg, #b6d6dc, #6f9aa3);
-  color: #0d1216;
-  border-color: transparent;
+  background: var(--accent);
+  color: var(--deep);
+  border-color: var(--accent);
   transform: translateY(-3px);
 }
 
@@ -1217,17 +1224,17 @@ ul {
   place-items: center;
   border-radius: 10px;
   color: var(--accent);
-  background: rgba(157, 193, 200, 0.12);
-  border: 1px solid rgba(157, 193, 200, 0.2);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
   transition:
     background 0.4s var(--ease),
     color 0.4s var(--ease),
     transform 0.4s var(--ease);
 }
 .footer-contact-item:hover .footer-contact-icon {
-  background: linear-gradient(135deg, #b6d6dc, #6f9aa3);
-  color: #0d1216;
-  border-color: transparent;
+  background: var(--accent);
+  color: var(--deep);
+  border-color: var(--accent);
   transform: rotate(-6deg) scale(1.05);
 }
 
@@ -1303,8 +1310,8 @@ ul {
   place-items: center;
   border-radius: 50%;
   font-size: 1.05rem;
-  color: #0d1216;
-  background: linear-gradient(135deg, #b6d6dc, #6f9aa3);
+  color: var(--deep);
+  background: var(--backtop-bg, var(--accent));
   box-shadow: 0 16px 34px -14px rgba(0, 0, 0, 0.6);
   opacity: 0;
   visibility: hidden;

@@ -155,10 +155,10 @@ function Videos({ videos, isConcept = false }) {
                     src={video.embed.src}
                     title={video.caption || `Project video ${index + 1}`}
                     loading="lazy"
-                    allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                    allow="autoplay; accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                   />
                 ) : video.embed?.kind === "file" ? (
-                  <video src={video.embed.src} controls preload="metadata" playsInline />
+                  <video src={video.embed.src} controls autoPlay muted loop preload="metadata" playsInline />
                 ) : (
                   <a className="cs-video-link" href={video.url} target="_blank" rel="noopener noreferrer">
                     Open video <ArrowRight size={16} />
