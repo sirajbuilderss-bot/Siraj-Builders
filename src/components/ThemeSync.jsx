@@ -14,6 +14,7 @@ const DEFAULTS = {
   theme_header: "#000000",
   theme_footer: "#000000",
   theme_backtop: "#e0a531",
+  theme_cursor: "#f4b323",
 };
 
 const LEGACY_DEFAULTS = {
@@ -27,6 +28,7 @@ const LEGACY_DEFAULTS = {
   theme_header: "#151c21",
   theme_footer: "#0f1418",
   theme_backtop: "#9dc1c8",
+  theme_cursor: "#f4b323",
 };
 
 const THEME_VARIABLES = {
@@ -41,6 +43,7 @@ const THEME_VARIABLES = {
   theme_header: ["--header-bg"],
   theme_footer: ["--footer-bg"],
   theme_backtop: ["--backtop-bg"],
+  theme_cursor: ["--cursor-color"],
 };
 
 function isHex(value) {
@@ -83,6 +86,10 @@ export default function ThemeSync() {
     const header = isHex(headerValue) ? headerValue : DEFAULTS.theme_header;
     root.style.setProperty("--accent-soft", rgba(accent, 0.12));
     root.style.setProperty("--accent-glow", rgba(accent, 0.28));
+    const cursorValue = resolveThemeValue("theme_cursor", data?.theme_cursor?.value);
+    const cursor = isHex(cursorValue) ? cursorValue : DEFAULTS.theme_cursor;
+    root.style.setProperty("--cursor-glow", rgba(cursor, 0.72));
+    root.style.setProperty("--cursor-glow-soft", rgba(cursor, 0.2));
     root.style.setProperty("--header-bg-transparent", rgba(header, 0.84));
     root.style.setProperty("--grad-accent", `linear-gradient(135deg, ${gradientStart} 0%, ${gradientEnd} 100%)`);
     root.style.setProperty("--grad-accent-soft", `linear-gradient(135deg, ${rgba(gradientStart, 0.9)} 0%, ${rgba(gradientEnd, 0.9)} 100%)`);

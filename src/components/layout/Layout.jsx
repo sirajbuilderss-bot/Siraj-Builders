@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import BackToTop from "./BackToTop";
+import FloatingWhatsApp from "./FloatingWhatsApp";
 
 export default function Layout() {
   const location = useLocation();
@@ -22,6 +23,7 @@ export default function Layout() {
       </main>
       <Footer />
       <BackToTop />
+      <FloatingWhatsApp />
     </>
   );
 }

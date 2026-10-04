@@ -656,8 +656,26 @@
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
   gap: var(--sx-gap);
 }
-.team-card { background: #fff; border: 1px solid var(--line); border-radius: var(--sx-card-r); overflow: hidden; }
+.team-card { position: relative; background: #fff; border: 1px solid var(--line); border-radius: var(--sx-card-r); overflow: hidden; }
 .team-card .sx-img { border-radius: 0; }
+.team-card-open {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.team-card:hover,
+.team-card:focus-within {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 42px rgba(20, 30, 35, 0.13);
+  transition: transform 220ms var(--ease), box-shadow 220ms ease;
+}
+.team-card-open:focus-visible { outline: 2px solid var(--accent); outline-offset: -5px; }
 .team-initials {
   aspect-ratio: 4 / 5;
   display: grid;
@@ -671,7 +689,69 @@
 .team-body h3 { margin: 0; font-size: 1.1rem; }
 .team-role { display: block; font-size: 0.85rem; color: var(--accent-deep); font-weight: 650; margin: 0.2rem 0 0.7rem; }
 .team-body p { margin: 0; font-size: 0.93rem; color: var(--muted); line-height: 1.6; }
+.team-card-action { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.85rem; color: var(--accent-darker); font-size: 0.86rem; font-weight: 750; }
 .team-link { display: inline-block; margin-top: 0.8rem; font-size: 0.88rem; font-weight: 650; color: var(--accent-darker); }
+
+.team-dialog-backdrop {
+  position: fixed;
+  z-index: 12000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(0.75rem, 4vw, 2.5rem);
+  background: rgba(8, 14, 18, 0.76);
+  backdrop-filter: blur(8px);
+  animation: team-dialog-fade 180ms ease both;
+}
+.team-dialog {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(200px, 0.8fr) minmax(0, 1.2fr);
+  width: min(880px, 100%);
+  max-height: min(86vh, 760px);
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.36);
+  animation: team-dialog-rise 260ms var(--ease) both;
+}
+.team-dialog:not(.has-photo) { display: block; }
+.team-dialog-photo { width: 100%; height: 100%; min-height: 360px; object-fit: cover; }
+.team-dialog-content { align-self: center; padding: clamp(1.5rem, 4vw, 3rem); }
+.team-dialog-content h2 { margin: 0.35rem 0 0; font-size: clamp(1.7rem, 4vw, 2.6rem); }
+.team-dialog-role { margin: 0.55rem 0 1.25rem; color: var(--accent-deep); font-weight: 750; }
+.team-dialog-bio { color: var(--muted); line-height: 1.8; white-space: pre-line; }
+.team-dialog-close {
+  position: absolute;
+  z-index: 1;
+  top: 0.85rem;
+  right: 0.85rem;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid rgba(20, 30, 35, 0.1);
+  border-radius: 50%;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.94);
+  font-size: 1.7rem;
+  line-height: 1;
+  cursor: pointer;
+}
+@keyframes team-dialog-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes team-dialog-rise { from { opacity: 0; transform: translateY(16px) scale(0.985); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 640px) {
+  .team-dialog { grid-template-columns: 1fr; max-height: 90vh; }
+  .team-dialog-photo { height: min(44vh, 320px); min-height: 200px; }
+  .team-dialog-content { padding: 1.3rem 1.25rem 1.6rem; }
+  .team-dialog-close { top: 0.65rem; right: 0.65rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .team-card, .team-dialog-backdrop, .team-dialog { animation: none; transition: none; }
+}
 
 /* ==========================================================================
    CONTACT CARDS + FORM

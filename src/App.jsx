@@ -8,6 +8,7 @@ import { SiteDataProvider } from "./context/SiteDataContext";
 import { PageContentProvider } from "./context/PageContentContext";
 import Home from "./pages/home";
 import ThemeSync from "./components/ThemeSync";
+import CustomCursor from "./components/layout/CustomCursor";
 
 /**
  * Routing.
@@ -78,6 +79,7 @@ function PublicShell() {
     <SiteDataProvider>
       <PageContentProvider>
         <SeoProvider>
+          <CustomCursor />
           <Seo />
           <ErrorBoundary>
             <Layout />

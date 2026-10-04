@@ -5,12 +5,12 @@ import { Pill } from "../components/ui";
 export default function TeamPage() {
   return (
     <ResourceManager
-      title="About project roles"
-      singular="Team member"
+      title="Project roles"
+      singular="Member profile"
       entity="team_members"
-      description="These cards appear in the Project roles section on the About page. Add, edit, reorder, publish or hide each role here."
-      emptyTitle="No About role cards yet"
-      emptyBody="Add the first verified role card to replace the site's sample project roles."
+      description="Manage the member cards in About → Project roles. Add profiles, edit their details, publish or hide them, reorder the cards, or delete a profile. Published cards open a popup with the full biography, photo and LinkedIn link."
+      emptyTitle="No project role profiles yet"
+      emptyBody="Add a member profile to show a card in the About page's Project roles section."
       load={team.listAll}
       reorder={team.reorder}
       toggle={{ field: "is_active", on: "Show", off: "Hide" }}
@@ -36,7 +36,7 @@ export default function TeamPage() {
         { name: "role", label: "Role or title" },
         { name: "linkedin_url", label: "LinkedIn URL", type: "url" },
         { name: "sort_order", label: "Sort order", type: "number" },
-        { name: "bio", label: "Biography", type: "textarea", rows: 4 },
+        { name: "bio", label: "Full biography / details", type: "textarea", rows: 6, help: "This complete description appears in the member's popup." },
         { name: "image_url", label: "Photo URL", type: "media" },
         { name: "is_active", label: "Show on the website", type: "checkbox" },
       ]}

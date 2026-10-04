@@ -31,7 +31,7 @@ import {
 
 const GROUP_LABELS = {
   company: "Company",
-  contact: "Contact information",
+  contact: "Contact & WhatsApp",
   seo: "SEO and domain",
   footer: "Footer",
   navigation: "Header & navigation",
@@ -72,6 +72,7 @@ const THEME_FIELDS = [
   ["theme_header", "Header color", "Website header and top navigation"],
   ["theme_footer", "Footer color", "Website footer background"],
   ["theme_backtop", "Back-to-top arrow", "Bottom-to-top button color"],
+  ["theme_cursor", "Cursor dot color", "Animated mouse cursor and its glow"],
 ].map(([key, label, help], index) => ({
   key,
   label,
@@ -333,6 +334,7 @@ export default function SettingsPage() {
                         <input
                           id={`set-${row.key}`}
                           type="text"
+                          placeholder={row.key === "contact_whatsapp" ? "+<country code> <phone number>" : undefined}
                           value={current.value}
                           onChange={(event) =>
                             setSetting(row.key, { value: event.target.value })
@@ -350,8 +352,8 @@ export default function SettingsPage() {
                     {CONFIRMABLE.has(row.key) && (
                       <Check
                         name={`confirm-${row.key}`}
-                        label="Confirmed — render as a live link"
-                        hint="Leave unchecked until this detail has been verified."
+                        label={row.key === "contact_whatsapp" ? "Enable the floating WhatsApp button" : "Confirmed — render as a live link"}
+                        hint={row.key === "contact_whatsapp" ? "Enter the number with its country code, save it as confirmed, and the website button will appear. Leave unchecked to hide the button." : "Leave unchecked until this detail has been verified."}
                         checked={current.is_confirmed}
                         onChange={(_name, checked) =>
                           setSetting(row.key, { is_confirmed: checked })

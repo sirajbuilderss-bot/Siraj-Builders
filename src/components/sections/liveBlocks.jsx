@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import useContent from "../../hooks/useContent";
 import {
@@ -15,7 +16,7 @@ import { useSiteData } from "../../context/SiteDataContext";
 import ProjectCard from "../projects/ProjectCard";
 import FaqBrowser, { FaqAccordion } from "../faq/FaqBrowser";
 import ContactForm from "../contact/ContactForm";
-import { Actions, Btn, Img, SectionFallback, SectionHead, SectionShell, SmartLink } from "./shared";
+import { Actions, Btn, Img, SectionFallback, SectionHead, SectionShell } from "./shared";
 import { ArrowRight, Chat, Clock, Mail, MapPin, Phone } from "../ui/Icons";
 import { CheckList } from "./blocks";
 import { CTA } from "../../config/site";
@@ -258,6 +259,7 @@ export function StatsBlock({ section }) {
  * ======================================================================== */
 export function TeamBlock({ section }) {
   const { data: team } = useContent(getTeam, [], { fallbackOnEmpty: false });
+  const [selectedMember, setSelectedMember] = useState(null);
   if (!team.length) return null;
   const hasSampleRoles = team.some((person) => person.isSample);
   const teamSection = hasSampleRoles
@@ -281,16 +283,79 @@ export function TeamBlock({ section }) {
               <h3>{person.name}</h3>
               {person.role && <span className="team-role">{person.role}</span>}
               {person.bio && <p>{person.bio}</p>}
-              {person.linkedin_url && (
-                <SmartLink to={person.linkedin_url} className="team-link">
-                  LinkedIn profile
-                </SmartLink>
-              )}
+              <span className="team-card-action">View member details <ArrowRight size={15} /></span>
             </div>
+            <button
+              className="team-card-open"
+              type="button"
+              aria-haspopup="dialog"
+              aria-label={`View full details for ${person.name}`}
+              onClick={() => setSelectedMember(person)}
+            >
+              <span className="sr-only">View full details for {person.name}</span>
+            </button>
           </article>
         ))}
       </div>
+      {selectedMember && (
+        <TeamMemberDialog member={selectedMember} onClose={() => setSelectedMember(null)} />
+      )}
     </SectionShell>
+  );
+}
+
+function TeamMemberDialog({ member, onClose }) {
+  const closeRef = useRef(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") onCloseRef.current();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, []);
+
+  const titleId = `team-member-title-${member.id}`;
+  return createPortal(
+    <div
+      className="team-dialog-backdrop"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
+      <section className={`team-dialog${member.image_url ? " has-photo" : ""}`} role="dialog" aria-modal="true" aria-labelledby={titleId}>
+        <button ref={closeRef} className="team-dialog-close" type="button" onClick={onClose} aria-label="Close member details">
+          ×
+        </button>
+        {member.image_url && (
+          <img
+            className="team-dialog-photo"
+            src={member.image_url}
+            alt={member.isSample ? `Stock portrait representing the ${member.name} role` : member.name}
+          />
+        )}
+        <div className="team-dialog-content">
+          {member.isSample && <span className="team-sample-label">Project role · stock portrait</span>}
+          <h2 id={titleId}>{member.name}</h2>
+          {member.role && <p className="team-dialog-role">{member.role}</p>}
+          {member.bio && <p className="team-dialog-bio">{member.bio}</p>}
+          {member.linkedin_url && (
+            <a className="team-link" href={member.linkedin_url} target="_blank" rel="noopener noreferrer">
+              View LinkedIn profile
+            </a>
+          )}
+        </div>
+      </section>
+    </div>,
+    document.body
   );
 }
 
