@@ -1,42 +1,47 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useAdminAuth } from "../AdminAuthContext";
-import { isConfigured } from "../../lib/supabase";
+import { Link, useNavigate } from "react-router-dom";
+import { auth, isConfigured } from "../../lib/supabase";
 import { Alert } from "../components/ui";
 
-/**
- * FORGOT PASSWORD
- * ============================================================================
- * Sends Supabase's recovery email, which links back to /admin/reset-password
- * with a single-use token in the URL fragment.
- *
- * The confirmation below is deliberately identical whether or not an account
- * exists for the address typed in. A form that said "no account found" would
- * be a working tool for checking who has an account here, which is worth more
- * to an attacker than it is to a forgetful admin.
- */
-export default function ForgotPasswordPage() {
-  const { requestPasswordReset } = useAdminAuth();
-  const [email, setEmail] = useState("");
-  const [isBusy, setIsBusy] = useState(false);
-  const [isSent, setIsSent] = useState(false);
-  const [problem, setProblem] = useState("");
+const MIN_PASSWORD = 8;
 
+export default function ForgotPasswordPage() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [phase, setPhase] = useState("email");
+  const [isBusy, setIsBusy] = useState(false);
+  const [problem, setProblem] = useState("");
   const configured = isConfigured();
 
   async function onSubmit(event) {
     event.preventDefault();
-    if (isBusy || !email.trim()) return;
-
+    if (isBusy) return;
     setIsBusy(true);
     setProblem("");
     try {
-      await requestPasswordReset(email);
-      setIsSent(true);
+      if (phase === "email") {
+        const result = await auth.resetAdminPasswordByEmail(email.trim(), "", "check");
+        if (!result?.exists) {
+          setProblem("No active admin account was found for this email.");
+        } else {
+          setPhase("password");
+        }
+      } else {
+        if (password.length < MIN_PASSWORD) {
+          setProblem(`Use at least ${MIN_PASSWORD} characters.`);
+          return;
+        }
+        if (password !== confirm) {
+          setProblem("The two passwords do not match.");
+          return;
+        }
+        await auth.resetAdminPasswordByEmail(email.trim(), password, "reset");
+        setPhase("done");
+      }
     } catch (err) {
-      setProblem(
-        err?.message || "Could not send the reset email. Please try again."
-      );
+      setProblem(err?.message || "Could not reset the password. Please try again.");
     } finally {
       setIsBusy(false);
     }
@@ -54,69 +59,103 @@ export default function ForgotPasswordPage() {
             </span>
           </div>
 
-          {isSent ? (
+          {phase === "done" ? (
             <>
-              <h1>Check your email</h1>
-              <Alert tone="ok" title="Reset link sent">
-                If an account exists for <b>{email}</b>, a password reset link
-                is on its way. The link expires after one hour and can only be
-                used once.
+              <h1>Password updated</h1>
+              <Alert tone="ok" title="Done">
+                Your password has been changed. Sign in with it now.
               </Alert>
-              <p className="ad-login-foot">
-                <Link to="/admin">Back to sign in</Link>
-              </p>
+              <button
+                className="ad-btn ad-btn-primary"
+                type="button"
+                onClick={() => navigate("/admin")}
+              >
+                Go to sign in
+              </button>
             </>
           ) : (
             <>
-              <h1>Reset your password</h1>
+              <h1>{phase === "email" ? "Reset your password" : "Choose a new password"}</h1>
               <p className="ad-login-sub">
-                Enter the email address on your admin account and we will send
-                you a link to set a new password.
+                {phase === "email"
+                  ? "Enter the email address on your admin account."
+                  : `Admin account: ${email}`}
               </p>
 
               {!configured && (
                 <Alert tone="error" title="Supabase is not configured">
-                  Add your credentials to <code>.env</code> and restart the dev
-                  server. See README.md.
+                  Add your credentials to <code>.env</code> and restart the dev server.
                 </Alert>
               )}
-
-              {problem && (
-                <Alert tone="error" title="Could not send the email">
-                  {problem}
-                </Alert>
-              )}
+              {problem && <Alert tone="error" title="Could not reset password">{problem}</Alert>}
 
               <form onSubmit={onSubmit} noValidate>
-                <div className="ad-field">
-                  <label className="ad-label" htmlFor="forgot-email">
-                    Email
-                  </label>
-                  <input
-                    id="forgot-email"
-                    type="email"
-                    autoComplete="username"
-                    value={email}
-                    required
-                    disabled={!configured || isBusy}
-                    onChange={(event) => {
-                      setEmail(event.target.value);
-                      setProblem("");
-                    }}
-                  />
-                </div>
+                {phase === "email" ? (
+                  <div className="ad-field">
+                    <label className="ad-label" htmlFor="forgot-email">Admin email</label>
+                    <input
+                      id="forgot-email"
+                      type="email"
+                      autoComplete="username"
+                      value={email}
+                      required
+                      disabled={!configured || isBusy}
+                      onChange={(event) => {
+                        setEmail(event.target.value);
+                        setProblem("");
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <div className="ad-field">
+                      <label className="ad-label" htmlFor="new-password">New password</label>
+                      <input
+                        id="new-password"
+                        type="password"
+                        autoComplete="new-password"
+                        value={password}
+                        required
+                        disabled={isBusy}
+                        onChange={(event) => {
+                          setPassword(event.target.value);
+                          setProblem("");
+                        }}
+                      />
+                      <div className="ad-field-help">At least {MIN_PASSWORD} characters.</div>
+                    </div>
+                    <div className="ad-field">
+                      <label className="ad-label" htmlFor="confirm-password">Confirm new password</label>
+                      <input
+                        id="confirm-password"
+                        type="password"
+                        autoComplete="new-password"
+                        value={confirm}
+                        required
+                        disabled={isBusy}
+                        onChange={(event) => {
+                          setConfirm(event.target.value);
+                          setProblem("");
+                        }}
+                      />
+                    </div>
+                  </>
+                )}
 
                 <button
                   className="ad-btn ad-btn-primary"
                   type="submit"
-                  disabled={!configured || isBusy || !email.trim()}
+                  disabled={
+                    !configured || isBusy ||
+                    (phase === "email" ? !email.trim() : !password || !confirm)
+                  }
                 >
-                  {isBusy ? "Sending…" : "Send reset link"}
+                  {isBusy ? "Please wait…" : phase === "email" ? "Continue" : "Reset password"}
                 </button>
               </form>
 
               <p className="ad-login-foot">
-                Remembered it? <Link to="/admin">Back to sign in</Link>
+                <Link to="/admin">Back to sign in</Link>
               </p>
             </>
           )}

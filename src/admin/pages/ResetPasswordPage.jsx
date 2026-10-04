@@ -9,12 +9,9 @@ import { Alert } from "../components/ui";
  * ============================================================================
  * The landing page for the link in Supabase's recovery email.
  *
- * Supabase appends the recovery token to the URL *fragment*
- * (`…/admin/reset-password#access_token=…&type=recovery`) rather than the
- * query string, precisely because fragments are never sent to a server. It is
- * read here, used to authorise one password change, and then wiped from the
- * address bar so it cannot be leaked through browser history, a screenshot or
- * a pasted URL.
+ * Supabase may return a session in the URL fragment, or an email template may
+ * send a token_hash in the query string. Both formats are handled here, then
+ * removed from browser history as soon as the recovery session is established.
  */
 
 const MIN_PASSWORD = 8;
@@ -29,6 +26,7 @@ function readFragment() {
     refreshToken: params.get("refresh_token") || "",
     expiresIn: params.get("expires_in") || "",
     type: params.get("type") || "",
+    errorCode: params.get("error_code") || "",
     errorDescription:
       params.get("error_description") || params.get("error") || "",
   };
@@ -39,6 +37,7 @@ export default function ResetPasswordPage() {
   const navigate = useNavigate();
 
   const [token, setToken] = useState("");
+  const [isChecking, setIsChecking] = useState(true);
   const [linkError, setLinkError] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -47,35 +46,70 @@ export default function ResetPasswordPage() {
   const [problem, setProblem] = useState("");
 
   useEffect(() => {
-    const fragment = readFragment();
+    let cancelled = false;
+    async function establishRecoverySession() {
+      try {
+        const fragment = readFragment();
+        const query = new URLSearchParams(window.location.search);
+        const errorCode = fragment.errorCode || query.get("error_code") || "";
+        const queryError = query.get("error_description") || query.get("error");
+        if (errorCode === "otp_expired") {
+          throw new Error(
+            "This reset link has expired or was already opened. Request a fresh email and use its newest link."
+          );
+        }
+        const error = fragment.errorDescription || queryError;
+        if (error) throw new Error(error);
 
-    if (fragment.errorDescription) {
-      setLinkError(
-        decodeURIComponent(fragment.errorDescription.replace(/\+/g, " "))
-      );
-      return;
+        // Supabase's normal browser flow returns tokens in the fragment, but
+        // some email templates / redirect handlers preserve them as query
+        // parameters. Accept both forms before declaring the link empty.
+        const accessToken =
+          fragment.accessToken || query.get("access_token") || "";
+        const refreshToken =
+          fragment.refreshToken || query.get("refresh_token") || "";
+        const expiresIn = fragment.expiresIn || query.get("expires_in") || "";
+        const type = fragment.type || query.get("type") || "";
+
+        if (accessToken) {
+          if (type && type !== "recovery") {
+            throw new Error("This link is not a password recovery link. Request a new one.");
+          }
+          auth.adoptTokens({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+            expires_in: expiresIn,
+          });
+          if (!cancelled) setToken(accessToken);
+        } else {
+          const tokenHash = query.get("token_hash") || query.get("token");
+          const type = query.get("type");
+          if (!tokenHash || type !== "recovery") {
+            throw new Error(
+              "Supabase redirected to this page without a recovery token. Use the newest reset email link. If it still happens, the email's redirect or verification step is not returning the token."
+            );
+          }
+          const session = await auth.verifyRecoveryToken(tokenHash);
+          if (!cancelled) setToken(session.access_token);
+        }
+
+        // Remove all credentials before rendering the password form.
+        window.history.replaceState(null, "", window.location.pathname);
+      } catch (err) {
+        if (!cancelled) {
+          setLinkError(
+            err?.message ||
+              "This reset link has expired or was already used. Request a new one from the sign-in screen."
+          );
+        }
+      } finally {
+        if (!cancelled) setIsChecking(false);
+      }
     }
-
-    if (!fragment.accessToken) {
-      setLinkError(
-        "This page needs a valid reset link. Request a new one from the sign-in screen."
-      );
-      return;
-    }
-
-    setToken(fragment.accessToken);
-    auth.adoptTokens({
-      access_token: fragment.accessToken,
-      refresh_token: fragment.refreshToken,
-      expires_in: fragment.expiresIn,
-    });
-
-    // Strip the token from the address bar without adding a history entry.
-    window.history.replaceState(
-      null,
-      "",
-      `${window.location.pathname}${window.location.search}`
-    );
+    establishRecoverySession();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   async function onSubmit(event) {
@@ -132,14 +166,23 @@ export default function ResetPasswordPage() {
                 Go to sign in
               </button>
             </>
+          ) : isChecking ? (
+            <>
+              <h1>Checking reset link</h1>
+              <p className="ad-login-sub">Please wait while we verify your link.</p>
+            </>
           ) : linkError ? (
             <>
-              <h1>Link problem</h1>
+              <h1>Recover your admin account</h1>
               <Alert tone="error" title="This reset link cannot be used">
                 {linkError}
               </Alert>
+              <p className="ad-login-sub">
+                Request a fresh reset email and open only the newest link. A
+                reset link can be verified once; older links stop working.
+              </p>
               <p className="ad-login-foot">
-                <Link to="/admin/forgot-password">Request a new link</Link>
+                <Link to="/admin/forgot-password">Try email reset again</Link>
               </p>
             </>
           ) : (

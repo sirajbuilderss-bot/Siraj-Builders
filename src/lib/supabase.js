@@ -246,6 +246,50 @@ export const auth = {
     return true;
   },
 
+  /** Email-only recovery requested by the project owner (Edge Function only). */
+  async resetAdminPasswordByEmail(email, password, action = "reset") {
+    if (!isConfigured()) throw configError();
+    const response = await fetch(
+      `${URL_BASE}/functions/v1/admin-password-recovery`,
+      {
+        method: "POST",
+        headers: {
+          apikey: ANON_KEY,
+          Authorization: `Bearer ${ANON_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ action, email, password }),
+      }
+    );
+    const data = await response.json().catch(() => null);
+    if (!response.ok) {
+      throw new SupabaseError(data?.error || "Could not reset the admin password.", {
+        status: response.status,
+        code: data?.code,
+      });
+    }
+    return data;
+  },
+
+  /** Verifies a recovery email token-hash and stores the returned session. */
+  async verifyRecoveryToken(tokenHash) {
+    if (!tokenHash) {
+      throw new SupabaseError("The reset link is missing its verification token.", {
+        code: "NO_TOKEN",
+      });
+    }
+    const data = await authFetch("/verify", {
+      body: { token_hash: tokenHash, type: "recovery" },
+    });
+    const session = storeTokenResponse(data);
+    if (!session) {
+      throw new SupabaseError("The reset link did not return a valid session.", {
+        code: "NO_SESSION",
+      });
+    }
+    return session;
+  },
+
   /**
    * Sets a new password for whoever the current token belongs to.
    *

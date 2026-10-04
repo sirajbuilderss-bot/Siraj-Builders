@@ -28,6 +28,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useLocation } from "react-router-dom";
 import { auth, db, isConfigured } from "../lib/supabase";
 import { adminUsers } from "../services/content";
 import { log } from "../services/activity";
@@ -52,12 +53,19 @@ async function fetchProfile(userId) {
 }
 
 export function AdminAuthProvider({ children }) {
+  const location = useLocation();
   const [profile, setProfile] = useState(null);
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState("");
 
   /* Restore a session left in localStorage from a previous visit. */
   useEffect(() => {
+    // A recovery URL must be parsed by ResetPasswordPage before any stored
+    // session restoration can redirect or sign out the visitor.
+    if (location.pathname === "/admin/reset-password") {
+      setIsReady(true);
+      return undefined;
+    }
     let cancelled = false;
 
     (async () => {
@@ -108,7 +116,7 @@ export function AdminAuthProvider({ children }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [location.pathname]);
 
   const signIn = useCallback(async (email, password) => {
     setError("");

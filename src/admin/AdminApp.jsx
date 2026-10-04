@@ -118,6 +118,14 @@ function AdminLayout({ children }) {
 
 function AdminGate() {
   const { isReady, isSignedIn } = useAdminAuth();
+  const location = useLocation();
+
+  // Recovery links carry a temporary password-change session. Always mount
+  // the reset screen so it can consume that session, even if another admin
+  // session was already stored in this browser.
+  if (location.pathname === "/admin/reset-password") {
+    return <ResetPasswordPage />;
+  }
 
   // Held until the stored session has been checked and refreshed, otherwise
   // a returning admin sees the login screen flash before being let straight in.
