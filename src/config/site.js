@@ -66,6 +66,7 @@ export const SOCIAL_PROFILES = [
   { key: "linkedin", label: "LinkedIn", href: "", confirmed: false },
   { key: "youtube", label: "YouTube", href: "", confirmed: false },
   { key: "tiktok", label: "TikTok", href: "", confirmed: false },
+  { key: "whatsapp_community", label: "WhatsApp Community", href: "", confirmed: false },
 ];
 
 /* ---------------- NAVIGATION ----------------

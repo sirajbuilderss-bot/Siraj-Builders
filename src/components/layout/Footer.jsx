@@ -30,10 +30,13 @@ const ICONS = {
   tiktok: (
     <path d="M15 4v10.5a4.5 4.5 0 1 1-4-4.47v3.05a1.5 1.5 0 1 0 1 1.42V4h3c.27 1.52 1.24 2.7 3 3.25V10c-1.16-.2-2.17-.67-3-1.38V4z" />
   ),
+  whatsapp_community: (
+    <path d="M20.5 3.5A10.7 10.7 0 0 0 12.9 1C7 1 2.2 5.8 2.2 11.7c0 1.9.5 3.7 1.5 5.3L2 22l5.2-1.6a10.7 10.7 0 0 0 5.7 1.6h.1c5.9 0 10.7-4.8 10.7-10.7 0-2.9-1.1-5.7-3.2-7.8zM12.9 20.3c-1.7 0-3.3-.5-4.7-1.4l-.3-.2-3.1.9.9-3-.2-.3a8.7 8.7 0 0 1-1.4-4.7c0-4.8 3.9-8.7 8.7-8.7 2.3 0 4.5.9 6.1 2.5a8.6 8.6 0 0 1 2.5 6.2c0 4.8-3.9 8.7-8.5 8.7z" />
+  ),
 };
 
 function SocialIcon({ name }) {
-  const filled = name === "facebook" || name === "linkedin" || name === "youtube" || name === "tiktok";
+  const filled = name === "facebook" || name === "linkedin" || name === "youtube" || name === "tiktok" || name === "whatsapp_community";
   return (
     <svg
       width="16"
