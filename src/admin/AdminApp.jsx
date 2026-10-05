@@ -5,6 +5,7 @@ import { SiteMapProvider } from "./SiteMapContext";
 import { Loading } from "./components/ui";
 import AdminSidebar, { NAV, findActive } from "./components/AdminSidebar";
 import { IconExternal } from "./components/icons";
+import BrandMark from "../components/layout/BrandMark";
 
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -86,6 +87,8 @@ function AdminLayout({ children }) {
               <span />
               <span />
             </button>
+
+            <BrandMark admin />
 
             <div className="ad-topbar-title">
               <h1>{active.title}</h1>

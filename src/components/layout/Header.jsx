@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { PRIMARY_NAV, CTA } from "../../config/site";
 import { useSiteData } from "../../context/SiteDataContext";
 import { ArrowRight, Mail, Phone } from "../ui/Icons";
+import BrandMark from "./BrandMark";
 
 /* ---------------- DATA ----------------
    Navigation now comes from src/config/site.js so the header, footer,
@@ -186,7 +187,7 @@ export default function Header() {
         <div className="nav-wrap">
           <div className="container nav-inner">
             <Link className="brand" to="/" aria-label={`${COMPANY.name} home`}>
-              <span className="brand-mark">{COMPANY.initials}</span>
+              <BrandMark />
               <span className="brand-name">{COMPANY.name}</span>
             </Link>
 

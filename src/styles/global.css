@@ -340,22 +340,31 @@ ul {
   color: #fff;
 }
 .brand-mark {
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
   border-radius: 13px;
   display: grid;
   place-items: center;
-  font-size: 0.8rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  color: var(--deep);
-  background: var(--accent);
-  box-shadow: var(--shadow-accent);
+  overflow: hidden;
+  background: #0c1014;
+  box-shadow: 0 10px 24px -16px rgba(0, 0, 0, 0.9);
   transition: transform 0.45s var(--ease);
 }
+.brand-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .brand:hover .brand-mark {
-  transform: rotate(-8deg) scale(1.06);
+  transform: rotate(-6deg) scale(1.05);
+}
+.footer-brand .brand-mark {
+  width: 48px;
+  height: 48px;
+  flex-basis: 48px;
+  border-radius: 14px;
 }
 
 .menu {

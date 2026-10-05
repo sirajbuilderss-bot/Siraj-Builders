@@ -20,6 +20,7 @@ import {
   IconUsers,
   sectionTypeIcon,
 } from "./icons";
+import BrandMark from "../../components/layout/BrandMark";
 
 /**
  * ADMIN SIDEBAR
@@ -548,13 +549,13 @@ export default function AdminSidebar({ isOpen, onNavigate, profile, onSignOut })
       className={`ad-sidebar${isOpen ? " is-open" : ""}`}
       aria-label="Admin navigation"
     >
-      <div className="ad-brand">
-        <span className="ad-brand-mark">SB</span>
+      <Link className="ad-brand" to="/admin" onClick={onNavigate}>
+        <BrandMark admin />
         <span className="ad-brand-text">
           <b>Siraj Builders</b>
           <span>Admin</span>
         </span>
-      </div>
+      </Link>
 
       <nav className="ad-nav" aria-label="Admin sections">
         {NAV.map((section) => (

@@ -7,6 +7,7 @@ import {
 } from "../../config/site";
 import { useSiteData } from "../../context/SiteDataContext";
 import { ArrowRight, Mail, MapPin, Phone } from "../ui/Icons";
+import BrandMark from "./BrandMark";
 
 /* ---------------- ICONS ---------------- */
 
@@ -120,7 +121,7 @@ export default function Footer() {
           {/* ---- BRAND ---- */}
           <div className="footer-brand">
             <Link className="brand" to="/" aria-label={`${COMPANY.name} home`}>
-              <span className="brand-mark">{COMPANY.initials}</span>
+              <BrandMark />
               <span className="brand-name">{COMPANY.name}</span>
             </Link>
 

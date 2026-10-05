@@ -5,6 +5,7 @@ import { isConfigured } from "../../lib/supabase";
 import { adminUsers } from "../../services/content";
 import { Alert } from "../components/ui";
 import PasswordInput from "../components/PasswordInput";
+import BrandMark from "../../components/layout/BrandMark";
 
 /**
  * ADMIN SIGN-UP
@@ -275,7 +276,7 @@ function Shell({ children }) {
       <div className="ad-login">
         <div className="ad-login-card">
           <div className="ad-login-brand">
-            <span className="ad-brand-mark">SB</span>
+            <BrandMark admin />
             <span className="ad-brand-text">
               <b>Siraj Builders</b>
               <span>Admin panel</span>

@@ -4,6 +4,7 @@ import { useAdminAuth } from "../AdminAuthContext";
 import { isConfigured } from "../../lib/supabase";
 import { Alert } from "../components/ui";
 import PasswordInput from "../components/PasswordInput";
+import BrandMark from "../../components/layout/BrandMark";
 
 /**
  * ADMIN LOGIN
@@ -45,7 +46,7 @@ export default function LoginPage() {
       <div className="ad-login">
         <div className="ad-login-card">
           <div className="ad-login-brand">
-            <span className="ad-brand-mark">SB</span>
+            <BrandMark admin />
             <span className="ad-brand-text">
               <b>Siraj Builders</b>
               <span>Admin panel</span>
