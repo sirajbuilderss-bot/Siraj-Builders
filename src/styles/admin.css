@@ -3290,6 +3290,33 @@
 .admin-root .ad-activity-delete:focus-visible { outline: 2px solid var(--ad-danger); outline-offset: 1px; }
 .admin-root .ad-activity-delete:disabled { cursor: wait; opacity: 0.35; }
 
+.admin-root .ad-login-card {
+  width: min(100%, 400px);
+  padding: clamp(18px, 5vw, 32px);
+}
+
+/* Keep the visual page map usable in the narrow editor: the page rail scrolls
+   horizontally above the section editor instead of stealing its width. */
+@media (max-width: 900px) {
+  .admin-root .ad-builder { grid-template-columns: minmax(0, 1fr); }
+  .admin-root .ad-builder-rail {
+    position: static;
+    max-height: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(150px, max-content);
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 420px) {
+  .admin-root .ad-content { padding-inline: 12px; }
+  .admin-root .ad-topbar { gap: 8px; padding-inline: 12px; }
+  .admin-root .ad-login-card { padding: 18px; }
+  .admin-root .ad-login-brand { gap: 9px; }
+}
+
 @media (max-width: 1100px) {
   .admin-root .ad-dashboard-actions { grid-template-columns: 1fr; gap: 16px; }
 }
