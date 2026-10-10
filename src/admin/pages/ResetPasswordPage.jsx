@@ -66,6 +66,13 @@ export default function ResetPasswordPage() {
         // Supabase's normal browser flow returns tokens in the fragment, but
         // some email templates / redirect handlers preserve them as query
         // parameters. Accept both forms before declaring the link empty.
+        const recoveryCode = query.get("code") || "";
+        if (recoveryCode) {
+          const session = await auth.exchangeRecoveryCode(recoveryCode);
+          auth.markRecoverySession();
+          if (!cancelled) setToken(session.access_token);
+        }
+
         const accessToken =
           fragment.accessToken || query.get("access_token") || "";
         const refreshToken =
@@ -73,7 +80,9 @@ export default function ResetPasswordPage() {
         const expiresIn = fragment.expiresIn || query.get("expires_in") || "";
         const type = fragment.type || query.get("type") || "";
 
-        if (accessToken) {
+        if (recoveryCode) {
+          // PKCE exchange above established the short-lived recovery session.
+        } else if (accessToken) {
           if (type && type !== "recovery") {
             throw new Error("This link is not a password recovery link. Request a new one.");
           }
@@ -82,17 +91,27 @@ export default function ResetPasswordPage() {
             refresh_token: refreshToken,
             expires_in: expiresIn,
           });
+          auth.markRecoverySession();
           if (!cancelled) setToken(accessToken);
         } else {
           const tokenHash = query.get("token_hash") || query.get("token");
           const type = query.get("type");
-          if (!tokenHash || type !== "recovery") {
-            throw new Error(
-              "Supabase redirected to this page without a recovery token. Use the newest reset email link. If it still happens, the email's redirect or verification step is not returning the token."
-            );
+          if (tokenHash && type === "recovery") {
+            const session = await auth.verifyRecoveryToken(tokenHash);
+            auth.markRecoverySession();
+            if (!cancelled) setToken(session.access_token);
+          } else {
+            // The callback strips one-time credentials from the address bar.
+            // If the user reloads the page afterward, resume only a recent
+            // recovery session, never an ordinary signed-in admin session.
+            const recoveryToken = await auth.getRecoverySessionToken();
+            if (!recoveryToken) {
+              throw new Error(
+                "Supabase redirected here without a recovery token. Request a fresh reset email in this same browser and open its newest link."
+              );
+            }
+            if (!cancelled) setToken(recoveryToken);
           }
-          const session = await auth.verifyRecoveryToken(tokenHash);
-          if (!cancelled) setToken(session.access_token);
         }
 
         // Remove all credentials before rendering the password form.
@@ -131,6 +150,7 @@ export default function ResetPasswordPage() {
     setProblem("");
     try {
       await updatePassword(password, token);
+      auth.clearRecoverySession();
       setIsDone(true);
     } catch (err) {
       setProblem(

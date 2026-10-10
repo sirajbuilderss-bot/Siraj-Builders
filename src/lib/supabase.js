@@ -32,6 +32,8 @@ const URL_BASE = (process.env.REACT_APP_SUPABASE_URL || "").replace(/\/+$/, "");
 const ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY || "";
 
 const SESSION_KEY = "sb.session";
+const RECOVERY_VERIFIER_KEY = "sb.recovery-code-verifier";
+const RECOVERY_SESSION_KEY = "sb.recovery-session-at";
 
 /** True when both environment variables are present. */
 export function isConfigured() {
@@ -239,36 +241,57 @@ export const auth = {
    * enumerating who has an account here.
    */
   async requestPasswordReset(email, { redirectTo } = {}) {
+    // Supabase PKCE returns a short-lived `?code=` to the redirect URL. Keep
+    // its verifier in this browser so only the browser that requested recovery
+    // can exchange the code for a session.
+    const verifierBytes = crypto.getRandomValues(new Uint8Array(32));
+    const verifier = btoa(String.fromCharCode(...verifierBytes))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/g, "");
+    const digest = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(verifier)
+    );
+    const challenge = btoa(String.fromCharCode(...new Uint8Array(digest)))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/g, "");
+    localStorage.setItem(RECOVERY_VERIFIER_KEY, verifier);
     const query = redirectTo
       ? `?redirect_to=${encodeURIComponent(redirectTo)}`
       : "";
-    await authFetch(`/recover${query}`, { body: { email } });
+    try {
+      await authFetch(`/recover${query}`, {
+        body: { email, code_challenge: challenge, code_challenge_method: "s256" },
+      });
+    } catch (error) {
+      localStorage.removeItem(RECOVERY_VERIFIER_KEY);
+      throw error;
+    }
     return true;
   },
 
-  /** Email-only recovery requested by the project owner (Edge Function only). */
-  async resetAdminPasswordByEmail(email, password, action = "reset") {
-    if (!isConfigured()) throw configError();
-    const response = await fetch(
-      `${URL_BASE}/functions/v1/admin-password-recovery`,
-      {
-        method: "POST",
-        headers: {
-          apikey: ANON_KEY,
-          Authorization: `Bearer ${ANON_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ action, email, password }),
-      }
-    );
-    const data = await response.json().catch(() => null);
-    if (!response.ok) {
-      throw new SupabaseError(data?.error || "Could not reset the admin password.", {
-        status: response.status,
-        code: data?.code,
+  /** Exchanges the one-time PKCE code from a recovery redirect for a session. */
+  async exchangeRecoveryCode(code) {
+    const verifier = localStorage.getItem(RECOVERY_VERIFIER_KEY);
+    if (!code || !verifier) {
+      throw new SupabaseError(
+        "This reset link was opened in a browser that did not request it. Request a new link in this browser.",
+        { code: "NO_CODE_VERIFIER" }
+      );
+    }
+    const data = await authFetch("/token?grant_type=pkce", {
+      body: { auth_code: code, code_verifier: verifier },
+    });
+    localStorage.removeItem(RECOVERY_VERIFIER_KEY);
+    const session = storeTokenResponse(data);
+    if (!session) {
+      throw new SupabaseError("The reset link did not return a valid session.", {
+        code: "NO_SESSION",
       });
     }
-    return data;
+    return session;
   },
 
   /** Permanently removes an admin account through the authenticated Edge Function. */
@@ -354,6 +377,28 @@ export const auth = {
       expires_in: Number(expires_in) || 3600,
       user: user || null,
     });
+  },
+
+  /** Marks a session created from a verified recovery link for short-lived reloads. */
+  markRecoverySession() {
+    localStorage.setItem(RECOVERY_SESSION_KEY, String(Date.now()));
+  },
+
+  /** Reuses only a recent recovery session after the callback URL was cleaned. */
+  async getRecoverySessionToken() {
+    const markedAt = Number(localStorage.getItem(RECOVERY_SESSION_KEY));
+    const maxAgeMs = 15 * 60 * 1000;
+    if (!markedAt || Date.now() - markedAt > maxAgeMs) {
+      localStorage.removeItem(RECOVERY_SESSION_KEY);
+      return null;
+    }
+    const token = await accessToken();
+    if (!token) localStorage.removeItem(RECOVERY_SESSION_KEY);
+    return token;
+  },
+
+  clearRecoverySession() {
+    localStorage.removeItem(RECOVERY_SESSION_KEY);
   },
 
   /** Reads the signed-in user's profile straight from GoTrue. */

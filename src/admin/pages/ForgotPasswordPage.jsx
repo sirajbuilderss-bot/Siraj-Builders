@@ -1,19 +1,13 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { auth, isConfigured } from "../../lib/supabase";
 import { Alert } from "../components/ui";
-import PasswordInput from "../components/PasswordInput";
 import BrandMark from "../../components/layout/BrandMark";
 
-const MIN_PASSWORD = 8;
-
 export default function ForgotPasswordPage() {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [phase, setPhase] = useState("email");
   const [isBusy, setIsBusy] = useState(false);
+  const [isSent, setIsSent] = useState(false);
   const [problem, setProblem] = useState("");
   const configured = isConfigured();
 
@@ -23,27 +17,12 @@ export default function ForgotPasswordPage() {
     setIsBusy(true);
     setProblem("");
     try {
-      if (phase === "email") {
-        const result = await auth.resetAdminPasswordByEmail(email.trim(), "", "check");
-        if (!result?.exists) {
-          setProblem("No active admin account was found for this email.");
-        } else {
-          setPhase("password");
-        }
-      } else {
-        if (password.length < MIN_PASSWORD) {
-          setProblem(`Use at least ${MIN_PASSWORD} characters.`);
-          return;
-        }
-        if (password !== confirm) {
-          setProblem("The two passwords do not match.");
-          return;
-        }
-        await auth.resetAdminPasswordByEmail(email.trim(), password, "reset");
-        setPhase("done");
-      }
+      await auth.requestPasswordReset(email.trim(), {
+        redirectTo: `${window.location.origin}/admin/reset-password`,
+      });
+      setIsSent(true);
     } catch (err) {
-      setProblem(err?.message || "Could not reset the password. Please try again.");
+      setProblem(err?.message || "Could not send the reset email. Please try again.");
     } finally {
       setIsBusy(false);
     }
@@ -61,96 +40,51 @@ export default function ForgotPasswordPage() {
             </span>
           </div>
 
-          {phase === "done" ? (
+          {isSent ? (
             <>
-              <h1>Password updated</h1>
-              <Alert tone="ok" title="Done">
-                Your password has been changed. Sign in with it now.
+              <h1>Check your email</h1>
+              <Alert tone="ok" title="If this account exists, a reset link is on its way">
+                Open the password reset email and follow its link to choose a new password.
               </Alert>
-              <button
-                className="ad-btn ad-btn-primary"
-                type="button"
-                onClick={() => navigate("/admin")}
-              >
-                Go to sign in
-              </button>
+              <p className="ad-login-foot">
+                <Link to="/admin">Back to sign in</Link>
+              </p>
             </>
           ) : (
             <>
-              <h1>{phase === "email" ? "Reset your password" : "Choose a new password"}</h1>
-              <p className="ad-login-sub">
-                {phase === "email"
-                  ? "Enter the email address on your admin account."
-                  : `Admin account: ${email}`}
-              </p>
+              <h1>Reset your password</h1>
+              <p className="ad-login-sub">Enter your admin email and we’ll send you a secure reset link.</p>
 
               {!configured && (
                 <Alert tone="error" title="Supabase is not configured">
                   Add your credentials to <code>.env</code> and restart the dev server.
                 </Alert>
               )}
-              {problem && <Alert tone="error" title="Could not reset password">{problem}</Alert>}
+              {problem && <Alert tone="error" title="Could not send reset email">{problem}</Alert>}
 
               <form onSubmit={onSubmit} noValidate>
-                {phase === "email" ? (
-                  <div className="ad-field">
-                    <label className="ad-label" htmlFor="forgot-email">Admin email</label>
-                    <input
-                      id="forgot-email"
-                      type="email"
-                      autoComplete="username"
-                      value={email}
-                      required
-                      disabled={!configured || isBusy}
-                      onChange={(event) => {
-                        setEmail(event.target.value);
-                        setProblem("");
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <div className="ad-field">
-                      <label className="ad-label" htmlFor="new-password">New password</label>
-                      <PasswordInput
-                        id="new-password"
-                        autoComplete="new-password"
-                        value={password}
-                        required
-                        disabled={isBusy}
-                        onChange={(event) => {
-                          setPassword(event.target.value);
-                          setProblem("");
-                        }}
-                      />
-                      <div className="ad-field-help">At least {MIN_PASSWORD} characters.</div>
-                    </div>
-                    <div className="ad-field">
-                      <label className="ad-label" htmlFor="confirm-password">Confirm new password</label>
-                      <PasswordInput
-                        id="confirm-password"
-                        autoComplete="new-password"
-                        value={confirm}
-                        required
-                        disabled={isBusy}
-                        onChange={(event) => {
-                          setConfirm(event.target.value);
-                          setProblem("");
-                        }}
-                      />
-                    </div>
-                  </>
-                )}
+                <div className="ad-field">
+                  <label className="ad-label" htmlFor="forgot-email">Admin email</label>
+                  <input
+                    id="forgot-email"
+                    type="email"
+                    autoComplete="username"
+                    value={email}
+                    required
+                    disabled={!configured || isBusy}
+                    onChange={(event) => {
+                      setEmail(event.target.value);
+                      setProblem("");
+                    }}
+                  />
+                </div>
 
                 <button
                   className="ad-btn ad-btn-primary"
                   type="submit"
-                  disabled={
-                    !configured || isBusy ||
-                    (phase === "email" ? !email.trim() : !password || !confirm)
-                  }
+                  disabled={!configured || isBusy || !email.trim()}
                 >
-                  {isBusy ? "Please wait…" : phase === "email" ? "Continue" : "Reset password"}
+                  {isBusy ? "Sending…" : "Send reset link"}
                 </button>
               </form>
 
