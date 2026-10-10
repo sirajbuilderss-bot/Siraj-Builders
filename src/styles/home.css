@@ -1221,6 +1221,110 @@
   }
 }
 
+/* Mobile hero: the carousel is absolutely layered, so its copy must fit in
+   the hero's reserved height instead of being clipped behind the controls or
+   the next section. Keep a deliberate header gap and reserve a compact
+   control lane at the bottom. */
+@media (max-width: 560px) {
+  .hero {
+    min-height: max(740px, 100svh);
+    min-height: max(740px, 100dvh);
+  }
+
+  .hero-slide {
+    align-items: flex-start;
+  }
+
+  .hero-content {
+    width: min(100% - 2rem, var(--container-w));
+    padding-top: calc(var(--header-h) + 1.25rem);
+    padding-bottom: calc(6.25rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .hero .eyebrow {
+    margin-bottom: 0.8rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.11em;
+  }
+
+  .display {
+    font-size: clamp(2rem, 8.8vw, 2.45rem);
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    margin-bottom: 1rem;
+    text-wrap: pretty;
+  }
+
+  .hero .lead {
+    max-width: 38rem;
+    font-size: clamp(0.94rem, 4.15vw, 1.03rem);
+    line-height: 1.58;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-actions {
+    gap: 0.65rem;
+  }
+
+  .hero-actions .btn {
+    min-height: 52px;
+    padding: 0.8rem 1.1rem;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .hero-controls {
+    bottom: max(14px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .hero-controls-inner {
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
+    gap: 0.35rem;
+  }
+
+  .hero-controls-center {
+    gap: 0.55rem;
+  }
+
+  .hero-arrow {
+    width: 40px;
+    height: 40px;
+  }
+
+  .hero-pause {
+    width: 32px;
+    height: 32px;
+  }
+
+  .hero-dots {
+    gap: 0.4rem;
+  }
+
+  .hero-dot {
+    width: 12px;
+    height: 12px;
+  }
+
+  .hero-dot.is-active {
+    width: 28px;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-content {
+    width: calc(100% - 1.5rem);
+    padding-top: calc(var(--header-h) + 1rem);
+  }
+
+  .display { font-size: clamp(1.85rem, 8.5vw, 2.1rem); }
+  .hero .lead { font-size: 0.93rem; }
+  .hero-controls-inner { grid-template-columns: 36px minmax(0, 1fr) 36px; }
+  .hero-arrow { width: 36px; height: 36px; }
+  .hero-dots { gap: 0.3rem; }
+  .hero-dot { width: 9px; height: 9px; }
+  .hero-dot.is-active { width: 22px; }
+}
+
 /* The homepage carousel uses the same construction graphics with one
    different technical motif per slide, layered below the copy. */
 .hero-slide .construction-graphic {

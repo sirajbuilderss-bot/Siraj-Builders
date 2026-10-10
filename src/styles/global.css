@@ -2044,6 +2044,66 @@ html {
   }
 }
 
+/* Shared small-screen spacing and overflow safeguards. These keep the
+   general content sections aligned even when CMS-managed copy is longer
+   than the original text used when a section was designed. */
+@media (max-width: 640px) {
+  html { scroll-padding-top: 84px; }
+
+  .section,
+  .sx-section {
+    padding-block: clamp(3.25rem, 12vw, 4.5rem);
+  }
+
+  .page-hero {
+    min-height: 0;
+    padding: calc(var(--header-h) + 3rem) 0 clamp(3.5rem, 12vw, 5rem);
+  }
+
+  .page-hero .container,
+  .section .container,
+  .sx-section .container {
+    width: min(100% - 2rem, var(--container));
+  }
+
+  .page-hero h1,
+  .page-hero .h1,
+  .section-head h2,
+  .sx-section h2 {
+    font-size: clamp(1.8rem, 8vw, 2.65rem);
+    line-height: 1.12;
+    overflow-wrap: anywhere;
+  }
+
+  .page-hero .lead,
+  .section-head p {
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .section-head { gap: 1rem; margin-bottom: 1.6rem; }
+  .split, .grid, .cards, .small-grid, .banner-inner, .teaser-inner { min-width: 0; }
+  .btn { white-space: normal; text-align: center; }
+
+  .floating-whatsapp {
+    right: max(14px, env(safe-area-inset-right, 0px));
+    bottom: max(16px, env(safe-area-inset-bottom, 0px));
+    width: 52px;
+    height: 52px;
+  }
+}
+
+@media (max-width: 380px) {
+  .page-hero .container,
+  .section .container,
+  .sx-section .container { width: calc(100% - 1.5rem); }
+
+  .page-hero h1,
+  .page-hero .h1,
+  .section-head h2,
+  .sx-section h2 { font-size: clamp(1.65rem, 7.8vw, 2.1rem); }
+}
+
 /* ============================================================
    19. ACTIVE NAV — SERVICES DROPDOWN
    Set by app.js when the open page is one of the service pages.
@@ -2473,5 +2533,16 @@ figure.card figcaption b {
   @keyframes cursor-glow {
     0%, 100% { transform: scale(0.82); opacity: 0.35; }
     50% { transform: scale(1.18); opacity: 0.9; }
+  }
+}
+
+/* Keep the floating contact action clear of mobile carousel controls and
+   the device safe area. */
+@media (max-width: 600px) {
+  .floating-whatsapp {
+    right: max(14px, env(safe-area-inset-right, 0px));
+    bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
+    width: 52px;
+    height: 52px;
   }
 }

@@ -3337,3 +3337,95 @@
   .admin-root .ad-activity-retention { flex: 1; }
   .admin-root .ad-activity-confirm { align-items: flex-start; flex-direction: column; }
 }
+
+/* Final responsive pass: keep admin controls and content readable on narrow
+   phones while allowing genuinely wide data tables to scroll inside their
+   own card instead of stretching the whole page. */
+.admin-root,
+.admin-root .ad-shell,
+.admin-root .ad-main,
+.admin-root .ad-content,
+.admin-root .ad-card,
+.admin-root .ad-card-body { min-width: 0; }
+
+.admin-root .ad-table-wrap {
+  max-width: 100%;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+}
+
+.admin-root .ad-table { min-width: 680px; }
+.admin-root .ad-table th,
+.admin-root .ad-table td { overflow-wrap: anywhere; }
+
+.admin-root .ad-modal-backdrop {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: max(12px, env(safe-area-inset-top, 0px)) 12px max(12px, env(safe-area-inset-bottom, 0px));
+}
+
+.admin-root .ad-modal {
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.admin-root .ad-field input,
+.admin-root .ad-field select,
+.admin-root .ad-field textarea,
+.admin-root input,
+.admin-root select,
+.admin-root textarea { max-width: 100%; }
+
+@media (max-width: 900px) {
+  .admin-root .ad-content { width: 100%; }
+  .admin-root .ad-toolbar { align-items: stretch; flex-wrap: wrap; }
+  .admin-root .ad-toolbar .ad-search { flex: 1 1 220px; min-width: min(100%, 220px); }
+  .admin-root .ad-pager { flex-wrap: wrap; gap: 10px; }
+}
+
+@media (max-width: 720px) {
+  .admin-root .ad-topbar {
+    min-height: 64px;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+  }
+
+  .admin-root .ad-topbar-title { flex: 1 1 auto; min-width: 0; }
+  .admin-root .ad-topbar-title h1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: clamp(15px, 4vw, 18px);
+  }
+
+  .admin-root .ad-topbar-actions { flex: 0 0 auto; width: auto; margin: 0; }
+  .admin-root .ad-topbar-actions .ad-btn { min-height: 38px; padding: 8px 10px; }
+  .admin-root .ad-content { padding: 16px 14px 40px; }
+  .admin-root .ad-card-head { gap: 10px; flex-wrap: wrap; }
+  .admin-root .ad-card-head > :last-child { max-width: 100%; }
+  .admin-root .ad-form-grid { grid-template-columns: minmax(0, 1fr); }
+  .admin-root .ad-field-wide { grid-column: auto; }
+  .admin-root .ad-modal-backdrop { align-items: flex-end; padding: 0; }
+  .admin-root .ad-modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px));
+    border-radius: 16px 16px 0 0;
+  }
+  .admin-root .ad-modal-foot { flex-wrap: wrap; }
+}
+
+@media (max-width: 420px) {
+  .admin-root .ad-topbar { gap: 8px; padding-inline: 10px; }
+  .admin-root .ad-topbar > .ad-brand-mark { width: 32px; height: 32px; }
+  .admin-root .ad-topbar-actions .ad-btn span { display: none; }
+  .admin-root .ad-topbar-actions .ad-btn { width: 38px; min-width: 38px; padding: 8px; justify-content: center; }
+  .admin-root .ad-content { padding-inline: 12px; }
+  .admin-root .ad-card-head,
+  .admin-root .ad-card-body,
+  .admin-root .ad-modal-body { padding: 13px; }
+  .admin-root .ad-dashboard-actions { padding: 14px; }
+}
