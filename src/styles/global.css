@@ -2085,12 +2085,6 @@ html {
   .split, .grid, .cards, .small-grid, .banner-inner, .teaser-inner { min-width: 0; }
   .btn { white-space: normal; text-align: center; }
 
-  .floating-whatsapp {
-    right: max(14px, env(safe-area-inset-right, 0px));
-    bottom: max(16px, env(safe-area-inset-bottom, 0px));
-    width: 52px;
-    height: 52px;
-  }
 }
 
 @media (max-width: 380px) {
@@ -2425,17 +2419,17 @@ figure.card figcaption b {
   position: fixed;
   right: 5.35rem;
   bottom: 1.4rem;
-  z-index: 899;
+  z-index: 1000;
   display: grid;
-  width: 54px;
-  height: 54px;
+  width: 56px;
+  height: 56px;
   place-items: center;
-  padding: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.32);
+  padding: 0;
+  border: 2px solid rgba(255, 255, 255, 0.96);
   border-radius: 999px;
   color: #fff;
-  background: linear-gradient(135deg, #25d366, #139b50);
-  box-shadow: 0 14px 34px rgba(13, 110, 55, 0.32), 0 4px 12px rgba(0, 0, 0, 0.18);
+  background: #25d366;
+  box-shadow: 0 8px 22px rgba(10, 87, 47, 0.3), 0 2px 8px rgba(0, 0, 0, 0.16);
   opacity: 0;
   transform: translateY(14px) scale(0.96);
   animation: whatsapp-arrive 650ms 350ms var(--ease) forwards;
@@ -2453,12 +2447,9 @@ figure.card figcaption b {
 }
 
 .floating-whatsapp svg {
-  width: 42px;
-  height: 42px;
-  padding: 4px;
-  border-radius: 50%;
-  fill: #15964d;
-  background: #fff;
+  width: 32px;
+  height: 32px;
+  fill: #fff;
 }
 
 .floating-whatsapp:hover {
@@ -2480,12 +2471,12 @@ figure.card figcaption b {
 
 @media (max-width: 600px) {
   .floating-whatsapp {
-    right: 4.75rem;
-    bottom: 1rem;
-    width: 50px;
-    height: 50px;
+    right: max(16px, env(safe-area-inset-right, 0px));
+    bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+    width: 56px;
+    height: 56px;
   }
-  .floating-whatsapp svg { width: 39px; height: 39px; }
+  .floating-whatsapp svg { width: 33px; height: 33px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2533,16 +2524,5 @@ figure.card figcaption b {
   @keyframes cursor-glow {
     0%, 100% { transform: scale(0.82); opacity: 0.35; }
     50% { transform: scale(1.18); opacity: 0.9; }
-  }
-}
-
-/* Keep the floating contact action clear of mobile carousel controls and
-   the device safe area. */
-@media (max-width: 600px) {
-  .floating-whatsapp {
-    right: max(14px, env(safe-area-inset-right, 0px));
-    bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
-    width: 52px;
-    height: 52px;
   }
 }
