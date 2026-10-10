@@ -1232,16 +1232,19 @@
   }
 
   .hero-slide {
-    align-items: flex-start;
+    align-items: center;
+    padding-block: calc(var(--header-h) + 1rem) calc(6.25rem + env(safe-area-inset-bottom, 0px));
   }
 
   .hero-content {
     width: min(100% - 2rem, var(--container-w));
-    padding-top: calc(var(--header-h) + 1.25rem);
-    padding-bottom: calc(6.25rem + env(safe-area-inset-bottom, 0px));
+    padding-block: 0;
   }
 
+  .hero-copy { max-width: 34rem; margin-inline: auto; text-align: center; }
+
   .hero .eyebrow {
+    justify-content: center;
     margin-bottom: 0.8rem;
     font-size: 0.72rem;
     letter-spacing: 0.11em;
@@ -1259,14 +1262,19 @@
     max-width: 38rem;
     font-size: clamp(0.94rem, 4.15vw, 1.03rem);
     line-height: 1.58;
-    margin-bottom: 1.25rem;
+    margin: 0 auto 1.25rem;
   }
 
   .hero-actions {
+    justify-content: center;
     gap: 0.65rem;
   }
 
   .hero-actions .btn {
+    width: min(100%, 26rem);
+    max-width: 26rem;
+    flex: 1 1 100%;
+    margin-inline: auto;
     min-height: 52px;
     padding: 0.8rem 1.1rem;
     white-space: normal;
@@ -1313,7 +1321,6 @@
 @media (max-width: 380px) {
   .hero-content {
     width: calc(100% - 1.5rem);
-    padding-top: calc(var(--header-h) + 1rem);
   }
 
   .display { font-size: clamp(1.85rem, 8.5vw, 2.1rem); }
@@ -1323,6 +1330,43 @@
   .hero-dots { gap: 0.3rem; }
   .hero-dot { width: 9px; height: 9px; }
   .hero-dot.is-active { width: 22px; }
+}
+
+/* Keep touch targets comfortable on phones, but draw compact indicators in
+   their centre. The global coarse-pointer rule gives each button a 24px hit
+   area; without this inner mark that area looks like an oversized dot. */
+@media (max-width: 560px) {
+  .hero-dots { gap: 0.15rem; }
+
+  .hero-dot,
+  .hero-dot:hover {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    min-width: 24px;
+    height: 24px;
+    min-height: 24px;
+    border-radius: 50%;
+    background: transparent;
+  }
+
+  .hero-dot::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.46);
+    transition: width 0.35s var(--ease), height 0.35s var(--ease), background 0.3s ease;
+  }
+
+  .hero-dot.is-active { background: transparent; }
+
+  .hero-dot.is-active::before {
+    width: 18px;
+    height: 5px;
+    background: var(--accent);
+  }
 }
 
 /* The homepage carousel uses the same construction graphics with one
