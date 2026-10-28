@@ -43,6 +43,47 @@ const PENDING_MESSAGE =
   "This account is waiting for approval. An existing administrator needs to " +
   "activate it in Admin panel → Admin users before you can sign in.";
 
+const ENV_CONFIG_MESSAGE =
+  "Add ADMIN_EMAIL and ADMIN_PASSWORD to .env, then restart the dev server.";
+
+async function readJson(response) {
+  return response.json().catch(() => null);
+}
+
+/** True only when the typed email and password match the server env account. */
+async function envCredentialsMatch(email, password) {
+  const response = await fetch("/api/admin/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: email.trim(), password }),
+  });
+  const data = await readJson(response);
+  if (response.status === 503) throw new Error(ENV_CONFIG_MESSAGE);
+  return Boolean(response.ok && data?.ok);
+}
+
+async function isEnvAdminEmail(email) {
+  if (!email) return false;
+  const response = await fetch("/api/admin/email", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  const data = await readJson(response);
+  return Boolean(response.ok && data?.ok);
+}
+
+/**
+ * The env account is the admin sign-in. If Supabase still has that row
+ * inactive, the panel still opens for this one account.
+ */
+function panelProfile(row, envAdmin) {
+  if (!row) return null;
+  if (row.is_active) return row;
+  if (!envAdmin) return null;
+  return { ...row, role: "admin", is_active: true };
+}
+
 async function fetchProfile(userId) {
   const { data } = await db
     .from("admin_users")
@@ -100,11 +141,13 @@ export function AdminAuthProvider({ children }) {
 
         if (cancelled) return;
 
-        if (!row || !row.is_active) {
+        const envAdmin = await isEnvAdminEmail(user.email);
+        const allowed = panelProfile(row, envAdmin);
+        if (!allowed) {
           await auth.signOut();
           setProfile(null);
         } else {
-          setProfile(row);
+          setProfile(allowed);
         }
       } catch {
         if (!cancelled) setProfile(null);
@@ -129,6 +172,20 @@ export function AdminAuthProvider({ children }) {
       throw new Error(message);
     }
 
+    let allowedByEnv = false;
+    try {
+      allowedByEnv = await envCredentialsMatch(email, password);
+    } catch (err) {
+      const message = err?.message || ENV_CONFIG_MESSAGE;
+      setError(message);
+      throw new Error(message);
+    }
+    if (!allowedByEnv) {
+      const message = "Incorrect email or password.";
+      setError(message);
+      throw new Error(message);
+    }
+
     try {
       const session = await auth.signIn(email.trim(), password);
       let row = await fetchProfile(session.user?.id);
@@ -148,16 +205,15 @@ export function AdminAuthProvider({ children }) {
         }
       }
 
-      if (!row || !row.is_active) {
-        // An existing-but-inactive row means "approved account, switched off
-        // or not yet approved" — a different problem from "never enrolled",
-        // and worth saying so rather than sending both to the same dead end.
+      const allowed = panelProfile(row, true);
+      if (!allowed) {
         const message = row ? PENDING_MESSAGE : NOT_ADMIN_MESSAGE;
         await auth.signOut();
         setError(message);
         throw new Error(message);
       }
 
+      row = allowed;
       setProfile(row);
       log("login", "admin_users", {
         entityId: row.id,
@@ -174,7 +230,10 @@ export function AdminAuthProvider({ children }) {
       return row;
     } catch (err) {
       const message =
-        err?.message === NOT_ADMIN_MESSAGE || err?.message === PENDING_MESSAGE
+        err?.message === NOT_ADMIN_MESSAGE ||
+        err?.message === PENDING_MESSAGE ||
+        err?.message === ENV_CONFIG_MESSAGE ||
+        err?.message === "Incorrect email or password."
           ? err.message
           : err?.status === 400
             ? "Incorrect email or password."

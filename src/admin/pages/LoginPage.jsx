@@ -118,8 +118,6 @@ export default function LoginPage() {
           </form>
 
           <p className="ad-login-foot">
-            <Link to="/admin/forgot-password">Forgot your password?</Link>
-            <br />
             No account yet? <Link to="/admin/signup">Create one</Link> ·{" "}
             <Link to="/">Back to website</Link>
           </p>
